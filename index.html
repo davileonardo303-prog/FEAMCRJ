@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FEAMCRJ - Federação Esportiva de Arte Marcial e Combate RJ</title>
+  
+  <!-- Tailwind CSS via CDN (Perfeito para Pen Drive e Google Drive) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fontes Premium do Google (Inter e Space Grotesk) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Estilos Adicionais Customizados -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- Header Dinâmico -->
+  <div id="header-container"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow">
+    
+    <!-- HERO LANDING SECTION -->
+    <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-24 px-4 sm:px-6 lg:px-8 border-b border-zinc-900">
+      <!-- Background Ambient Glow -->
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(239,68,68,0.08),transparent_45%)]"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.08),transparent_45%)]"></div>
+      
+      <div class="relative max-w-5xl mx-auto text-center space-y-8 z-10">
+        
+        <!-- Badge -->
+        <div class="inline-flex items-center space-x-2 bg-zinc-900 border border-zinc-800 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-amber-500 uppercase">
+          <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+          <span>FILIAÇÕES ABERTAS PARA A TEMPORADA 2026</span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight leading-none text-white">
+          O Templo do Combate no <br>
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-600 via-orange-500 to-amber-500">Rio de Janeiro</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-zinc-400 text-base sm:text-xl max-w-3xl mx-auto leading-relaxed font-light">
+          A <strong class="text-white font-semibold">FEAMCRJ</strong> é a entidade oficial responsável por homologar, certificar e gerenciar o circuito esportivo de artes marciais e esportes de combate no Estado do Rio de Janeiro.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <a href="cadastro-atleta.html" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-sm font-black uppercase tracking-wider text-white hover:from-red-500 hover:to-amber-400 shadow-lg shadow-amber-950/35 transition-all transform hover:-translate-y-1 text-center">
+            Filie-se como Atleta
+          </a>
+          <a href="torneios.html" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-zinc-900 border border-zinc-800 text-sm font-black uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-zinc-850 hover:border-zinc-700 transition-all text-center">
+            Ver Calendário de Lutas
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STATS COUNTERS -->
+    <section class="bg-zinc-950 py-12 border-b border-zinc-900">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          
+          <div class="text-center p-4 bg-zinc-900/40 rounded-2xl border border-zinc-900">
+            <span class="block text-3xl sm:text-4xl font-extrabold text-amber-500 font-display">1.800+</span>
+            <span class="block text-xs uppercase font-bold text-zinc-500 tracking-wider mt-1">Atletas Federados</span>
+          </div>
+
+          <div class="text-center p-4 bg-zinc-900/40 rounded-2xl border border-zinc-900">
+            <span class="block text-3xl sm:text-4xl font-extrabold text-white font-display">85+</span>
+            <span class="block text-xs uppercase font-bold text-zinc-500 tracking-wider mt-1">Academias Certificadas</span>
+          </div>
+
+          <div class="text-center p-4 bg-zinc-900/40 rounded-2xl border border-zinc-900">
+            <span class="block text-3xl sm:text-4xl font-extrabold text-amber-500 font-display">14</span>
+            <span class="block text-xs uppercase font-bold text-zinc-500 tracking-wider mt-1">Grandes Torneios / Ano</span>
+          </div>
+
+          <div class="text-center p-4 bg-zinc-900/40 rounded-2xl border border-zinc-900">
+            <span class="block text-3xl sm:text-4xl font-extrabold text-white font-display">100%</span>
+            <span class="block text-xs uppercase font-bold text-zinc-500 tracking-wider mt-1">Oficial e Homologado</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- DISCIPLINES INTRO -->
+    <section class="py-24 bg-zinc-950">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Title -->
+        <div class="text-center max-w-3xl mx-auto mb-20">
+          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white uppercase">
+            Modalidades <span class="text-amber-500">Regulamentadas</span>
+          </h2>
+          <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+          <p class="mt-6 text-zinc-400 text-sm sm:text-base leading-relaxed">
+            Oferecemos suporte técnico, regras padronizadas, cursos de formação arbitral e segurança médica nos eventos de todas as artes marciais homologadas.
+          </p>
+        </div>
+
+        <!-- Grid of 3 Major Disciplines -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Jiu-Jitsu -->
+          <div class="group bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-8 hover:border-zinc-700 hover:bg-zinc-900 transition-all">
+            <div class="flex items-center justify-between mb-6">
+              <div class="w-12 h-12 bg-amber-500/10 rounded-xl border border-amber-500/20 flex items-center justify-center text-amber-500 font-bold">BJJ</div>
+              <span class="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Grappling</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Jiu-Jitsu Brasileiro</h3>
+            <p class="text-zinc-400 text-sm leading-relaxed mb-4">
+              Foco na luta agarrada e combate de solo. Regulamentado sob os mais rígidos preceitos de graduação e segurança para torneios estaduais.
+            </p>
+            <a href="torneios.html" class="inline-flex items-center text-xs font-bold text-amber-500 group-hover:underline">
+              <span>Campeonatos de BJJ</span>
+              <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+
+          <!-- Muay Thai / Kickboxing -->
+          <div class="group bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-8 hover:border-zinc-700 hover:bg-zinc-900 transition-all">
+            <div class="flex items-center justify-between mb-6">
+              <div class="w-12 h-12 bg-red-500/10 rounded-xl border border-red-500/20 flex items-center justify-center text-red-500 font-bold">MT</div>
+              <span class="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">Percussão</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Muay Thai e Kickboxing</h3>
+            <p class="text-zinc-400 text-sm leading-relaxed mb-4">
+              Arte das oito armas e a dinâmica moderna do K1. Com corpo de arbitragem qualificado para garantir eventos justos e dinâmicos de troca em pé.
+            </p>
+            <a href="torneios.html" class="inline-flex items-center text-xs font-bold text-red-500 group-hover:underline">
+              <span>Campeonatos de Trocação</span>
+              <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+
+          <!-- MMA -->
+          <div class="group bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-8 hover:border-zinc-700 hover:bg-zinc-900 transition-all">
+            <div class="flex items-center justify-between mb-6">
+              <div class="w-12 h-12 bg-purple-500/10 rounded-xl border border-purple-500/20 flex items-center justify-center text-purple-500 font-bold">MMA</div>
+              <span class="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">Mista</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Artes Marciais Mistas</h3>
+            <p class="text-zinc-400 text-sm leading-relaxed mb-4">
+              O amálgama definitivo dos esportes de combate. O MMA Amador é chancelado pela FEAMCRJ visando a preparação segura para o âmbito profissional.
+            </p>
+            <a href="torneios.html" class="inline-flex items-center text-xs font-bold text-purple-500 group-hover:underline">
+              <span>GP Amador de MMA</span>
+              <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+
+        </div>
+
+        <div class="text-center mt-12">
+          <a href="sobre.html" class="text-xs font-bold text-zinc-400 hover:text-white uppercase tracking-widest border-b border-zinc-800 hover:border-zinc-400 pb-1.5 transition-all">
+            Conhecer todas as modalidades homologadas
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PORTAL DO ATLETA PREVIEW -->
+    <section class="py-24 border-t border-zinc-900 bg-zinc-900/20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-8 sm:p-16 relative overflow-hidden">
+          
+          <div class="absolute inset-y-0 right-0 w-1/3 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.06),transparent_70%)] hidden md:block"></div>
+          
+          <div class="relative max-w-2xl z-10 space-y-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-500">REVOLUÇÃO DIGITAL</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold uppercase leading-tight text-white">
+              Nova Carteira <br class="hidden sm:block">
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-amber-500">Digital do Filiado</span>
+            </h2>
+            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+              Diga adeus às carteiras de plástico antigas! Todo atleta federado FEAMCRJ tem acesso imediato ao seu <strong class="text-white">Painel Online</strong> com sua credencial oficial digital com foto, graduação certificada em tempo real e histórico de lutas integrados em um QR Code seguro.
+            </p>
+            
+            <div class="flex flex-wrap items-center gap-4 pt-4">
+              <a href="login.html" class="px-6 py-3 rounded-xl bg-amber-500 text-zinc-950 font-bold text-sm hover:bg-amber-400 transition-all">
+                Acessar Meu Painel
+              </a>
+              <a href="cadastro-atleta.html" class="px-6 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-sm border border-zinc-800 transition-all">
+                Registrar-se no Sistema
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Dinâmico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts Globais (Ordem de importação é crucial) -->
+  <script src="firebase-config.js"></script>
+  <script src="components.js"></script>
+</body>
+</html>

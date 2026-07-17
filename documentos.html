@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regulamentos e Downloads - FEAMCRJ</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- Header Dinâmico -->
+  <div id="header-container"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto space-y-12">
+      
+      <!-- Page Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-4">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-500">SECRETARIA DE LUTAS</span>
+        <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-none">
+          Documentação Oficial
+        </h1>
+        <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+        <p class="text-zinc-400 text-sm sm:text-base">
+          Acesse regulamentos gerais, fichas de inscrição coletiva, tabelas de pesagem e termos oficiais de isenção de responsabilidade médica.
+        </p>
+      </div>
+
+      <!-- Search Input -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4">
+        <input type="text" id="doc-search" oninput="filterDocs()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Buscar por Título do Documento ou Categoria...">
+      </div>
+
+      <!-- Documents list container -->
+      <div id="docs-list" class="space-y-4">
+        <!-- Dynamic docs will be loaded here -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer Dinâmico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts Globais -->
+  <script src="firebase-config.js"></script>
+  <script src="components.js"></script>
+
+  <!-- Lógica da Página -->
+  <script>
+    const INITIAL_DOCUMENTS = [
+      {
+        id: 'doc-1',
+        title: 'Regulamento Geral Unificado de Competições FEAMCRJ 2026',
+        category: 'Regulamento',
+        uploadDate: '2026-01-10',
+        size: '2.4 MB',
+        format: 'PDF'
+      },
+      {
+        id: 'doc-2',
+        title: 'Tabela de Taxas Administrativas, Anuidade e Filiações 2026',
+        category: 'Taxas',
+        uploadDate: '2026-01-05',
+        size: '850 KB',
+        format: 'PDF'
+      },
+      {
+        id: 'doc-3',
+        title: 'Manual de Padronização de Graduações e Exames de Faixa Preta',
+        category: 'Manual',
+        uploadDate: '2026-02-18',
+        size: '4.1 MB',
+        format: 'PDF'
+      },
+      {
+        id: 'doc-4',
+        title: 'Ficha Cadastral de Filiação Coletiva para Academias',
+        category: 'Formulário',
+        uploadDate: '2026-03-01',
+        size: '1.2 MB',
+        format: 'DOCX'
+      },
+      {
+        id: 'doc-5',
+        title: 'Termo de Responsabilidade e Isenção Médica para Menores de Idade',
+        category: 'Formulário',
+        uploadDate: '2026-04-12',
+        size: '430 KB',
+        format: 'PDF'
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDocs(INITIAL_DOCUMENTS);
+    });
+
+    function renderDocs(list) {
+      const container = document.getElementById('docs-list');
+      let listHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-zinc-500 text-sm bg-zinc-900/40 border border-zinc-900 rounded-2xl">
+            Nenhum documento encontrado correspondente aos termos de busca.
+          </div>
+        `;
+        return;
+      }
+
+      list.forEach(doc => {
+        listHTML += `
+          <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-zinc-700 transition-all">
+            <div class="flex items-start space-x-4">
+              <!-- File Icon -->
+              <div class="w-12 h-12 rounded-xl bg-zinc-950 border border-zinc-850 flex flex-col items-center justify-center font-mono text-[9px] font-bold text-amber-500">
+                <svg class="w-5 h-5 text-zinc-600 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span>${doc.format}</span>
+              </div>
+              <div class="space-y-1">
+                <span class="px-2 py-0.5 rounded bg-zinc-950 text-amber-500 border border-zinc-850 font-bold uppercase tracking-wider text-[8px]">${doc.category}</span>
+                <h3 class="text-sm sm:text-base font-bold text-white mt-1.5">${doc.title}</h3>
+                <p class="text-[10px] text-zinc-500">Adicionado em: ${doc.uploadDate} • Tamanho: ${doc.size}</p>
+              </div>
+            </div>
+            
+            <button onclick="alert('Dica de Pen Drive:\\nPor se tratar de um site estático e portátil, você pode preencher os PDFs reais da sua federação e colocá-los na pasta do seu pen drive para fazer o download direto!');" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-850 text-xs font-bold text-zinc-300 hover:text-white transition-all flex items-center justify-center space-x-2 shrink-0">
+              <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              <span>Baixar Arquivo</span>
+            </button>
+          </div>
+        `;
+      });
+
+      container.innerHTML = listHTML;
+    }
+
+    function filterDocs() {
+      const searchVal = document.getElementById('doc-search').value.toLowerCase();
+      let filtered = INITIAL_DOCUMENTS;
+
+      if (searchVal) {
+        filtered = filtered.filter(doc => 
+          doc.title.toLowerCase().includes(searchVal) || 
+          doc.category.toLowerCase().includes(searchVal)
+        );
+      }
+
+      renderDocs(filtered);
+    }
+  </script>
+</body>
+</html>

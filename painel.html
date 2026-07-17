@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Filiado - FEAMCRJ</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- Header Dinâmico -->
+  <div id="header-container"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-10">
+      
+      <!-- Dashboard Top Greeting Bar -->
+      <div class="flex flex-col md:flex-row items-center justify-between p-6 bg-zinc-900 border border-zinc-800 rounded-2xl gap-4">
+        <div>
+          <span class="text-xs font-bold text-amber-500 uppercase tracking-widest">PORTAL FEAMCRJ</span>
+          <h1 class="text-2xl sm:text-3xl font-black text-white leading-none mt-1">
+            Olá, <span id="welcome-name" class="text-amber-500">Filiado</span>!
+          </h1>
+          <p class="text-zinc-500 text-xs mt-1">
+            Seu acesso oficial e acompanhamento de registros esportivos do estado.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse mr-2"></span>
+            Acesso Ativo
+          </span>
+          <button onclick="requestPasswordResetSelf()" class="px-4 py-2 rounded-lg bg-zinc-950 hover:bg-amber-500/10 hover:text-amber-500 border border-zinc-800 text-xs font-bold text-zinc-400 transition-all cursor-pointer">
+            Recuperar Senha
+          </button>
+          <button onclick="handleSignOut()" class="px-4 py-2 rounded-lg bg-zinc-950 hover:bg-red-500/10 hover:text-red-500 border border-zinc-800 text-xs font-bold text-zinc-400 transition-all cursor-pointer">
+            Desconectar
+          </button>
+        </div>
+      </div>
+
+      <!-- SEÇÃO DO FILIADO / ATLETA -->
+      <div id="filiado-view" class="grid grid-cols-1 lg:grid-cols-12 gap-8 hidden">
+        
+        <!-- COLUNA ESQUERDA: A CARTEIRA DIGITAL (Takes 5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Sua Identidade Esportiva</h2>
+          
+          <!-- CARTEIRA DIGITAL PREMIUM (Bento box look) -->
+          <div class="relative w-full max-w-sm mx-auto aspect-[1.58/1] rounded-2xl bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-850 border border-amber-500/45 p-6 shadow-2xl shadow-amber-950/15 overflow-hidden flex flex-col justify-between group">
+            
+            <!-- Metallic background badge design -->
+            <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-amber-500/5 blur-xl group-hover:bg-amber-500/10 transition-colors"></div>
+            
+            <!-- Top Card: Logo Header -->
+            <div class="flex items-center justify-between border-b border-zinc-800/80 pb-3">
+              <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-red-600 to-amber-500 p-[1px]">
+                  <div class="flex items-center justify-center w-full h-full bg-zinc-950 rounded-[7px]">
+                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                  </div>
+                </div>
+                <div>
+                  <span class="block text-xs font-black text-white leading-none">FEAMCRJ</span>
+                  <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest leading-none">Carteira Digital</span>
+                </div>
+              </div>
+              
+              <!-- QR Mock icon -->
+              <div class="w-7 h-7 bg-white p-0.5 rounded flex items-center justify-center opacity-85">
+                <svg class="w-full h-full text-zinc-950" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 15h6v6H3v-6zm2 2v2h2v-2H5zm10-2h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-4-4h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 2h2v2h-2v-2zm6-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm4 4h2v2h-2v-2z"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Middle Card: Athlete Info -->
+            <div class="py-2 space-y-1 flex-grow flex flex-col justify-center">
+              <span id="card-name" class="block text-lg font-black uppercase text-white tracking-wide truncate">NOME DO FILIADO</span>
+              <div class="flex items-center space-x-2 text-[10px]">
+                <span class="font-bold text-amber-500 uppercase tracking-widest" id="card-modality">Jiu-Jitsu</span>
+                <span class="text-zinc-600">•</span>
+                <span class="text-zinc-400 font-semibold" id="card-rank">Faixa Preta</span>
+              </div>
+              <span id="card-academy" class="block text-[10px] text-zinc-500 uppercase font-medium">Alliance Copacabana</span>
+            </div>
+
+            <!-- Bottom Card: Registration Details -->
+            <div class="flex items-center justify-between border-t border-zinc-800/80 pt-3 text-[9px] text-zinc-500">
+              <div>
+                <span class="block text-[7px] uppercase tracking-wider text-zinc-600 font-bold">Registro de Atleta</span>
+                <span class="font-mono font-semibold text-zinc-300" id="card-reg-number">FEAM-2026-XXXX</span>
+              </div>
+              <div class="text-right">
+                <span class="block text-[7px] uppercase tracking-wider text-zinc-600 font-bold">Status Cadastral</span>
+                <span class="font-bold text-emerald-500 uppercase tracking-wider">● VERIFICADO</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick statistics / action box -->
+          <div class="bg-zinc-900 border border-zinc-900 rounded-2xl p-6 space-y-4">
+            <h3 class="text-xs font-black uppercase tracking-wider text-white">Solicitações Administrativas</h3>
+            <p class="text-zinc-400 text-xs">Precisa atualizar sua foto cadastral ou solicitar uma correção de graduação de faixa oficial?</p>
+            <form id="rank-promo-form" class="space-y-3">
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Nova Faixa / Graduação</label>
+                <div class="flex gap-2">
+                  <input type="text" id="new-rank-input" required class="flex-grow bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Faixa Marrom">
+                  <button type="submit" class="bg-amber-500 text-zinc-950 font-bold px-3 py-2 rounded-lg text-xs hover:bg-amber-400 transition-colors">Solicitar</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- COLUNA DIREITA: INSCRIÇÕES EM CAMPEONATOS & OUTRAS OPÇÕES (Takes 7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Inscrições em Campeonatos</h2>
+            <a href="torneios.html" class="text-xs font-bold text-amber-500 hover:underline flex items-center">
+              <span>Inscrever em novo Torneio</span>
+              <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </a>
+          </div>
+
+          <!-- LIST OF CURRENT ACTIVE TOURNAMENT REGISTRATIONS -->
+          <div id="no-registrations-block" class="hidden bg-zinc-900/40 border border-zinc-900 border-dashed rounded-2xl p-8 text-center space-y-3">
+            <div class="w-12 h-12 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-600 mx-auto">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            </div>
+            <p class="text-zinc-500 text-xs">Você não está inscrito em nenhum campeonato estadual nesta temporada.</p>
+            <a href="torneios.html" class="inline-block text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-amber-500 font-bold">Ver Torneios Abertos</a>
+          </div>
+
+          <div id="registrations-list-container" class="space-y-4">
+            <!-- Dynamic registration card will be injected here -->
+          </div>
+
+          <!-- PORTAL DOCS DIRECT ACCESS -->
+          <div class="bg-zinc-900 border border-zinc-900 rounded-2xl p-6 space-y-4">
+            <h3 class="text-xs font-black uppercase tracking-wider text-white">Documentos Importantes</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <a href="documentos.html" class="p-3 bg-zinc-950 hover:bg-zinc-850 rounded-xl border border-zinc-850 flex items-center justify-between group transition-colors">
+                <span class="text-zinc-400 group-hover:text-white">Código de Ética Esportiva</span>
+                <span class="text-amber-500 font-bold">PDF</span>
+              </a>
+              <a href="documentos.html" class="p-3 bg-zinc-950 hover:bg-zinc-850 rounded-xl border border-zinc-850 flex items-center justify-between group transition-colors">
+                <span class="text-zinc-400 group-hover:text-white">Tabela de Pesos e Categorias</span>
+                <span class="text-amber-500 font-bold">PDF</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SEÇÃO EXCLUSIVA DE PROFESSORES / DIRETORES DE CT (Gerenciamento do CT Próprio) -->
+      <div id="professor-view" class="grid grid-cols-1 lg:grid-cols-12 gap-8 hidden">
+        
+        <!-- COLUNA ESQUERDA: GESTÃO DO CT (Takes 5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Meu Centro de Treinamento (CT)</h2>
+            <span class="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-amber-500 uppercase text-center">
+              Credenciado Até: <span id="prof-ct-certified">2027-12-31</span>
+            </span>
+          </div>
+
+          <!-- Form de Gestão do CT -->
+          <div class="bg-zinc-900 border border-zinc-850 rounded-2xl p-6 space-y-4">
+            <form id="prof-ct-form" class="space-y-4">
+              <input type="hidden" id="prof-ct-id">
+              
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome do CT / Academia</label>
+                <input type="text" id="prof-ct-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Nome do CT">
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Professor Responsável / Diretor Técnico</label>
+                <input type="text" id="prof-ct-instructor" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Seu nome">
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Telefone de Contato</label>
+                  <input type="text" id="prof-ct-phone" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="(21) 99999-9999">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cidade</label>
+                  <input type="text" id="prof-ct-city" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Rio de Janeiro">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Endereço do CT</label>
+                  <input type="text" id="prof-ct-address" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Av. Principal, 100">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Bairro</label>
+                  <input type="text" id="prof-ct-neighborhood" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Copacabana">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modalidades Oferecidas (Vírgulas)</label>
+                <input type="text" id="prof-ct-modalities" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Jiu-Jitsu, Muay Thai">
+              </div>
+
+              <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md transition-all cursor-pointer">
+                Salvar Dados do meu CT
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- COLUNA DIREITA: GESTÃO DE ATLETAS (Takes 7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Alunos Filiados do meu CT</h2>
+            <span id="prof-atletas-count" class="text-xs bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider">0 Atletas</span>
+          </div>
+
+          <!-- Tabela de Alunos vinculados -->
+          <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+            <table class="w-full text-left text-xs text-zinc-400">
+              <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                <tr>
+                  <th class="p-3">Atleta</th>
+                  <th class="p-3">Registro FEAM</th>
+                  <th class="p-3">Graduação</th>
+                  <th class="p-3">Status</th>
+                </tr>
+              </thead>
+              <tbody id="prof-atletas-tbody" class="divide-y divide-zinc-900">
+                <!-- Dynamic athlete list row will be injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SEÇÃO EXCLUSIVA DE ADMINISTRAÇÃO (Oculta por padrão, ativa para feamcrj@gmail.com) -->
+      <div id="admin-view" class="hidden space-y-8">
+        
+        <!-- ADMIN NAVIGATION TABS -->
+        <div class="flex flex-wrap items-center gap-2 border-b border-zinc-900 pb-4">
+          <button onclick="switchAdminTab('inscricoes')" id="tab-inscricoes" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-zinc-950 transition-all uppercase tracking-wider cursor-pointer">
+            Inscrições em Torneios
+          </button>
+          <button onclick="switchAdminTab('torneios')" id="tab-torneios" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            + Adicionar Torneio
+          </button>
+          <button onclick="switchAdminTab('edit-torneios')" id="tab-edit-torneios" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            🔧 Gerenciar Torneios
+          </button>
+          <button onclick="switchAdminTab('atletas')" id="tab-atletas" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            Atletas Filiados
+          </button>
+          <button onclick="switchAdminTab('academias')" id="tab-academias" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            Aprovar Academias
+          </button>
+          <button onclick="switchAdminTab('edit-academias')" id="tab-edit-academias" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            🏠 Gerenciar Academias / CTs
+          </button>
+          <button onclick="switchAdminTab('config-site')" id="tab-config-site" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            ⚙️ Configuração do Site
+          </button>
+          <button onclick="switchAdminTab('novo-usuario')" id="tab-novo-usuario" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            👥 Membros / ADMs
+          </button>
+        </div>
+
+        <!-- TAB CONTENT: INSCRIÇÕES -->
+        <div id="content-inscricoes" class="space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Atletas Inscritos em Campeonatos</h2>
+              <p class="text-zinc-500 text-xs">Monitore os pagamentos e homologue a participação dos atletas nos estaduais FEAMCRJ.</p>
+            </div>
+            <span class="self-start sm:self-center text-xs bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider" id="admin-insc-count">0 Inscrições</span>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+            <table class="w-full text-left text-xs text-zinc-400">
+              <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                <tr>
+                  <th class="p-4">Campeonato</th>
+                  <th class="p-4">Atleta</th>
+                  <th class="p-4">E-mail</th>
+                  <th class="p-4">Faixa & Peso</th>
+                  <th class="p-4">Data Inscrição</th>
+                  <th class="p-4">Status Pago</th>
+                  <th class="p-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-inscricoes-tbody" class="divide-y divide-zinc-900/60">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: ADICIONAR TORNEIO -->
+        <div id="content-torneios" class="hidden bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 space-y-6 max-w-2xl">
+          <div>
+            <h2 class="text-lg font-black uppercase text-white tracking-tight">Criar Novo Campeonato FEAMCRJ</h2>
+            <p class="text-zinc-500 text-xs">Os torneios criados serão atualizados no banco de dados e refletidos imediatamente em todo o site.</p>
+          </div>
+
+          <form id="add-torneio-form" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Título do Torneio</label>
+                <input type="text" id="adm-t-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Estadual de Jiu-Jitsu FEAMCRJ">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Data de Realização</label>
+                <input type="date" id="adm-t-date" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Local do Ginásio/Arena</label>
+                <input type="text" id="adm-t-location" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Arena Carioca 1 - Parque Olímpico">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cidade / Estado</label>
+                <input type="text" id="adm-t-city" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Rio de Janeiro - RJ" value="Rio de Janeiro - RJ">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Prazo de Inscrição</label>
+                <input type="date" id="adm-t-deadline" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Taxa de Inscrição (R$)</label>
+                <input type="number" id="adm-t-fee" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="120" value="120">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Status Inicial</label>
+                <select id="adm-t-status" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                  <option value="open">Inscrições Abertas (Ativo)</option>
+                  <option value="upcoming">Breve (Próximo campeonato)</option>
+                  <option value="closed">Encerrado / Lotado</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modalidades Elegíveis (separadas por vírgula)</label>
+              <input type="text" id="adm-t-modalities" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Jiu-Jitsu Brasileiro (BJJ), Kickboxing, Muay Thai">
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">URL do Banner do Torneio</label>
+              <input type="url" id="adm-t-image" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" value="https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=600&auto=format&fit=crop">
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Descrição Técnica do Campeonato</label>
+              <textarea id="adm-t-desc" rows="3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Insira informações de cronograma de lutas, pesos, regulamento oficial da federação, etc..."></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md shadow-amber-950/20 transition-all cursor-pointer">
+              Publicar Novo Campeonato
+            </button>
+          </form>
+        </div>
+
+        <!-- TAB CONTENT: ATLETAS -->
+        <div id="content-atletas" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Atletas Cadastrados</h2>
+              <p class="text-zinc-500 text-xs">Visualize e gerencie a base cadastral de atletas filiados sob a FEAMCRJ.</p>
+            </div>
+            <span class="self-start sm:self-center text-xs bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider" id="admin-atletas-count">0 Atletas</span>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+            <table class="w-full text-left text-xs text-zinc-400">
+              <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                <tr>
+                  <th class="p-4">Matrícula</th>
+                  <th class="p-4">Nome Atleta</th>
+                  <th class="p-4">E-mail</th>
+                  <th class="p-4">Telefone</th>
+                  <th class="p-4">Arte Marcial / Faixa</th>
+                  <th class="p-4">Data Filiação</th>
+                  <th class="p-4">Status</th>
+                  <th class="p-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-atletas-tbody" class="divide-y divide-zinc-900/60">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: ACADEMIAS -->
+        <div id="content-academias" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Academias e Professores</h2>
+              <p class="text-zinc-500 text-xs">Valide e homologue novas academias no mapa oficial de credenciadas.</p>
+            </div>
+            <span class="self-start sm:self-center text-xs bg-purple-500/10 text-purple-500 border border-purple-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider" id="admin-academias-count">0 Academias</span>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+            <table class="w-full text-left text-xs text-zinc-400">
+              <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                <tr>
+                  <th class="p-4">Academia / Equipe</th>
+                  <th class="p-4">Professor Responsável</th>
+                  <th class="p-4">Cidade / Bairro</th>
+                  <th class="p-4">E-mail / Telefone</th>
+                  <th class="p-4">Modalidades</th>
+                  <th class="p-4">Válido Até</th>
+                  <th class="p-4">Status</th>
+                  <th class="p-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-academias-tbody" class="divide-y divide-zinc-900/60">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: GERENCIAR TORNEIOS -->
+        <div id="content-edit-torneios" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Gerenciar Torneios Existentes</h2>
+              <p class="text-zinc-500 text-xs">Edite ou exclua os torneios publicados na Federação.</p>
+            </div>
+            <span class="self-start sm:self-center text-xs bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider" id="admin-torneios-count">0 Torneios</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="admin-manage-torneios-grid">
+            <!-- Dynamic tournament cards injected here -->
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: GERENCIAR ACADEMIAS / CTs -->
+        <div id="content-edit-academias" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Gerenciar Academias & Centros de Treinamento (CT)</h2>
+              <p class="text-zinc-500 text-xs">Adicione, edite ou exclua CTs diretamente sem precisar de código.</p>
+            </div>
+            <button onclick="openAddAcademiaForm()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-zinc-950 hover:bg-amber-400 transition-all uppercase tracking-wider font-display font-black cursor-pointer">
+              + Adicionar Academia / CT
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="admin-manage-academias-grid">
+            <!-- Dynamic CT cards injected here -->
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: CONFIGURAÇÕES DO SITE -->
+        <div id="content-config-site" class="hidden bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 space-y-6 max-w-4xl">
+          <div>
+            <h2 class="text-lg font-black uppercase text-white tracking-tight">Personalização e Informações do Site</h2>
+            <p class="text-zinc-500 text-xs">Altere as informações públicas do site, estatísticas da página inicial e avisos de forma visual e amigável.</p>
+          </div>
+
+          <form id="admin-site-config-form" class="space-y-6">
+            
+            <!-- ALERT / ANNOUNCEMENT MESSAGE -->
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-4 space-y-3">
+              <div class="flex items-center space-x-2">
+                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <h3 class="text-xs font-extrabold uppercase text-amber-500 tracking-wider">Aviso Global no Topo do Site</h3>
+              </div>
+              <p class="text-[11px] text-zinc-400">Ative uma faixa vermelha/laranja no topo de todas as páginas para avisos urgentes (ex: 'Inscrições abertas para o Estadual!'). Deixe em branco para ocultar.</p>
+              <input type="text" id="cfg-alert-message" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Últimas vagas para o Estadual Rio de Janeiro! Inscrições até 10/08.">
+            </div>
+
+            <!-- HERO BLOCK -->
+            <div class="space-y-4">
+              <h3 class="text-xs font-extrabold uppercase text-zinc-300 tracking-wider">Apresentação Principal (Página Inicial)</h3>
+              <div class="grid grid-cols-1 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Título Principal (Aceita HTML para colorir/destacar)</label>
+                  <input type="text" id="cfg-hero-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Título">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Texto Descritivo de Subtítulo</label>
+                  <textarea id="cfg-hero-subtitle" rows="3" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Descrição"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- SITE STATISTICS -->
+            <div class="space-y-4 pt-4 border-t border-zinc-850">
+              <div class="flex items-center space-x-2">
+                <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                <h3 class="text-xs font-extrabold uppercase text-emerald-500 tracking-wider">Contadores Dinâmicos de Estatísticas</h3>
+              </div>
+              <p class="text-[11px] text-zinc-400 leading-relaxed">
+                As estatísticas exibidas na Página Inicial agora são calculadas <strong>automaticamente</strong> em tempo real a partir do banco de dados (calculando atletas filiados, academias certificadas e campeonatos publicados mais os valores base da federação).
+              </p>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-zinc-950/40 p-4 rounded-2xl border border-zinc-850">
+                <div class="text-center p-2">
+                  <div class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Atletas Federados</div>
+                  <div id="disp-stat-atletas" class="text-sm font-black text-white">Carregando...</div>
+                </div>
+                <div class="text-center p-2">
+                  <div class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Academias</div>
+                  <div id="disp-stat-academias" class="text-sm font-black text-white">Carregando...</div>
+                </div>
+                <div class="text-center p-2">
+                  <div class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Torneios / Ano</div>
+                  <div id="disp-stat-torneios" class="text-sm font-black text-white">Carregando...</div>
+                </div>
+                <div class="text-center p-2">
+                  <div class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Oficialidade</div>
+                  <div id="disp-stat-oficial" class="text-sm font-black text-amber-500">100%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONFIGURAÇÃO DO RODAPÉ (FOOTER) -->
+            <div class="space-y-4 pt-6 border-t border-zinc-850">
+              <h3 class="text-xs font-extrabold uppercase text-zinc-300 tracking-wider">Informações do Rodapé e Diretoria</h3>
+              
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Descrição da FEAMCRJ no Rodapé</label>
+                <textarea id="cfg-footer-desc" rows="2" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500"></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Presidente</label>
+                  <input type="text" id="cfg-footer-pres" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Vice-Presidente</label>
+                  <input type="text" id="cfg-footer-vice" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Diretor Técnico</label>
+                  <input type="text" id="cfg-footer-tech" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Relações Públicas</label>
+                  <input type="text" id="cfg-footer-rel" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">E-mail de Contato</label>
+                  <input type="email" id="cfg-footer-email" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Telefone de Contato</label>
+                  <input type="text" id="cfg-footer-phone" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Endereço Físico</label>
+                  <input type="text" id="cfg-footer-address" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cidade - Estado</label>
+                  <input type="text" id="cfg-footer-city" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Texto de Registro em Cartório</label>
+                <input type="text" id="cfg-footer-cartorio" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+              </div>
+            </div>
+
+            <!-- SUBMIT ACTION -->
+            <div class="pt-4 border-t border-zinc-850">
+              <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-xs font-black uppercase tracking-widest text-white hover:from-emerald-500 hover:to-teal-400 shadow-md transition-all cursor-pointer">
+                Salvar Configurações do Site e Rodapé
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- TAB CONTENT: CADASTRO DE NOVO USUÁRIO -->
+        <div id="content-novo-usuario" class="hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Cadastro de Membros, Professores & Administradores</h2>
+              <p class="text-zinc-500 text-xs">Cadastre novos integrantes na federação de acordo com a função correspondente. O e-mail informado será o login de acesso do usuário.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- COLUNA ESQUERDA: FORMULÁRIO (Takes 5 cols) -->
+            <div class="lg:col-span-5 bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 space-y-6">
+              <h3 class="text-sm font-black uppercase tracking-wider text-amber-500 flex items-center gap-2">
+                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                Novo Cadastro Unificado
+              </h3>
+
+              <form id="admin-add-user-form" class="space-y-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome Completo</label>
+                  <input type="text" id="usr-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: José da Silva">
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">E-mail (Login de Acesso)</label>
+                  <input type="email" id="usr-email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: jose@gmail.com">
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Senha Inicial</label>
+                  <input type="password" id="usr-password" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Senha123">
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Função / Tipo de Perfil</label>
+                  <select id="usr-role" onchange="toggleUserRoleFields()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                    <option value="atleta">Atleta / Aluno</option>
+                    <option value="professor">Professor / Dono de CT</option>
+                    <option value="admin">Administrador Secundário (FEAM)</option>
+                  </select>
+                </div>
+
+                <!-- SEÇÃO CONDICIONAL: ATLETA / ALUNO -->
+                <div id="role-fields-atleta" class="space-y-4 pt-3 border-t border-zinc-850/60">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Arte Marcial Principal</label>
+                    <select id="usr-atleta-modality" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="Jiu-Jitsu Brasileiro (BJJ)">Jiu-Jitsu Brasileiro (BJJ)</option>
+                      <option value="Kickboxing">Kickboxing</option>
+                      <option value="Muay Thai">Muay Thai</option>
+                      <option value="Grappling / Submission">Grappling / Submission</option>
+                      <option value="MMA">Artes Marciais Mistas (MMA)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Graduação / Faixa</label>
+                    <select id="usr-atleta-rank" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="Faixa Branca">Faixa Branca</option>
+                      <option value="Faixa Azul">Faixa Azul</option>
+                      <option value="Faixa Roxa">Faixa Roxa</option>
+                      <option value="Faixa Marrom">Faixa Marrom</option>
+                      <option value="Faixa Preta">Faixa Preta</option>
+                      <option value="Grau Iniciante">Grau Iniciante</option>
+                      <option value="Grau Intermediário">Grau Intermediário</option>
+                      <option value="Grau Avançado">Grau Avançado</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Academia / CT Filiado</label>
+                    <select id="usr-atleta-academy" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <!-- Populated dynamically with academies -->
+                    </select>
+                  </div>
+                </div>
+
+                <!-- SEÇÃO CONDICIONAL: PROFESSOR / CT -->
+                <div id="role-fields-professor" class="hidden space-y-4 pt-3 border-t border-zinc-850/60">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome do CT / Academia</label>
+                    <input type="text" id="usr-prof-ct-name" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: CT Impacto Tijuca">
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Telefone</label>
+                      <input type="text" id="usr-prof-phone" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="(21) 99999-9999">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cidade</label>
+                      <input type="text" id="usr-prof-city" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Rio de Janeiro" value="Rio de Janeiro">
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Bairro</label>
+                      <input type="text" id="usr-prof-neighborhood" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Copacabana">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Endereço Completo</label>
+                      <input type="text" id="usr-prof-address" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Rua Real, 123">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modalidades (separadas por vírgula)</label>
+                    <input type="text" id="usr-prof-modalities" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Jiu-Jitsu, Kickboxing" value="Jiu-Jitsu, Muay Thai">
+                  </div>
+                </div>
+
+                <!-- SEÇÃO CONDICIONAL: ADMINISTRADOR -->
+                <div id="role-fields-admin" class="hidden space-y-4 pt-3 border-t border-zinc-850/60">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cargo Administrativo / Função na FEAM</label>
+                    <input type="text" id="usr-admin-title" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Diretor Técnico Adjunto">
+                  </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md transition-all cursor-pointer">
+                  Confirmar e Cadastrar Usuário
+                </button>
+              </form>
+            </div>
+
+            <!-- COLUNA DIREITA: LISTA DE ADMINISTRADORES E MEMBROS GERAIS (Takes 7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-black uppercase tracking-widest text-zinc-400">Administradores e Professores Filiados</h3>
+              </div>
+
+              <!-- Tabela de Admins -->
+              <div class="space-y-4">
+                <div>
+                  <h4 class="text-xs font-bold text-amber-500 uppercase tracking-wider mb-2">Administradores Secundários</h4>
+                  <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+                    <table class="w-full text-left text-xs text-zinc-400">
+                      <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                        <tr>
+                          <th class="p-3">Nome</th>
+                          <th class="p-3">E-mail</th>
+                          <th class="p-3">Cargo</th>
+                          <th class="p-3 text-right">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="admin-secundarios-tbody" class="divide-y divide-zinc-900">
+                        <!-- Dynamic list will be injected here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="text-xs font-bold text-amber-500 uppercase tracking-wider mb-2">Professores de CT Cadastrados</h4>
+                  <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+                    <table class="w-full text-left text-xs text-zinc-400">
+                      <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                        <tr>
+                          <th class="p-3">Nome do Professor</th>
+                          <th class="p-3">E-mail</th>
+                          <th class="p-3">CT de Atuação</th>
+                          <th class="p-3 text-right">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="admin-professores-tbody" class="divide-y divide-zinc-900">
+                        <!-- Dynamic list will be injected here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL: EDITAR TORNEIO (ADMIN) -->
+        <div id="modal-edit-torneio" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/85 backdrop-blur-sm hidden">
+          <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-6 relative shadow-2xl text-left">
+            <button type="button" onclick="closeEditTorneioModal()" class="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white transition-colors cursor-pointer" title="Fechar">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div>
+              <h3 class="text-lg font-black uppercase text-white tracking-tight">Editar Detalhes do Campeonato</h3>
+              <p class="text-zinc-500 text-xs">Altere as informações do evento em tempo real no site.</p>
+            </div>
+
+            <form id="edit-torneio-form" class="space-y-4">
+              <input type="hidden" id="edit-t-id">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Título do Torneio</label>
+                  <input type="text" id="edit-t-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Data de Realização</label>
+                  <input type="date" id="edit-t-date" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Local do Ginásio/Arena</label>
+                  <input type="text" id="edit-t-location" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cidade / Estado</label>
+                  <input type="text" id="edit-t-city" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Prazo de Inscrição</label>
+                  <input type="date" id="edit-t-deadline" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Taxa de Inscrição (R$)</label>
+                  <input type="number" id="edit-t-fee" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Status</label>
+                  <select id="edit-t-status" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                    <option value="open">Inscrições Abertas</option>
+                    <option value="upcoming">Breve (Brevemente)</option>
+                    <option value="closed">Encerrado / Lotado</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modalidades Elegíveis (separadas por vírgula)</label>
+                <input type="text" id="edit-t-modalities" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">URL do Banner do Torneio</label>
+                <input type="url" id="edit-t-image" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Descrição Técnica do Campeonato</label>
+                <textarea id="edit-t-desc" rows="3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md transition-all cursor-pointer">
+                Salvar Alterações do Campeonato
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- MODAL: ADICIONAR / EDITAR ACADEMIA (ADMIN) -->
+        <div id="modal-edit-academia" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/85 backdrop-blur-sm hidden">
+          <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-6 relative shadow-2xl text-left">
+            <button type="button" onclick="closeEditAcademiaModal()" class="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white transition-colors cursor-pointer" title="Fechar">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div>
+              <h3 class="text-lg font-black uppercase text-white tracking-tight" id="acad-modal-title">Adicionar Nova Academia</h3>
+              <p class="text-zinc-500 text-xs">Preencha os dados cadastrais da academia ou CT federado.</p>
+            </div>
+
+            <form id="edit-academia-form" class="space-y-4">
+              <input type="hidden" id="edit-acad-id">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome do Centro de Treinamento / Academia</label>
+                  <input type="text" id="edit-acad-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Gracie Barra Copacabana">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Professor Responsável / Diretor Técnico</label>
+                  <input type="text" id="edit-acad-instructor" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Mestre Carlos Gracie Jr.">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Endereço Completo</label>
+                  <input type="text" id="edit-acad-address" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Av. Nossa Sra de Copacabana, 150">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Bairro</label>
+                    <input type="text" id="edit-acad-neighborhood" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Copacabana">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cidade</label>
+                    <input type="text" id="edit-acad-city" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Rio de Janeiro">
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Telefone Comercial</label>
+                  <input type="text" id="edit-acad-phone" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="(21) 99999-9999">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">E-mail Comercial</label>
+                  <input type="email" id="edit-acad-email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="contato@ct.com.br">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Credenciado Até</label>
+                  <input type="date" id="edit-acad-until" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modalidades Oferecidas (Vírgulas)</label>
+                  <input type="text" id="edit-acad-modalities" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Jiu-Jitsu Brasileiro (BJJ), Muay Thai">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Status da Filiação</label>
+                  <select id="edit-acad-status" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                    <option value="active">Homologada (Ativa)</option>
+                    <option value="inactive">Suspensa / Inativa</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Senha do Professor</label>
+                  <input type="password" id="edit-acad-password" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Opcional se já existe">
+                </div>
+              </div>
+
+              <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md transition-all cursor-pointer">
+                Salvar Dados da Academia
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer Dinâmico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts Globais -->
+  <script src="firebase-config.js"></script>
+  <script src="components.js"></script>
+
+  <!-- Lógica do Painel -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Verifica se está logado
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserJson) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const loggedUser = JSON.parse(loggedUserJson);
+      
+      // Carrega informações na tela
+      document.getElementById('welcome-name').textContent = loggedUser.name;
+      
+      // Se for admin, carrega os dados de admin
+      if (loggedUser.tipo === 'admin') {
+        document.getElementById('filiado-view').classList.add('hidden');
+        document.getElementById('professor-view').classList.add('hidden');
+        document.getElementById('admin-view').classList.remove('hidden');
+        
+        // Atualiza cabeçalho para Administrador
+        document.getElementById('welcome-name').textContent = "Presidente / Administrador";
+        
+        // Carrega todas as informações administrativas em tempo real
+        await loadAdminInscricoes();
+        await loadAdminAtletas();
+        await loadAdminAcademias();
+      } else if (loggedUser.tipo === 'professor') {
+        document.getElementById('filiado-view').classList.add('hidden');
+        document.getElementById('admin-view').classList.add('hidden');
+        document.getElementById('professor-view').classList.remove('hidden');
+        
+        document.getElementById('welcome-name').textContent = "Professor / Diretor de CT";
+        
+        await loadProfessorCT();
+      } else {
+        // Carrega informações normais de atleta na tela
+        document.getElementById('filiado-view').classList.remove('hidden');
+        document.getElementById('admin-view').classList.add('hidden');
+        document.getElementById('professor-view').classList.add('hidden');
+        
+        const userDetails = loggedUser.detalhes || {};
+        
+        document.getElementById('card-name').textContent = loggedUser.name || 'Nome do Filiado';
+        document.getElementById('card-modality').textContent = userDetails.modality || userDetails.modalities?.[0] || 'Artes Marciais';
+        document.getElementById('card-rank').textContent = userDetails.rank || 'Credenciado';
+        document.getElementById('card-academy').textContent = userDetails.academyName || userDetails.address || 'Academia Federada';
+        document.getElementById('card-reg-number').textContent = userDetails.registrationNumber || 'FEAM-CRED-' + loggedUser.id.toUpperCase();
+
+        renderUserRegistrations(loggedUser.email);
+      }
+    });
+
+    // Função de auto-recuperação/redefinição para o usuário logado
+    async function requestPasswordResetSelf() {
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserJson) return;
+      const loggedUser = JSON.parse(loggedUserJson);
+      
+      if (confirm(`Deseja solicitar o e-mail de redefinição de senha para a conta ${loggedUser.email}?`)) {
+        try {
+          const res = await recuperarSenha(loggedUser.email);
+          alert(res.message);
+        } catch (error) {
+          alert("Erro ao enviar recuperação: " + error.message);
+        }
+      }
+    }
+
+    // Carrega dados do CT próprio (Módulo do Professor)
+    async function loadProfessorCT() {
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserJson) return;
+      const loggedUser = JSON.parse(loggedUserJson);
+      
+      const email = loggedUser.email;
+      const academies = await getAcademias();
+      
+      // Tenta achar a academia vinculada a este professor pelo email
+      const ct = academies.find(a => a.email === email) || {
+        id: loggedUser.id || 'new-ct',
+        name: loggedUser.name || 'Meu Centro de Treinamento',
+        headInstructor: loggedUser.name || 'Professor Responsável',
+        email: email,
+        phone: '',
+        address: '',
+        neighborhood: '',
+        city: 'Rio de Janeiro',
+        modalities: ['Jiu-Jitsu'],
+        certifiedUntil: '2027-12-31',
+        status: 'active'
+      };
+      
+      document.getElementById('prof-ct-id').value = ct.id;
+      document.getElementById('prof-ct-name').value = ct.name;
+      document.getElementById('prof-ct-instructor').value = ct.headInstructor;
+      document.getElementById('prof-ct-phone').value = ct.phone || '';
+      document.getElementById('prof-ct-address').value = ct.address || '';
+      document.getElementById('prof-ct-neighborhood').value = ct.neighborhood || '';
+      document.getElementById('prof-ct-city').value = ct.city || 'Rio de Janeiro';
+      document.getElementById('prof-ct-modalities').value = Array.isArray(ct.modalities) ? ct.modalities.join(', ') : (ct.modality || 'Jiu-Jitsu');
+      document.getElementById('prof-ct-certified').textContent = ct.certifiedUntil || '2027-12-31';
+      
+      // Filtra atletas vinculados a este CT
+      const atletas = await getAtletas();
+      const ctAtletas = atletas.filter(ath => {
+        const athAcad = (ath.academyName || '').toLowerCase().trim();
+        const ctName = (ct.name || '').toLowerCase().trim();
+        return athAcad && (athAcad.includes(ctName) || ctName.includes(athAcad));
+      });
+      
+      const tbody = document.getElementById('prof-atletas-tbody');
+      tbody.innerHTML = '';
+      
+      if (ctAtletas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-zinc-500 text-xs">Nenhum atleta filiado a este CT registrado ainda.</td></tr>`;
+      } else {
+        ctAtletas.forEach(ath => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-zinc-900/30 transition-colors border-b border-zinc-900 text-xs";
+          tr.innerHTML = `
+            <td class="p-3 font-semibold text-white">${ath.name}</td>
+            <td class="p-3 font-mono text-zinc-400">${ath.registrationNumber || '-'}</td>
+            <td class="p-3 text-zinc-300">${ath.modality || 'Livre'} <span class="text-zinc-500">(${ath.rank || 'Branca'})</span></td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${ath.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}">
+                ${ath.status === 'active' ? 'Ativo' : 'Inativo'}
+              </span>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+      
+      document.getElementById('prof-atletas-count').textContent = `${ctAtletas.length} Atletas`;
+    }
+
+    // Salvar modificações do CT (Módulo do Professor)
+    document.getElementById('prof-ct-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const id = document.getElementById('prof-ct-id').value;
+      const modsInput = document.getElementById('prof-ct-modalities').value;
+      const modsArray = modsInput.split(',').map(m => m.trim());
+      
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      const loggedUser = JSON.parse(loggedUserJson);
+      
+      const data = {
+        name: document.getElementById('prof-ct-name').value,
+        headInstructor: document.getElementById('prof-ct-instructor').value,
+        phone: document.getElementById('prof-ct-phone').value,
+        address: document.getElementById('prof-ct-address').value,
+        neighborhood: document.getElementById('prof-ct-neighborhood').value,
+        city: document.getElementById('prof-ct-city').value,
+        email: loggedUser.email,
+        modalities: modsArray,
+        certifiedUntil: document.getElementById('prof-ct-certified').textContent,
+        status: 'active'
+      };
+      
+      try {
+        if (isFirebaseActive) {
+          if (id && id !== 'new-ct') {
+            await db.collection('academias').doc(id).update(data);
+          } else {
+            const docRef = await db.collection('academias').add(data);
+            document.getElementById('prof-ct-id').value = docRef.id;
+          }
+        } else {
+          const academias = JSON.parse(localStorage.getItem('feam_academias')) || [];
+          const idx = academias.findIndex(a => a.id === id || a.email === loggedUser.email);
+          if (idx !== -1) {
+            academias[idx] = { ...academias[idx], ...data };
+            localStorage.setItem('feam_academias', JSON.stringify(academias));
+          } else {
+            const newId = 'acad-' + Math.floor(100000 + Math.random() * 900000);
+            academias.push({ id: newId, ...data });
+            document.getElementById('prof-ct-id').value = newId;
+            localStorage.setItem('feam_academias', JSON.stringify(academias));
+          }
+        }
+        
+        // Atualiza a sessão local
+        loggedUser.name = data.name;
+        loggedUser.detalhes = data;
+        localStorage.setItem('feamcrj_logged_user', JSON.stringify(loggedUser));
+        
+        alert('🏠 Detalhes do seu Centro de Treinamento salvos com sucesso!');
+        await loadProfessorCT();
+      } catch (error) {
+        alert('Erro ao salvar dados do CT: ' + error.message);
+      }
+    });
+
+    // Solicitar alteração de faixa (Filiado normal)
+    document.getElementById('rank-promo-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newRank = document.getElementById('new-rank-input').value;
+      
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (loggedUserJson) {
+        const loggedUser = JSON.parse(loggedUserJson);
+        if (!loggedUser.detalhes) loggedUser.detalhes = {};
+        
+        // Atualiza localmente
+        loggedUser.detalhes.rank = newRank;
+        localStorage.setItem('feamcrj_logged_user', JSON.stringify(loggedUser));
+        
+        // Também atualiza na base geral para sincronia
+        if (loggedUser.tipo === 'atleta') {
+          const atletas = JSON.parse(localStorage.getItem('feam_atletas'));
+          const idx = atletas.findIndex(a => a.id === loggedUser.id);
+          if (idx !== -1) {
+            atletas[idx].rank = newRank;
+            localStorage.setItem('feam_atletas', JSON.stringify(atletas));
+          }
+        }
+
+        document.getElementById('card-rank').textContent = newRank;
+        document.getElementById('new-rank-input').value = '';
+        alert('🎉 Graduação atualizada com sucesso na sua Carteira Digital FEAMCRJ!');
+      }
+    });
+
+    // Renderizar inscrições de torneios (Filiado normal)
+    async function renderUserRegistrations(email) {
+      const container = document.getElementById('registrations-list-container');
+      const emptyBlock = document.getElementById('no-registrations-block');
+      
+      try {
+        const inscricoes = await getInscricoesAtleta(email);
+        
+        if (!inscricoes || inscricoes.length === 0) {
+          emptyBlock.classList.remove('hidden');
+          container.innerHTML = '';
+          return;
+        }
+
+        emptyBlock.classList.add('hidden');
+        
+        // Carrega todos os torneios para obter o título correto
+        const torneios = await getTorneios();
+
+        let listHTML = '';
+        inscricoes.forEach(ins => {
+          const torneio = torneios.find(t => t.id === ins.torneioId) || {
+            title: 'Torneio Especial FEAMCRJ',
+            location: 'Arena de Lutas RJ'
+          };
+
+          listHTML += `
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="space-y-1 text-center sm:text-left">
+                <span class="text-[9px] font-bold text-amber-500 uppercase tracking-widest">Inscrição Confirmada</span>
+                <h4 class="text-sm font-bold text-white">${torneio.title}</h4>
+                <p class="text-xs text-zinc-400">${torneio.location} • Categoria: ${ins.rank || 'Livre'} / ${ins.category || 'Absoluto'}</p>
+                <p class="text-[10px] text-zinc-500">Inscrito em: ${ins.dataInscricao}</p>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="px-3 py-1.5 rounded-lg ${ins.pago ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-amber-500/10 border border-amber-500/20 text-amber-400'} text-[10px] font-bold uppercase tracking-wider">
+                  ${ins.pago ? 'Pago / Ativo' : 'Aguardando Pix'}
+                </span>
+                <button onclick="alert('Ingresso Digital de Lutas chancelado FEAMCRJ sob o registro de carteira digital do atleta.')" class="p-2 bg-zinc-950 hover:bg-zinc-850 rounded-lg border border-zinc-850 text-zinc-400 hover:text-white" title="Imprimir Comprovante">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                </button>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = listHTML;
+
+      } catch (error) {
+        console.error('Erro ao renderizar inscrições: ', error);
+      }
+    }
+
+    function switchAdminTab(tabName) {
+      const tabs = ['inscricoes', 'torneios', 'atletas', 'academias', 'edit-torneios', 'edit-academias', 'config-site', 'novo-usuario'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        const content = document.getElementById('content-' + t);
+        if (!btn || !content) return;
+        if (t === tabName) {
+          btn.className = "px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-zinc-950 transition-all uppercase tracking-wider cursor-pointer";
+          content.classList.remove('hidden');
+        } else {
+          btn.className = "px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer";
+          content.classList.add('hidden');
+        }
+      });
+
+      if (tabName === 'edit-torneios') loadAdminManageTorneios();
+      if (tabName === 'edit-academias') loadAdminManageAcademias();
+      if (tabName === 'config-site') loadAdminSiteConfig();
+      if (tabName === 'novo-usuario') {
+        populateAcademiesDropdown();
+        loadAdminMembersList();
+      }
+    }
+
+    // 1. Carregar Inscrições de Torneios
+    async function loadAdminInscricoes() {
+      const tbody = document.getElementById('admin-inscricoes-tbody');
+      const countBadge = document.getElementById('admin-insc-count');
+      tbody.innerHTML = '';
+
+      const inscricoes = await getInscricoesTodas();
+      const torneios = await getTorneios();
+
+      countBadge.textContent = `${inscricoes.length} Inscrições`;
+
+      if (inscricoes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-zinc-500">Nenhuma inscrição registrada no sistema ainda.</td></tr>`;
+        return;
+      }
+
+      inscricoes.forEach(ins => {
+        const t = torneios.find(item => item.id === ins.torneioId) || { title: 'Torneio Excluído' };
+        
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-zinc-900/30 transition-colors";
+        tr.innerHTML = `
+          <td class="p-4 font-bold text-white max-w-[180px] truncate" title="${t.title}">${t.title}</td>
+          <td class="p-4 font-semibold text-zinc-300">${ins.name}</td>
+          <td class="p-4 font-mono text-zinc-500 text-[11px]">${ins.email}</td>
+          <td class="p-4 text-zinc-400">${ins.rank || 'N/A'} • <span class="text-zinc-500">${ins.category || 'Absoluto'}</span></td>
+          <td class="p-4 text-zinc-500">${ins.dataInscricao || '-'}</td>
+          <td class="p-4">
+            <span class="px-2 py-1 rounded text-[10px] font-bold ${ins.pago ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}">
+              ${ins.pago ? 'Sim (Pago)' : 'Pendente (Pix)'}
+            </span>
+          </td>
+          <td class="p-4 text-right space-x-2 whitespace-nowrap">
+            <button onclick="admTogglePagamento('${ins.id}', ${!ins.pago})" class="px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-amber-500 hover:bg-amber-500 hover:text-zinc-950 text-[10px] font-bold transition-all cursor-pointer">
+              ${ins.pago ? 'Pendente' : 'Confirmar'}
+            </button>
+            <button onclick="admExcluirInscricao('${ins.id}')" class="px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-red-500 hover:bg-red-500 hover:text-white text-[10px] font-bold transition-all cursor-pointer">
+              Excluir
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function admTogglePagamento(id, novoStatus) {
+      await confirmarInscricaoPagamento(id, novoStatus);
+      await loadAdminInscricoes();
+    }
+
+    async function admExcluirInscricao(id) {
+      if (confirm('Tem certeza de que deseja deletar permanentemente esta inscrição de torneio?')) {
+        await excluirInscricao(id);
+        await loadAdminInscricoes();
+      }
+    }
+
+    // 2. Carregar Atletas Filiados
+    async function loadAdminAtletas() {
+      const tbody = document.getElementById('admin-atletas-tbody');
+      const countBadge = document.getElementById('admin-atletas-count');
+      tbody.innerHTML = '';
+
+      const atletas = await getAtletas();
+      countBadge.textContent = `${atletas.length} Atletas`;
+
+      if (atletas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-zinc-500">Nenhum atleta registrado no banco de dados local ainda.</td></tr>`;
+        return;
+      }
+
+      atletas.forEach(ath => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-zinc-900/30 transition-colors";
+        tr.innerHTML = `
+          <td class="p-4 font-mono font-bold text-amber-500 text-[11px]">${ath.registrationNumber || 'Pendente'}</td>
+          <td class="p-4 font-semibold text-white">${ath.name}</td>
+          <td class="p-4 font-mono text-zinc-400 text-[11px]">${ath.email}</td>
+          <td class="p-4 text-zinc-400">${ath.phone || '-'}</td>
+          <td class="p-4 text-zinc-300">${ath.modality || 'Grappling'} <span class="text-zinc-500">(${ath.rank || 'Branca'})</span></td>
+          <td class="p-4 text-zinc-500">${ath.affiliationDate || '-'}</td>
+          <td class="p-4">
+            <span class="px-2 py-1 rounded text-[10px] font-bold ${ath.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}">
+              ${ath.status === 'active' ? 'Ativo' : 'Suspenso'}
+            </span>
+          </td>
+          <td class="p-4 text-right space-x-2 whitespace-nowrap">
+            <button onclick="admToggleStatusAtleta('${ath.id}', '${ath.status === 'active' ? 'suspended' : 'active'}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 hover:text-white text-[10px] font-bold cursor-pointer">
+              ${ath.status === 'active' ? 'Suspender' : 'Ativar'}
+            </button>
+            <button onclick="admDeletarAtleta('${ath.id}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-red-500 hover:bg-red-500 hover:text-white text-[10px] font-bold cursor-pointer">
+              Excluir
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function admToggleStatusAtleta(id, status) {
+      await alterarStatusAtleta(id, status);
+      await loadAdminAtletas();
+    }
+
+    async function admDeletarAtleta(id) {
+      if (confirm('Atenção: deseja deletar permanentemente este atleta da Federação? Todos os seus dados serão excluídos.')) {
+        await excluirAtleta(id);
+        await loadAdminAtletas();
+      }
+    }
+
+    // 3. Carregar Academias Credenciadas (Aba aprovações/espera)
+    async function loadAdminAcademias() {
+      const tbody = document.getElementById('admin-academias-tbody');
+      const countBadge = document.getElementById('admin-academias-count');
+      tbody.innerHTML = '';
+
+      const academias = await getAcademias();
+      countBadge.textContent = `${academias.length} Academias`;
+
+      if (academias.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-zinc-500">Nenhuma academia cadastrada no sistema.</td></tr>`;
+        return;
+      }
+
+      academias.forEach(acad => {
+        const mods = Array.isArray(acad.modalities) ? acad.modalities.join(', ') : (acad.modality || 'Artes Marciais');
+        
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-zinc-900/30 transition-colors";
+        tr.innerHTML = `
+          <td class="p-4 font-bold text-white">${acad.name}</td>
+          <td class="p-4 font-semibold text-zinc-300">${acad.headInstructor}</td>
+          <td class="p-4 text-zinc-400">${acad.city} <span class="text-zinc-500">(${acad.neighborhood || '-'})</span></td>
+          <td class="p-4 text-[11px]">
+            <span class="block font-mono text-zinc-400">${acad.email}</span>
+            <span class="block text-zinc-500">${acad.phone || '-'}</span>
+          </td>
+          <td class="p-4 text-zinc-400 max-w-[150px] truncate" title="${mods}">${mods}</td>
+          <td class="p-4 text-zinc-500 font-mono text-[11px]">${acad.certifiedUntil || '-'}</td>
+          <td class="p-4">
+            <span class="px-2 py-1 rounded text-[10px] font-bold ${acad.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}">
+              ${acad.status === 'active' ? 'Homologada' : 'Inativa'}
+            </span>
+          </td>
+          <td class="p-4 text-right space-x-2 whitespace-nowrap">
+            <button onclick="admToggleStatusAcademia('${acad.id}', '${acad.status === 'active' ? 'inactive' : 'active'}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 hover:text-white text-[10px] font-bold cursor-pointer">
+              ${acad.status === 'active' ? 'Desativar' : 'Aprovar'}
+            </button>
+            <button onclick="admDeletarAcademia('${acad.id}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-red-500 hover:bg-red-500 hover:text-white text-[10px] font-bold cursor-pointer">
+              Excluir
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function admToggleStatusAcademia(id, status) {
+      await alterarStatusAcademia(id, status);
+      await loadAdminAcademias();
+      if (document.getElementById('content-edit-academias') && !document.getElementById('content-edit-academias').classList.contains('hidden')) {
+        await loadAdminManageAcademias();
+      }
+    }
+
+    async function admDeletarAcademia(id) {
+      if (confirm('Deseja deletar permanentemente esta academia da Federação?')) {
+        await excluirAcademia(id);
+        await loadAdminAcademias();
+        if (document.getElementById('content-edit-academias') && !document.getElementById('content-edit-academias').classList.contains('hidden')) {
+          await loadAdminManageAcademias();
+        }
+      }
+    }
+
+    // 4. Cadastrar Novo Campeonato (Formulário Adicionar)
+    document.getElementById('add-torneio-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const modsInput = document.getElementById('adm-t-modalities').value;
+      const modsArray = modsInput.split(',').map(m => m.trim());
+
+      const torneioData = {
+        title: document.getElementById('adm-t-title').value,
+        date: document.getElementById('adm-t-date').value,
+        location: document.getElementById('adm-t-location').value,
+        city: document.getElementById('adm-t-city').value,
+        registrationDeadline: document.getElementById('adm-t-deadline').value,
+        entryFee: parseInt(document.getElementById('adm-t-fee').value || '120'),
+        status: document.getElementById('adm-t-status').value,
+        modalities: modsArray,
+        image: document.getElementById('adm-t-image').value,
+        description: document.getElementById('adm-t-desc').value,
+      };
+
+      try {
+        await adicionarTorneio(torneioData);
+        alert('🏆 Campeonato oficial cadastrado com sucesso no banco de dados FEAMCRJ!');
+        
+        // Limpa campos
+        document.getElementById('adm-t-title').value = '';
+        document.getElementById('adm-t-date').value = '';
+        document.getElementById('adm-t-location').value = '';
+        document.getElementById('adm-t-deadline').value = '';
+        document.getElementById('adm-t-fee').value = '120';
+        document.getElementById('adm-t-desc').value = '';
+
+        // Volta para a aba de gerenciamento de campeonatos
+        switchAdminTab('edit-torneios');
+      } catch (error) {
+        alert('Erro ao adicionar torneio: ' + error.message);
+      }
+    });
+
+    // ==========================================
+    // LÓGICA DE GERENCIAMENTO DE TORNEIOS (EDIT / EXCLUIR CARD)
+    // ==========================================
+
+    async function loadAdminManageTorneios() {
+      const grid = document.getElementById('admin-manage-torneios-grid');
+      const countBadge = document.getElementById('admin-torneios-count');
+      grid.innerHTML = '<p class="text-zinc-500 text-xs col-span-full">Carregando torneios...</p>';
+      
+      try {
+        const torneios = await getTorneios();
+        const inscricoes = await getInscricoesTodas();
+        
+        countBadge.textContent = `${torneios.length} Torneios`;
+        grid.innerHTML = '';
+        
+        if (torneios.length === 0) {
+          grid.innerHTML = '<p class="text-zinc-500 text-xs col-span-full text-center py-8">Nenhum campeonato cadastrado ainda.</p>';
+          return;
+        }
+        
+        torneios.forEach(t => {
+          const tInscCount = inscricoes.filter(i => i.torneioId === t.id).length;
+          const card = document.createElement('div');
+          card.className = "bg-zinc-900/60 border border-zinc-800 rounded-3xl overflow-hidden flex flex-col hover:border-zinc-700 transition-all text-left";
+          card.innerHTML = `
+            <div class="h-32 w-full bg-cover bg-center relative" style="background-image: url('${t.image || 'https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=600&auto=format&fit=crop'}')">
+              <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent"></div>
+              <span class="absolute top-3 right-3 text-[10px] font-black uppercase tracking-wider px-2 py-1 bg-zinc-950/80 rounded-md border border-zinc-800 text-white">${t.status === 'open' ? '🟢 Inscrições Abertas' : t.status === 'upcoming' ? '🟡 Em breve' : '🔴 Encerrado'}</span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+              <div class="space-y-1">
+                <h4 class="text-sm font-black uppercase text-white tracking-tight">${t.title}</h4>
+                <p class="text-xs text-zinc-400">${t.location} • ${t.city}</p>
+                <div class="grid grid-cols-2 gap-2 pt-2 text-[10px] text-zinc-500 font-mono">
+                  <div>📅 Realização: ${t.date}</div>
+                  <div>⏳ Prazo: ${t.registrationDeadline}</div>
+                  <div>💸 Valor: R$ ${t.entryFee}</div>
+                  <div>🥋 Atletas: ${tInscCount} inscritos</div>
+                </div>
+              </div>
+              <div class="flex gap-2 pt-2">
+                <button onclick="openEditTorneioModal('${t.id}')" class="flex-1 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-[10px] font-bold text-amber-500 hover:bg-amber-500 hover:text-zinc-950 transition-all cursor-pointer text-center">Editar</button>
+                <button onclick="admDeletarTorneio('${t.id}')" class="px-3 py-2 bg-zinc-950 border border-zinc-850 rounded-xl text-[10px] font-bold text-red-500 hover:bg-red-500 hover:text-white transition-all cursor-pointer">Excluir</button>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        grid.innerHTML = `<p class="text-red-500 text-xs col-span-full">Erro ao carregar torneios: ${error.message}</p>`;
+      }
+    }
+
+    async function openEditTorneioModal(id) {
+      try {
+        const torneios = await getTorneios();
+        const t = torneios.find(item => item.id === id);
+        if (!t) {
+          alert('Campeonato não encontrado.');
+          return;
+        }
+
+        document.getElementById('edit-t-id').value = t.id;
+        document.getElementById('edit-t-title').value = t.title || '';
+        document.getElementById('edit-t-date').value = t.date || '';
+        document.getElementById('edit-t-location').value = t.location || '';
+        document.getElementById('edit-t-city').value = t.city || '';
+        document.getElementById('edit-t-deadline').value = t.registrationDeadline || '';
+        document.getElementById('edit-t-fee').value = t.entryFee || 120;
+        document.getElementById('edit-t-status').value = t.status || 'open';
+        document.getElementById('edit-t-modalities').value = Array.isArray(t.modalities) ? t.modalities.join(', ') : (t.modality || '');
+        document.getElementById('edit-t-image').value = t.image || '';
+        document.getElementById('edit-t-desc').value = t.description || '';
+
+        document.getElementById('modal-edit-torneio').classList.remove('hidden');
+      } catch (error) {
+        alert('Erro ao carregar dados do campeonato: ' + error.message);
+      }
+    }
+
+    function closeEditTorneioModal() {
+      document.getElementById('modal-edit-torneio').classList.add('hidden');
+    }
+
+    document.getElementById('edit-torneio-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('edit-t-id').value;
+      const modsInput = document.getElementById('edit-t-modalities').value;
+      const modsArray = modsInput.split(',').map(m => m.trim());
+
+      const data = {
+        title: document.getElementById('edit-t-title').value,
+        date: document.getElementById('edit-t-date').value,
+        location: document.getElementById('edit-t-location').value,
+        city: document.getElementById('edit-t-city').value,
+        registrationDeadline: document.getElementById('edit-t-deadline').value,
+        entryFee: parseInt(document.getElementById('edit-t-fee').value || '120'),
+        status: document.getElementById('edit-t-status').value,
+        modalities: modsArray,
+        image: document.getElementById('edit-t-image').value,
+        description: document.getElementById('edit-t-desc').value
+      };
+
+      try {
+        await atualizarTorneioAdmin(id, data);
+        alert('🏆 Campeonato atualizado com sucesso!');
+        closeEditTorneioModal();
+        await loadAdminManageTorneios();
+      } catch (error) {
+        alert('Erro ao atualizar: ' + error.message);
+      }
+    });
+
+    async function admDeletarTorneio(id) {
+      if (confirm('Tem certeza absoluta de que deseja excluir permanentemente este torneio do site? Isso também poderá afetar inscrições relacionadas.')) {
+        try {
+          await excluirTorneio(id);
+          alert('Torneio excluído com sucesso.');
+          await loadAdminManageTorneios();
+        } catch (error) {
+          alert('Erro ao deletar torneio: ' + error.message);
+        }
+      }
+    }
+
+    // ==========================================
+    // LÓGICA DE GERENCIAMENTO DE ACADEMIAS
+    // ==========================================
+
+    async function loadAdminManageAcademias() {
+      const grid = document.getElementById('admin-manage-academias-grid');
+      grid.innerHTML = '<p class="text-zinc-500 text-xs col-span-full">Carregando academias...</p>';
+      
+      try {
+        const academias = await getAcademias();
+        grid.innerHTML = '';
+        
+        if (academias.length === 0) {
+          grid.innerHTML = '<p class="text-zinc-500 text-xs col-span-full text-center py-8">Nenhuma academia cadastrada ainda.</p>';
+          return;
+        }
+        
+        academias.forEach(acad => {
+          const card = document.createElement('div');
+          card.className = "bg-zinc-900/60 border border-zinc-800 rounded-3xl p-5 flex flex-col justify-between space-y-4 hover:border-zinc-700 transition-all text-left";
+          card.innerHTML = `
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md ${acad.status === 'active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                  ${acad.status === 'active' ? 'Homologada' : 'Inativa'}
+                </span>
+                <span class="text-[10px] text-zinc-500 font-mono">Até: ${acad.certifiedUntil || '-'}</span>
+              </div>
+              <h4 class="text-sm font-black uppercase text-white tracking-tight">${acad.name}</h4>
+              <div class="text-[11px] text-zinc-400 space-y-1">
+                <p>👤 <strong class="text-zinc-300">Professor:</strong> ${acad.headInstructor}</p>
+                <p>📍 <strong class="text-zinc-300">Cidade:</strong> ${acad.city} (${acad.neighborhood || '-'})</p>
+                <p>📞 <strong class="text-zinc-300">Contato:</strong> ${acad.phone || '-'}</p>
+                <p class="truncate">✉️ <strong class="text-zinc-300">E-mail:</strong> ${acad.email}</p>
+                <p class="text-zinc-500 text-[10px] italic">🥋 ${Array.isArray(acad.modalities) ? acad.modalities.join(', ') : (acad.modality || '')}</p>
+              </div>
+            </div>
+            <div class="flex gap-2 pt-2 border-t border-zinc-850/60">
+              <button onclick="openEditAcademiaModal('${acad.id}')" class="flex-1 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-[10px] font-bold text-amber-500 hover:bg-amber-500 hover:text-zinc-950 transition-all cursor-pointer text-center">Editar</button>
+              <button onclick="admDeletarAcademiaCard('${acad.id}')" class="px-3 py-2 bg-zinc-950 border border-zinc-850 rounded-xl text-[10px] font-bold text-red-500 hover:bg-red-500 hover:text-white transition-all cursor-pointer">Excluir</button>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        grid.innerHTML = `<p class="text-red-500 text-xs col-span-full">Erro ao carregar academias: ${error.message}</p>`;
+      }
+    }
+
+    function openAddAcademiaForm() {
+      document.getElementById('acad-modal-title').textContent = 'Adicionar Nova Academia (CT)';
+      document.getElementById('edit-acad-id').value = '';
+      document.getElementById('edit-acad-name').value = '';
+      document.getElementById('edit-acad-instructor').value = '';
+      document.getElementById('edit-acad-address').value = '';
+      document.getElementById('edit-acad-neighborhood').value = '';
+      document.getElementById('edit-acad-city').value = 'Rio de Janeiro';
+      document.getElementById('edit-acad-phone').value = '';
+      document.getElementById('edit-acad-email').value = '';
+      document.getElementById('edit-acad-password').value = '';
+      document.getElementById('edit-acad-until').value = new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0]; // 1 ano
+      document.getElementById('edit-acad-modalities').value = 'Jiu-Jitsu, Grappling, Muay Thai';
+      document.getElementById('edit-acad-status').value = 'active';
+
+      document.getElementById('modal-edit-academia').classList.remove('hidden');
+    }
+
+    async function openEditAcademiaModal(id) {
+      try {
+        const academias = await getAcademias();
+        const acad = academias.find(item => item.id === id);
+        if (!acad) {
+          alert('Academia não encontrada.');
+          return;
+        }
+
+        document.getElementById('acad-modal-title').textContent = 'Editar Academia / CT';
+        document.getElementById('edit-acad-id').value = acad.id;
+        document.getElementById('edit-acad-name').value = acad.name || '';
+        document.getElementById('edit-acad-instructor').value = acad.headInstructor || '';
+        document.getElementById('edit-acad-address').value = acad.address || '';
+        document.getElementById('edit-acad-neighborhood').value = acad.neighborhood || '';
+        document.getElementById('edit-acad-city').value = acad.city || '';
+        document.getElementById('edit-acad-phone').value = acad.phone || '';
+        document.getElementById('edit-acad-email').value = acad.email || '';
+        document.getElementById('edit-acad-password').value = '';
+        document.getElementById('edit-acad-until').value = acad.certifiedUntil || '';
+        document.getElementById('edit-acad-modalities').value = Array.isArray(acad.modalities) ? acad.modalities.join(', ') : (acad.modality || '');
+        document.getElementById('edit-acad-status').value = acad.status || 'active';
+
+        document.getElementById('modal-edit-academia').classList.remove('hidden');
+      } catch (error) {
+        alert('Erro ao carregar dados da academia: ' + error.message);
+      }
+    }
+
+    function closeEditAcademiaModal() {
+      document.getElementById('modal-edit-academia').classList.add('hidden');
+    }
+
+    document.getElementById('edit-academia-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('edit-acad-id').value;
+      const modsInput = document.getElementById('edit-acad-modalities').value;
+      const modsArray = modsInput.split(',').map(m => m.trim());
+
+      const data = {
+        name: document.getElementById('edit-acad-name').value,
+        headInstructor: document.getElementById('edit-acad-instructor').value,
+        address: document.getElementById('edit-acad-address').value,
+        neighborhood: document.getElementById('edit-acad-neighborhood').value,
+        city: document.getElementById('edit-acad-city').value,
+        phone: document.getElementById('edit-acad-phone').value,
+        email: document.getElementById('edit-acad-email').value,
+        password: document.getElementById('edit-acad-password').value,
+        certifiedUntil: document.getElementById('edit-acad-until').value,
+        modalities: modsArray,
+        status: document.getElementById('edit-acad-status').value
+      };
+
+      try {
+        if (id) {
+          await atualizarAcademiaAdmin(id, data);
+          alert('🏠 Academia atualizada com sucesso!');
+        } else {
+          // Se for nova, exige senha inicial
+          if (!data.password || !data.password.trim()) {
+            throw new Error("Por favor, digite uma senha de acesso inicial para o professor desta academia.");
+          }
+          await adicionarAcademiaAdmin(data);
+          alert('🏠 Nova academia cadastrada com sucesso!');
+        }
+        closeEditAcademiaModal();
+        await loadAdminManageAcademias();
+        await loadAdminAcademias();
+      } catch (error) {
+        alert('Erro ao salvar dados da academia: ' + error.message);
+      }
+    });
+
+    async function admDeletarAcademiaCard(id) {
+      if (confirm('Tem certeza de que deseja deletar permanentemente esta academia? Todos os dados cadastrais serão removidos.')) {
+        try {
+          await excluirAcademia(id);
+          alert('Academia removida com sucesso.');
+          await loadAdminManageAcademias();
+          await loadAdminAcademias();
+        } catch (error) {
+          alert('Erro ao excluir: ' + error.message);
+        }
+      }
+    }
+
+    // ==========================================
+    // LÓGICA DE CUSTOMIZAÇÃO DO SITE
+    // ==========================================
+
+    async function loadAdminSiteConfig() {
+      try {
+        const info = await getSiteInfo();
+        document.getElementById('cfg-alert-message').value = info.alertMessage || '';
+        document.getElementById('cfg-hero-title').value = info.heroTitle || '';
+        document.getElementById('cfg-hero-subtitle').value = info.heroSubtitle || '';
+        
+        // Exibe os contadores dinâmicos calculados a partir do banco de dados
+        document.getElementById('disp-stat-atletas').textContent = info.statAtletas || '1.800+';
+        document.getElementById('disp-stat-academias').textContent = info.statAcademias || '85+';
+        document.getElementById('disp-stat-torneios').textContent = info.statTorneios || '14';
+        document.getElementById('disp-stat-oficial').textContent = info.statOficial || '100%';
+
+        // Preenche campos do rodapé
+        document.getElementById('cfg-footer-desc').value = info.footerDescription || '';
+        document.getElementById('cfg-footer-pres').value = info.president || '';
+        document.getElementById('cfg-footer-vice').value = info.vicePresident || '';
+        document.getElementById('cfg-footer-tech').value = info.techDirector || '';
+        document.getElementById('cfg-footer-rel').value = info.publicRelations || '';
+        document.getElementById('cfg-footer-email').value = info.contactEmail || '';
+        document.getElementById('cfg-footer-phone').value = info.contactPhone || '';
+        document.getElementById('cfg-footer-address').value = info.contactAddress || '';
+        document.getElementById('cfg-footer-city').value = info.contactCity || '';
+        document.getElementById('cfg-footer-cartorio').value = info.cartorioText || '';
+      } catch (error) {
+        console.error('Erro ao ler configurações do site:', error);
+      }
+    }
+
+    document.getElementById('admin-site-config-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const config = {
+        alertMessage: document.getElementById('cfg-alert-message').value,
+        heroTitle: document.getElementById('cfg-hero-title').value,
+        heroSubtitle: document.getElementById('cfg-hero-subtitle').value,
+        footerDescription: document.getElementById('cfg-footer-desc').value,
+        president: document.getElementById('cfg-footer-pres').value,
+        vicePresident: document.getElementById('cfg-footer-vice').value,
+        techDirector: document.getElementById('cfg-footer-tech').value,
+        publicRelations: document.getElementById('cfg-footer-rel').value,
+        contactEmail: document.getElementById('cfg-footer-email').value,
+        contactPhone: document.getElementById('cfg-footer-phone').value,
+        contactAddress: document.getElementById('cfg-footer-address').value,
+        contactCity: document.getElementById('cfg-footer-city').value,
+        cartorioText: document.getElementById('cfg-footer-cartorio').value,
+        stats: {
+          atletas: document.getElementById('disp-stat-atletas').textContent,
+          academias: document.getElementById('disp-stat-academias').textContent,
+          torneios: document.getElementById('disp-stat-torneios').textContent,
+          oficial: document.getElementById('disp-stat-oficial').textContent
+        }
+      };
+
+      try {
+        await salvarSiteInfo(config);
+        alert('⚙️ Configurações do site e do rodapé salvas com sucesso! As alterações já estão em vigor em todas as páginas.');
+        if (typeof applySiteInfoConfig === 'function') {
+          await applySiteInfoConfig();
+        }
+      } catch (error) {
+        alert('Erro ao salvar configurações: ' + error.message);
+      }
+    });
+
+    // ==========================================
+    // LÓGICA DE CADASTRO UNIFICADO DE MEMBROS (ROLE-BASED)
+    // ==========================================
+
+    function toggleUserRoleFields() {
+      const role = document.getElementById('usr-role').value;
+      
+      const atletaSection = document.getElementById('role-fields-atleta');
+      const profSection = document.getElementById('role-fields-professor');
+      const adminSection = document.getElementById('role-fields-admin');
+      
+      atletaSection.classList.add('hidden');
+      profSection.classList.add('hidden');
+      adminSection.classList.add('hidden');
+      
+      if (role === 'atleta') {
+        atletaSection.classList.remove('hidden');
+      } else if (role === 'professor') {
+        profSection.classList.remove('hidden');
+      } else if (role === 'admin') {
+        adminSection.classList.remove('hidden');
+      }
+    }
+
+    async function populateAcademiesDropdown() {
+      try {
+        const dropdown = document.getElementById('usr-atleta-academy');
+        if (!dropdown) return;
+        dropdown.innerHTML = '';
+        
+        // Opção avulsa padrão
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = 'Avulso';
+        defaultOpt.textContent = 'Independente / Avulso';
+        dropdown.appendChild(defaultOpt);
+
+        const academias = await getAcademias();
+        academias.forEach(acad => {
+          const opt = document.createElement('option');
+          opt.value = acad.name;
+          opt.textContent = acad.name;
+          dropdown.appendChild(opt);
+        });
+      } catch (error) {
+        console.error("Erro ao preencher academias no cadastro:", error);
+      }
+    }
+
+    async function loadAdminMembersList() {
+      try {
+        // 1. Carrega administradores secundários
+        const adminsList = await getAdmins();
+        const adminsTbody = document.getElementById('admin-secundarios-tbody');
+        if (adminsTbody) {
+          adminsTbody.innerHTML = '';
+          if (adminsList.length === 0) {
+            adminsTbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-zinc-600 text-[11px]">Nenhum administrador secundário cadastrado.</td></tr>`;
+          } else {
+            adminsList.forEach(adm => {
+              adminsTbody.innerHTML += `
+                <tr class="hover:bg-zinc-950/20 text-left">
+                  <td class="p-3 font-bold text-white">${adm.name}</td>
+                  <td class="p-3 font-mono text-[11px] text-zinc-400">${adm.email}</td>
+                  <td class="p-3"><span class="px-2 py-0.5 text-[10px] font-bold bg-amber-500/10 text-amber-500 rounded border border-amber-500/20">${adm.title || 'Administrador'}</span></td>
+                  <td class="p-3 text-right">
+                    <button onclick="deleteSecundarioAdmin('${adm.id}')" class="text-red-500 hover:text-red-400 text-xs font-bold uppercase tracking-wider cursor-pointer">Excluir</button>
+                  </td>
+                </tr>
+              `;
+            });
+          }
+        }
+
+        // 2. Carrega professores / CTs homologados
+        const academiasList = await getAcademias();
+        const profsTbody = document.getElementById('admin-professores-tbody');
+        if (profsTbody) {
+          profsTbody.innerHTML = '';
+          if (academiasList.length === 0) {
+            profsTbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-zinc-600 text-[11px]">Nenhum professor/CT cadastrado no sistema.</td></tr>`;
+          } else {
+            academiasList.forEach(acad => {
+              profsTbody.innerHTML += `
+                <tr class="hover:bg-zinc-950/20 text-left">
+                  <td class="p-3 font-bold text-white">${acad.headInstructor || acad.instructor || 'Sem Professor'}</td>
+                  <td class="p-3 font-mono text-[11px] text-zinc-400">${acad.email}</td>
+                  <td class="p-3 text-zinc-300 font-bold">${acad.name}</td>
+                  <td class="p-3 text-right">
+                    <span class="text-emerald-500 text-[10px] uppercase font-bold tracking-wider">Ativo</span>
+                  </td>
+                </tr>
+              `;
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao carregar listas de membros:", error);
+      }
+    }
+
+    async function deleteSecundarioAdmin(id) {
+      if (id === 'feamcrj@gmail.com') {
+        alert("❌ O administrador Master (feamcrj@gmail.com) não pode ser removido!");
+        return;
+      }
+      if (confirm("⚠️ Tem certeza que deseja revogar o acesso deste administrador? Ele perderá imediatamente as permissões master do site.")) {
+        try {
+          await excluirAdmin(id);
+          alert("✅ Acesso de administrador revogado com sucesso!");
+          await loadAdminMembersList();
+        } catch (e) {
+          alert("Erro ao excluir administrador: " + e.message);
+        }
+      }
+    }
+
+    document.getElementById('admin-add-user-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('usr-name').value;
+      const email = document.getElementById('usr-email').value;
+      const password = document.getElementById('usr-password').value;
+      const role = document.getElementById('usr-role').value;
+
+      try {
+        if (role === 'admin') {
+          const adminTitle = document.getElementById('usr-admin-title').value || 'Administrador Secundário';
+          await adicionarAdmin({
+            name: name,
+            email: email,
+            password: password,
+            title: adminTitle
+          });
+          alert('👥 Administrador secundário cadastrado com sucesso! As credenciais de acesso foram configuradas.');
+        } else if (role === 'professor') {
+          const ctName = document.getElementById('usr-prof-ct-name').value || 'CT ' + name;
+          const phone = document.getElementById('usr-prof-phone').value || '(21) 99999-9999';
+          const city = document.getElementById('usr-prof-city').value || 'Rio de Janeiro';
+          const neighborhood = document.getElementById('usr-prof-neighborhood').value || 'Bairro';
+          const address = document.getElementById('usr-prof-address').value || 'Endereço';
+          const modalities = document.getElementById('usr-prof-modalities').value || 'Jiu-Jitsu';
+          
+          await adicionarAcademiaAdmin({
+            name: ctName,
+            headInstructor: name,
+            email: email,
+            password: password,
+            phone: phone,
+            city: city,
+            neighborhood: neighborhood,
+            address: address,
+            modalities: modalities.split(',').map(m => m.trim()),
+            status: 'active',
+            certifiedUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0]
+          });
+          alert('🏠 Professor e CT cadastrados com sucesso! O professor já pode logar usando seu e-mail.');
+        } else if (role === 'atleta') {
+          const rank = document.getElementById('usr-atleta-rank').value;
+          const modality = document.getElementById('usr-atleta-modality').value;
+          const academyName = document.getElementById('usr-atleta-academy').value || 'Avulso';
+          
+          await adicionarAtletaAdmin({
+            name: name,
+            email: email,
+            password: password,
+            rank: rank,
+            modality: modality,
+            academyName: academyName
+          });
+          alert('🥋 Atleta / Aluno filiado e cadastrado com sucesso! As credenciais de acesso foram configuradas.');
+        }
+
+        // Reseta formulário e atualiza listagens
+        document.getElementById('admin-add-user-form').reset();
+        toggleUserRoleFields();
+        await loadAdminMembersList();
+        
+        // Atualiza as listagens das abas adjacentes
+        if (typeof loadAdminAtletas === 'function') await loadAdminAtletas();
+        if (typeof loadAdminAcademias === 'function') await loadAdminAcademias();
+        if (typeof loadAdminManageAcademias === 'function') await loadAdminManageAcademias();
+      } catch (error) {
+        alert('Erro ao realizar o cadastro: ' + error.message);
+      }
+    });
+
+  </script>
+</body>
+</html>

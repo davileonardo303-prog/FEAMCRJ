@@ -1,0 +1,6 @@
+{
+  "name": "FEAMCRJ - Federação Esportiva de Arte Marcial e Combate RJ",
+  "description": "Portal oficial da Federação Esportiva de Arte Marcial e Combate do Estado do Rio de Janeiro. Informações de campeonatos, filiações de atletas e academias, regulamentos e notícias do cenário esportivo carioca.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

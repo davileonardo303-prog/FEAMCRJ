@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendário de Torneios - FEAMCRJ</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- Header Dinâmico -->
+  <div id="header-container"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Page Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-4">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-500">CALENDÁRIO OFICIAL 2026</span>
+        <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-none">
+          Campeonatos Estaduais
+        </h1>
+        <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+        <p class="text-zinc-400 text-sm sm:text-base">
+          Confira as datas, locais e regulamentos de cada evento chancelado. Inscreva-se diretamente online pelo nosso portal.
+        </p>
+      </div>
+
+      <!-- Tournaments Grid -->
+      <div id="tournaments-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Tournaments cards will be dynamically loaded here by script -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL DE INSCRIÇÃO DENTRO DA PÁGINA -->
+  <div id="inscription-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative space-y-6">
+      
+      <!-- Close button -->
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <!-- Modal Title -->
+      <div>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-500">Formulário de Inscrição</span>
+        <h3 class="text-xl font-bold text-white mt-1" id="modal-tournament-title">Título do Campeonato</h3>
+        <p class="text-zinc-500 text-[10px]" id="modal-tournament-details">Local e Data</p>
+      </div>
+
+      <!-- Subscription Form -->
+      <form id="inscription-form" class="space-y-4">
+        <input type="hidden" id="modal-tournament-id">
+
+        <div>
+          <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome Completo</label>
+          <input type="text" id="modal-user-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">E-mail de Cadastro</label>
+          <input type="email" id="modal-user-email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Faixa / Graduação</label>
+            <input type="text" id="modal-user-rank" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Roxa">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Categoria / Peso</label>
+            <input type="text" id="modal-user-category" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Adulto Meio-Pesado">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest hover:from-red-500 hover:to-amber-400 shadow-md shadow-amber-950/20 transition-all pt-4">
+          Confirmar e Pagar Taxa
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Footer Dinâmico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts Globais -->
+  <script src="firebase-config.js"></script>
+  <script src="components.js"></script>
+
+  <!-- Lógica de Eventos -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadTournaments();
+      prefillWithSession();
+    });
+
+    let tournamentsList = [];
+
+    async function loadTournaments() {
+      const container = document.getElementById('tournaments-grid');
+      try {
+        tournamentsList = await getTorneios();
+        
+        let gridHTML = '';
+        tournamentsList.forEach(t => {
+          const isOpen = t.status === 'open';
+          const isUpcoming = t.status === 'upcoming';
+          
+          let statusBadge = '';
+          if (isOpen) {
+            statusBadge = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 px-3 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider">Inscrições Abertas</span>`;
+          } else if (isUpcoming) {
+            statusBadge = `<span class="bg-blue-500/10 text-blue-400 border border-blue-500/25 px-3 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider">Breve</span>`;
+          } else {
+            statusBadge = `<span class="bg-zinc-800 text-zinc-500 px-3 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider">Encerrado</span>`;
+          }
+
+          gridHTML += `
+            <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-zinc-700 transition-all group">
+              
+              <!-- Banner Image Mock -->
+              <div class="h-48 w-full overflow-hidden relative">
+                <img src="${t.image}" alt="Banner" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                  ${statusBadge}
+                  <span class="text-amber-500 font-black text-xs font-mono uppercase tracking-widest bg-zinc-950/80 px-2 py-1 rounded border border-zinc-800">R$ ${t.entryFee},00</span>
+                </div>
+              </div>
+
+              <!-- Details Body -->
+              <div class="p-6 space-y-4 flex-grow flex flex-col justify-between">
+                <div class="space-y-2">
+                  <h3 class="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">${t.title}</h3>
+                  <p class="text-zinc-400 text-xs leading-relaxed">${t.description}</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-xs border-t border-b border-zinc-800/60 py-3 text-zinc-400">
+                  <div>
+                    <span class="block text-[9px] font-bold uppercase text-zinc-500">Data do Torneio</span>
+                    <strong class="text-white">${t.date}</strong>
+                  </div>
+                  <div>
+                    <span class="block text-[9px] font-bold uppercase text-zinc-500">Local de Combates</span>
+                    <strong class="text-white truncate block">${t.location}</strong>
+                  </div>
+                  <div>
+                    <span class="block text-[9px] font-bold uppercase text-zinc-500">Prazo Inscrições</span>
+                    <strong class="text-red-500">${t.registrationDeadline}</strong>
+                  </div>
+                  <div>
+                    <span class="block text-[9px] font-bold uppercase text-zinc-500">Inscritos Ativos</span>
+                    <strong class="text-amber-500">${t.registeredCount || 0} competidores</strong>
+                  </div>
+                </div>
+
+                <!-- CTA Action -->
+                <div>
+                  ${isOpen ? `
+                    <button onclick="openSubscriptionModal('${t.id}')" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 transition-all text-center">
+                      Inscrever-se no Torneio
+                    </button>
+                  ` : isUpcoming ? `
+                    <button disabled class="w-full py-3 rounded-xl bg-zinc-850 text-zinc-500 text-xs font-black uppercase tracking-widest cursor-not-allowed">
+                      Inscrições começam em breve
+                    </button>
+                  ` : `
+                    <button disabled class="w-full py-3 rounded-xl bg-zinc-950 text-zinc-600 border border-zinc-900 text-xs font-black uppercase tracking-widest cursor-not-allowed">
+                      Inscrições Encerradas
+                    </button>
+                  `}
+                </div>
+              </div>
+
+            </div>
+          `;
+        });
+
+        container.innerHTML = gridHTML;
+
+      } catch (error) {
+        console.error('Erro ao carregar torneios: ', error);
+      }
+    }
+
+    // Modal Operations
+    function openSubscriptionModal(tournamentId) {
+      const t = tournamentsList.find(item => item.id === tournamentId);
+      if (!t) return;
+
+      document.getElementById('modal-tournament-id').value = t.id;
+      document.getElementById('modal-tournament-title').textContent = t.title;
+      document.getElementById('modal-tournament-details').textContent = `${t.location} • ${t.date}`;
+
+      document.getElementById('inscription-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('inscription-modal').classList.add('hidden');
+    }
+
+    // Prefills forms if user has active session
+    function prefillWithSession() {
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (loggedUserJson) {
+        const loggedUser = JSON.parse(loggedUserJson);
+        const details = loggedUser.detalhes || {};
+
+        document.getElementById('modal-user-name').value = loggedUser.name || '';
+        document.getElementById('modal-user-email').value = loggedUser.email || '';
+        document.getElementById('modal-user-rank').value = details.rank || '';
+        document.getElementById('modal-user-category').value = 'Adulto Pena';
+      }
+    }
+
+    // Inscription Form Submission
+    document.getElementById('inscription-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const inscData = {
+        torneioId: document.getElementById('modal-tournament-id').value,
+        name: document.getElementById('modal-user-name').value,
+        email: document.getElementById('modal-user-email').value,
+        rank: document.getElementById('modal-user-rank').value,
+        category: document.getElementById('modal-user-category').value,
+      };
+
+      try {
+        await inscreverNoTorneio(inscData);
+        alert('🎉 Inscrição efetuada com sucesso!\nSua vaga foi garantida no campeonato.');
+        closeModal();
+        window.location.href = 'painel.html';
+      } catch (error) {
+        alert('Falha na inscrição: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

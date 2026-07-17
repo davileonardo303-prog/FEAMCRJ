@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academias Credenciadas - FEAMCRJ</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- Header Dinâmico -->
+  <div id="header-container"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Page Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-4">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-500">MUNICÍPIOS DE LUTAS</span>
+        <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-none">
+          Academias Credenciadas
+        </h1>
+        <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+        <p class="text-zinc-400 text-sm sm:text-base">
+          Encontre uma escola oficial filiada para treinar com segurança e ter suas graduações de faixa chanceladas pelo estado.
+        </p>
+      </div>
+
+      <!-- Filters & Search block -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div class="w-full sm:w-auto flex-grow max-w-md">
+          <input type="text" id="search-input" oninput="filterAcademies()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Buscar por Nome da Academia ou Professor...">
+        </div>
+        <div class="w-full sm:w-auto">
+          <select id="neighborhood-filter" onchange="filterAcademies()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-zinc-400 focus:outline-none focus:border-amber-500">
+            <option value="">Todos os Bairros / Cidades</option>
+            <option value="Copacabana">Copacabana</option>
+            <option value="Barra da Tijuca">Barra da Tijuca</option>
+            <option value="Tijuca">Tijuca</option>
+            <option value="Niterói">Niterói</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Academies Cards Grid -->
+      <div id="academies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Dynamic cards injected here -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer Dinâmico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts Globais -->
+  <script src="firebase-config.js"></script>
+  <script src="components.js"></script>
+
+  <!-- Lógica da Página -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadAcademies();
+    });
+
+    let academiesList = [];
+
+    async function loadAcademies() {
+      try {
+        academiesList = await getAcademias();
+        renderAcademies(academiesList);
+      } catch (error) {
+        console.error('Erro ao buscar academias: ', error);
+      }
+    }
+
+    function renderAcademies(list) {
+      const container = document.getElementById('academies-grid');
+      let gridHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12 text-zinc-500 text-sm">
+            Nenhuma academia credenciada encontrada correspondente aos termos de busca.
+          </div>
+        `;
+        return;
+      }
+
+      list.forEach(acad => {
+        gridHTML += `
+          <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 flex flex-col justify-between hover:border-zinc-700 hover:bg-zinc-900 transition-all">
+            
+            <div class="space-y-4">
+              <!-- Header Brand -->
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3 class="text-lg font-bold text-white">${acad.name}</h3>
+                  <span class="block text-[10px] font-black uppercase text-amber-500 tracking-wider mt-1">Professor: ${acad.headInstructor}</span>
+                </div>
+                <span class="px-2 py-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[8px] font-bold uppercase tracking-wider">ATIVO 2026</span>
+              </div>
+
+              <!-- Modalities tags list -->
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                ${acad.modalities.map(m => `
+                  <span class="px-2 py-0.5 rounded-md bg-zinc-950 text-zinc-400 text-[9px] font-semibold border border-zinc-800">${m}</span>
+                `).join('')}
+              </div>
+
+              <!-- Address and details -->
+              <div class="space-y-2 pt-2 border-t border-zinc-800 text-xs text-zinc-400">
+                <p class="flex items-start">
+                  <svg class="w-3.5 h-3.5 text-zinc-600 mr-2 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                  <span>${acad.address} <br> <strong class="text-zinc-300">${acad.neighborhood} - ${acad.city}</strong></span>
+                </p>
+                <p class="flex items-center">
+                  <svg class="w-3.5 h-3.5 text-zinc-600 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                  <span>${acad.phone}</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Certified Status footer block -->
+            <div class="mt-6 pt-3 border-t border-zinc-850 flex items-center justify-between text-[10px] text-zinc-500">
+              <span>Credenciada até:</span>
+              <strong class="text-zinc-300">${acad.certifiedUntil}</strong>
+            </div>
+
+          </div>
+        `;
+      });
+
+      container.innerHTML = gridHTML;
+    }
+
+    function filterAcademies() {
+      const searchVal = document.getElementById('search-input').value.toLowerCase();
+      const neighborhoodVal = document.getElementById('neighborhood-filter').value;
+
+      let filtered = academiesList;
+
+      if (searchVal) {
+        filtered = filtered.filter(acad => 
+          acad.name.toLowerCase().includes(searchVal) || 
+          acad.headInstructor.toLowerCase().includes(searchVal)
+        );
+      }
+
+      if (neighborhoodVal) {
+        filtered = filtered.filter(acad => acad.neighborhood === neighborhoodVal || acad.city.includes(neighborhoodVal));
+      }
+
+      renderAcademies(filtered);
+    }
+  </script>
+</body>
+</html>

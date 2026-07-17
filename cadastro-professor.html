@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credenciamento de Academia - FEAMCRJ</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- Header Dinâmico -->
+  <div id="header-container"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-xl mx-auto space-y-8">
+      
+      <!-- Page Header -->
+      <div class="text-center space-y-2">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-500">CREDENCIAMENTO ESTADUAL</span>
+        <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tight text-white leading-none">
+          Credenciar Academia
+        </h1>
+        <p class="text-zinc-500 text-xs">
+          Registre sua escola de lutas e homologue suas graduações de alunos sob chancela oficial FEAMCRJ.
+        </p>
+      </div>
+
+      <!-- Form Card -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+        
+        <form id="academia-form" class="space-y-5">
+          
+          <!-- Nome da Academia -->
+          <div>
+            <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Nome Fantasia da Academia / Escola</label>
+            <input type="text" id="name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="Ex: Combat Team Tijuca ou Ryan Gracie Barra">
+          </div>
+
+          <!-- Responsável Técnico -->
+          <div>
+            <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Professor / Mestre Responsável</label>
+            <input type="text" id="headInstructor" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="Ex: Mestre Alexandre 'Caveira' Silva">
+          </div>
+
+          <!-- Grid Email + Senha (para login) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Seu E-mail</label>
+              <input type="email" id="email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="diretoria@academia.com">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Login de Acesso</label>
+              <input type="text" id="login-replicate" readonly class="w-full bg-zinc-900 border border-zinc-850 rounded-xl px-4 py-3 text-sm text-zinc-500 cursor-not-allowed outline-none font-semibold" placeholder="Repete o e-mail...">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Crie sua Senha</label>
+              <input type="password" id="password" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="••••••••">
+            </div>
+          </div>
+
+          <!-- Grid Contato + Modalidade -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Telefone Comercial</label>
+              <input type="text" id="phone" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="(21) 2568-1234">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Modalidade Principal</label>
+              <select id="modality" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-400 focus:outline-none focus:border-amber-500 transition-colors">
+                <option value="Jiu-Jitsu Brasileiro (BJJ)">Jiu-Jitsu Brasileiro (BJJ)</option>
+                <option value="Muay Thai">Muay Thai</option>
+                <option value="Kickboxing">Kickboxing</option>
+                <option value="Karate-Do">Karate-Do</option>
+                <option value="Taekwondo">Taekwondo</option>
+                <option value="Artes Marciais Mistas (MMA)">Artes Marciais Mistas (MMA)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Divisor Endereço -->
+          <div class="pt-2 border-t border-zinc-800"></div>
+
+          <!-- Endereço Completo -->
+          <div>
+            <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Endereço Completo (Rua, Número, Sala)</label>
+            <input type="text" id="address" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="Ex: Rua Conde de Bonfim, 342 - Sala 301">
+          </div>
+
+          <!-- Grid Bairro + Cidade -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Bairro</label>
+              <input type="text" id="neighborhood" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="Ex: Tijuca">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Cidade</label>
+              <input type="text" id="city" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="Ex: Rio de Janeiro">
+            </div>
+          </div>
+
+          <!-- Checkbox Termo -->
+          <div class="flex items-start space-x-3 pt-2">
+            <input type="checkbox" required id="terms" class="mt-1 rounded border-zinc-800 bg-zinc-950 text-amber-500 focus:ring-amber-500">
+            <span class="text-[10px] text-zinc-500 leading-relaxed">
+              Como responsável técnico, comprometo-me a cumprir e fazer cumprir o estatuto e códigos ético-disciplinares da FEAMCRJ, mantendo o credenciamento de filiações de alunos rigorosamente atualizado.
+            </span>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-sm font-black uppercase tracking-widest hover:from-red-500 hover:to-amber-400 shadow-md shadow-amber-950/20 transition-all">
+            Credenciar e Acessar Painel
+          </button>
+
+          <div class="text-center mt-4">
+            <a href="cadastro-atleta.html" class="text-xs text-amber-500/80 hover:text-amber-400 underline">É Atleta e quer se filiar individualmente? Clique aqui</a>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer Dinâmico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts Globais -->
+  <script src="firebase-config.js"></script>
+  <script src="components.js"></script>
+
+  <!-- Lógica de Envio -->
+  <script>
+    // Duplica o email digitado no login automaticamente
+    document.getElementById('email').addEventListener('input', (e) => {
+      document.getElementById('login-replicate').value = e.target.value;
+    });
+
+    document.getElementById('academia-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const acadData = {
+        name: document.getElementById('name').value,
+        headInstructor: document.getElementById('headInstructor').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        phone: document.getElementById('phone').value,
+        modalities: [document.getElementById('modality').value],
+        address: document.getElementById('address').value,
+        neighborhood: document.getElementById('neighborhood').value,
+        city: document.getElementById('city').value,
+      };
+
+      try {
+        const novaAcad = await cadastrarAcademia(acadData);
+        alert('🎉 Academia credenciada com sucesso!\nO certificado oficial da temporada foi emitido para seu painel.');
+        window.location.href = 'painel.html';
+      } catch (error) {
+        alert('Falha ao cadastrar: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
