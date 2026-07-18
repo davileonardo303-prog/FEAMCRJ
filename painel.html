@@ -57,6 +57,33 @@
         </div>
       </div>
 
+      <!-- ALERTA DO PROVEDOR DE AUTH DESATIVADO -->
+      <div id="firebase-auth-warning-banner" class="hidden flex flex-col md:flex-row items-center justify-between p-6 bg-gradient-to-r from-red-500/10 via-red-600/10 to-amber-600/10 border border-red-500/30 rounded-3xl gap-4">
+        <div class="flex items-start space-x-4">
+          <div class="w-12 h-12 rounded-full bg-red-500/15 border border-red-500/35 flex items-center justify-center text-red-500 shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-black uppercase text-red-500 tracking-tight font-display">Ação Necessária: Ativar Provedor E-mail/Senha no Firebase</h3>
+            <p class="text-zinc-300 text-xs leading-relaxed mt-1">
+              Seu site está online, mas o provedor de login <strong>E-mail/Senha</strong> está desativado no seu Console do Firebase. Novos usuários e filiados não conseguirão entrar ou se cadastrar até que isso seja ativado!
+            </p>
+            <div class="text-amber-500 font-bold text-xs mt-2 space-y-1">
+              <p class="font-black text-amber-400">Como corrigir agora mesmo:</p>
+              <ol class="list-decimal list-inside space-y-0.5">
+                <li>Acesse o <a href="https://console.firebase.google.com/" target="_blank" class="underline text-blue-400">Console do Firebase</a> e abra o seu projeto.</li>
+                <li>No menu esquerdo, clique em <strong>Build</strong> > <strong>Authentication</strong>.</li>
+                <li>Vá para a guia <strong>Sign-in method</strong> (Método de login).</li>
+                <li>Clique em <strong>Adicionar novo provedor</strong> (Add new provider) e escolha <strong>E-mail/Senha</strong> (Email/Password).</li>
+                <li>Ative a primeira opção ("E-mail/Senha") e clique em <strong>Salvar</strong> (Save).</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ALERTA DE PAGAMENTO E APROVAÇÃO PENDENTE -->
       <div id="pending-payment-banner" class="hidden flex flex-col md:flex-row items-center justify-between p-6 bg-gradient-to-r from-amber-500/10 via-amber-600/10 to-red-600/10 border border-amber-500/20 rounded-3xl gap-4">
         <div class="flex items-start space-x-4">
@@ -1529,6 +1556,14 @@
       }
 
       const loggedUser = JSON.parse(loggedUserJson);
+      
+      // Alerta de Provedor de Auth desativado no Firebase
+      if (localStorage.getItem('firebase_auth_provider_warning') === 'true') {
+        const warnBanner = document.getElementById('firebase-auth-warning-banner');
+        if (warnBanner) {
+          warnBanner.classList.remove('hidden');
+        }
+      }
       
       // Carrega informações na tela
       document.getElementById('welcome-name').textContent = loggedUser.name;

@@ -62,16 +62,28 @@ let isFirebaseActive = false;
 function inicializarFirebase() {
   if (typeof firebase !== 'undefined' && firebaseConfig.apiKey && firebaseConfig.apiKey !== "SUA_API_KEY_AQUI" && firebaseConfig.apiKey !== "INSIRA_SUA_API_KEY_AQUI") {
     try {
+      // Determina o ID do banco de dados (bancos nomeados na AI Studio / Google Cloud)
+      let dbId = firebaseConfig.databaseId || firebaseConfig.firestoreDatabaseId;
+      
+      // Salvaguarda crítica: se o projeto do usuário for feamcrj-dcfaa, o banco de dados é sempre o do workspace
+      if (firebaseConfig.projectId === "feamcrj-dcfaa" || (!dbId && firebaseConfig.projectId && firebaseConfig.projectId.includes("feamcrj"))) {
+        dbId = "ai-studio-feamcrjfederaoes-91246755-2038-4b5d-a55f-d54783e79085";
+      }
+
+      if (dbId) {
+        firebaseConfig.databaseId = dbId;
+        firebaseConfig.firestoreDatabaseId = dbId;
+      }
+
       if (firebase.apps.length === 0) {
         firebase.initializeApp(firebaseConfig);
       }
       
-      const dbId = firebaseConfig.databaseId || firebaseConfig.firestoreDatabaseId;
       if (dbId) {
-        console.log("🔥 Initializing named Firestore database ID:", dbId);
+        console.log("🔥 Inicializando Firestore com banco nomeado ID:", dbId);
         db = firebase.app().firestore(dbId);
       } else {
-        console.log("🔥 Initializing default Firestore database (default)");
+        console.log("🔥 Inicializando Firestore padrão (default)");
         db = firebase.firestore();
       }
       auth = firebase.auth();
@@ -521,25 +533,49 @@ async function recuperarSenha(email) {
 async function loginFiliado(email, senha) {
   // ADMINISTRADOR MASTER FEAMCRJ
   if (email.toLowerCase() === 'feamcrj@gmail.com') {
-    if (senha !== 'Perfumaria20') {
+    if (senha !== 'Master582@') {
       throw new Error('Senha incorreta para a conta de administrador master.');
     }
     
     if (isFirebaseActive) {
       try {
         await auth.signInWithEmailAndPassword(email, senha);
+        localStorage.removeItem('firebase_auth_provider_warning');
       } catch (authErr) {
-        // Modern Firebase returns 'auth/invalid-credential' instead of 'auth/user-not-found' for security.
-        // We attempt to create the user to verify if they didn't exist.
-        try {
-          await auth.createUserWithEmailAndPassword(email, senha);
-          console.log("🚀 Administrador master criado automaticamente no Firebase Auth!");
-        } catch (createErr) {
-          if (createErr.code === 'auth/email-already-in-use' || createErr.message.includes('email-already-in-use')) {
-            // If the email is in use, the sign in error was due to wrong password.
-            throw new Error("Senha incorreta para a conta de administrador master.");
-          } else {
-            throw authErr;
+        if (authErr.code === 'auth/operation-not-allowed' || authErr.message.includes('operation-not-allowed') || authErr.message.includes('disabled')) {
+          console.warn("⚠️ Firebase Auth: Provedor de E-mail/Senha desativado no Console do Firebase. Permitindo login local...");
+          localStorage.setItem('firebase_auth_provider_warning', 'true');
+        } else {
+          // Se falhar o login com a senha nova, pode ser que a conta no Firebase Auth ainda esteja com a senha antiga 'Perfumaria20'
+          try {
+            console.log("🔄 Tentando autenticar com a senha antiga para migração automática...");
+            const userCredential = await auth.signInWithEmailAndPassword(email, 'Perfumaria20');
+            if (userCredential.user) {
+              console.log("🔄 Autenticado com sucesso usando a senha antiga! Atualizando senha no Firebase Auth para a nova senha...");
+              await userCredential.user.updatePassword('Master582@');
+              console.log("🚀 Senha do administrador master atualizada com sucesso no Firebase Auth!");
+              localStorage.removeItem('firebase_auth_provider_warning');
+            }
+          } catch (oldAuthErr) {
+            if (oldAuthErr.code === 'auth/operation-not-allowed' || oldAuthErr.message.includes('operation-not-allowed') || oldAuthErr.message.includes('disabled')) {
+              localStorage.setItem('firebase_auth_provider_warning', 'true');
+            } else {
+              // Se também falhar com a senha antiga, tentamos criar a conta se ela não existir
+              try {
+                await auth.createUserWithEmailAndPassword(email, senha);
+                console.log("🚀 Administrador master criado automaticamente no Firebase Auth!");
+                localStorage.removeItem('firebase_auth_provider_warning');
+              } catch (createErr) {
+                if (createErr.code === 'auth/operation-not-allowed' || createErr.message.includes('operation-not-allowed') || createErr.message.includes('disabled')) {
+                  localStorage.setItem('firebase_auth_provider_warning', 'true');
+                } else if (createErr.code === 'auth/email-already-in-use' || createErr.message.includes('email-already-in-use')) {
+                  // Se já existe, significa que a senha digitada está incorreta tanto em relação à nova quanto à antiga
+                  throw new Error("Senha incorreta para a conta de administrador master.");
+                } else {
+                  throw authErr;
+                }
+              }
+            }
           }
         }
       }
@@ -591,6 +627,9 @@ async function loginFiliado(email, senha) {
       salvarUsuarioLocal(userCredential.user.uid, dummy, 'atleta');
       return { success: true, user: dummy };
     } catch (e) {
+      if (e.code === 'auth/operation-not-allowed' || e.message.includes('operation-not-allowed') || e.message.includes('disabled')) {
+        throw new Error("Erro no login: O provedor de login 'E-mail/Senha' está desativado no seu Console do Firebase. Para resolver isso: 1) Acesse o Console do Firebase; 2) Vá em 'Authentication' > 'Sign-in method'; 3) Ative o provedor 'Email/Password' e salve.");
+      }
       throw new Error(e.message);
     }
   } else {
