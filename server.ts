@@ -1,13 +1,25 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 
 const app = express();
 const PORT = 3000;
+
+app.use(express.json());
 
 // Log requests for easy debugging
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
+});
+
+// Endpoint to capture browser/client-side errors
+app.post('/api/log-error', (req, res) => {
+  const { error, stack, url, line, col } = req.body;
+  const logEntry = `[${new Date().toISOString()}] ERROR: ${error}\nURL: ${url}:${line}:${col}\nSTACK: ${stack}\n----------------------------------------\n`;
+  console.error("❌ CLIENT ERROR CAPTURED:\n", logEntry);
+  fs.appendFileSync(path.join(process.cwd(), 'client-errors.log'), logEntry);
+  res.status(200).json({ ok: true });
 });
 
 // Serve the workspace root statically so we can access any html file

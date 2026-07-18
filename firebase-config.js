@@ -12,11 +12,46 @@
  * Isso permite que o site funcione PERFEITAMENTE em um Pen Drive ou no Google Drive, mesmo offline!
  */
 
+// Global error reporter to capture and debug runtime errors in the user's browser
+window.addEventListener('error', function(event) {
+  try {
+    fetch('/api/log-error', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        error: event.message,
+        url: event.filename,
+        line: event.lineno,
+        col: event.colno,
+        stack: event.error ? event.error.stack : ''
+      })
+    }).catch(function(e) {});
+  } catch(e) {}
+});
+
+window.addEventListener('unhandledrejection', function(event) {
+  try {
+    var reason = event.reason || {};
+    fetch('/api/log-error', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        error: reason.message || String(reason),
+        url: window.location.href,
+        line: 0,
+        col: 0,
+        stack: reason.stack || ''
+      })
+    }).catch(function(e) {});
+  } catch(e) {}
+});
+
 // Load Firebase Compat SDK scripts if not already loaded on the page
 if (typeof firebase === 'undefined') {
   document.write('<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>');
   document.write('<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>');
   document.write('<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>');
+  document.write('<script src="firebase-modular-dist.js"></script>');
 }
 
 // === COORDENAÇÃO DE CREDENCIAIS DO FIREBASE ===
@@ -75,13 +110,46 @@ function inicializarFirebase() {
         firebaseConfig.firestoreDatabaseId = dbId;
       }
 
-      if (firebase.apps.length === 0) {
-        firebase.initializeApp(firebaseConfig);
+      // Limpa qualquer app anterior para garantir inicialização limpa com o databaseId correto
+      if (firebase.apps.length > 0) {
+        try {
+          console.log("🔄 Resetando conexões anteriores do Firebase para evitar cache de banco (default)...");
+          firebase.app().delete();
+        } catch (e) {
+          console.warn("⚠️ Não foi possível deletar o app anterior:", e);
+        }
       }
+
+      console.log("📦 Inicializando Firebase App com Project ID:", firebaseConfig.projectId, "e Database ID:", dbId);
+      firebase.initializeApp(firebaseConfig);
       
       if (dbId) {
         console.log("🔥 Inicializando Firestore com banco nomeado ID:", dbId);
-        db = firebase.app().firestore(dbId);
+        try {
+          // Tenta usar a função namespace com app e dbId, que é a mais recomendada no compat
+          db = firebase.firestore(firebase.app(), dbId);
+          console.log("✅ Firestore inicializado com firebase.firestore(app, dbId)");
+        } catch (e) {
+          console.warn("⚠️ Falha ao inicializar com firebase.firestore(app, dbId), tentando firebase.app().firestore(dbId):", e);
+          fetch('/api/log-error', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ error: "Compat init 1 failed: " + e.message, stack: e.stack, url: "firebase-config.js" })
+          }).catch(() => {});
+          try {
+            db = firebase.app().firestore(dbId);
+            console.log("✅ Firestore inicializado com firebase.app().firestore(dbId)");
+          } catch (e2) {
+            console.warn("⚠️ Falha ao inicializar com firebase.app().firestore(dbId), tentando firebase.firestore() padrão com databaseId no config:", e2);
+            fetch('/api/log-error', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ error: "Compat init 2 failed: " + e2.message, stack: e2.stack, url: "firebase-config.js" })
+            }).catch(() => {});
+            db = firebase.firestore();
+            console.log("✅ Firestore inicializado com firebase.firestore() padrão (respeitando databaseId no config)");
+          }
+        }
       } else {
         console.log("🔥 Inicializando Firestore padrão (default)");
         db = firebase.firestore();
@@ -91,6 +159,11 @@ function inicializarFirebase() {
       console.log("🔥 Firebase inicializado com sucesso para FEAMCRJ!");
     } catch (error) {
       console.warn("⚠️ Falha ao carregar Firebase. Executando em modo de Persistência Local (Pen Drive):", error);
+      fetch('/api/log-error', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: "Firebase Init Master Error: " + error.message, stack: error.stack, url: "firebase-config.js" })
+      }).catch(() => {});
     }
   } else {
     console.log("⚡ Rodando em modo de Demonstração Local (Pen Drive / Google Drive). Os dados estão protegidos no LocalStorage.");
