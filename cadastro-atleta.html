@@ -180,10 +180,22 @@
 
       try {
         const novoAtleta = await cadastrarAtleta(atletaData);
-        alert('🎉 Filiação efetuada com sucesso!\nSua carteira digital foi emitida e seu acesso liberado.');
-        window.location.href = 'painel.html';
+        showPixPaymentModal({
+          title: 'Filiação Cadastrada!',
+          message: 'Seu cadastro como atleta foi recebido com sucesso e está pendente de aprovação!\n\nPara ativar sua Carteira Digital oficial e liberar seu acesso ao portal, realize o pagamento de R$ 70,00 via PIX.',
+          amount: '70,00',
+          email: atletaData.email,
+          name: atletaData.name,
+          onConfirm: () => {
+            window.location.href = 'login.html';
+          }
+        });
       } catch (error) {
-        alert('Falha ao cadastrar: ' + error.message);
+        showCustomModal({
+          title: 'Erro ao Cadastrar',
+          message: 'Falha ao cadastrar: ' + error.message,
+          type: 'error'
+        });
       }
     });
   </script>

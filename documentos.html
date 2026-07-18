@@ -22,6 +22,8 @@
       font-family: 'Space Grotesk', sans-serif;
     }
   </style>
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
 
@@ -142,7 +144,7 @@
               </div>
             </div>
             
-            <button onclick="alert('Dica de Pen Drive:\\nPor se tratar de um site estático e portátil, você pode preencher os PDFs reais da sua federação e colocá-los na pasta do seu pen drive para fazer o download direto!');" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-850 text-xs font-bold text-zinc-300 hover:text-white transition-all flex items-center justify-center space-x-2 shrink-0">
+            <button onclick="downloadOfficialDoc('${doc.id}', '${doc.title}', '${doc.format}')" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-850 text-xs font-bold text-zinc-300 hover:text-white transition-all flex items-center justify-center space-x-2 shrink-0">
               <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
               <span>Baixar Arquivo</span>
             </button>
@@ -165,6 +167,225 @@
       }
 
       renderDocs(filtered);
+    }
+
+    function downloadOfficialDoc(id, title, format) {
+      // Create offscreen container styled as an official white paper document
+      const optDiv = document.createElement('div');
+      optDiv.className = "bg-white text-zinc-950 p-10 font-sans border-8 border-double border-zinc-300 w-[794px] min-h-[1123px] flex flex-col justify-between mx-auto text-left";
+      optDiv.style.boxSizing = "border-box";
+      optDiv.style.position = "fixed";
+      optDiv.style.top = "-10000px";
+      optDiv.style.left = "-10000px";
+
+      let bodyHTML = '';
+
+      if (id === 'doc-1') {
+        bodyHTML = `
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">REGULAMENTO GERAL UNIFICADO DE COMPETIÇÕES E EVENTOS ESPORTIVOS</h2>
+          
+          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917;">
+            <p style="margin-bottom: 12px;"><strong>1. DAS MODALIDADES HOMOLOGADAS:</strong> Este regulamento rege todos os eventos oficiais e chancelados pela FEAMCRJ no Estado do Rio de Janeiro para as seguintes modalidades: Jiu-Jitsu Brasileiro (BJJ) (Grappling / Kimono e No-Gi), Muay Thai Tradicional (Percussão / Cotovelos, Joelhos, Clinche), Boxe Olímpico e Profissional (Percussão), Luta Livre Esportiva (Grappling / Submission), Kickboxing (Rules K1 e Low Kicks) e Mixed Martial Arts (MMA) (Híbrido).</p>
+            
+            <p style="margin-bottom: 12px;"><strong>2. DAS DIVISÕES DE PESO E IDADE:</strong> As competições seguirão rigorosamente as tabelas oficiais de peso de cada modalidade esportiva nacional e internacional sob a chancela da FEAMCRJ, divididas em categorias que abrangem desde as divisões infantis (Pré-Mirim, Mirim, Infantil, Infanto-Juvenil e Juvenil) até as divisões de rendimento adulto e sênior (Master 1, 2, 3, 4 e 5) com graduações adequadas para cada nível.</p>
+            
+            <p style="margin-bottom: 12px;"><strong>3. DAS REGRAS E CONDUTA DISCIPLINAR:</strong> É obrigatório o porte da Carteira Digital de Filiado FEAMCRJ ou documento oficial com foto na pesagem oficial. Atletas, treinadores e líderes de equipe que violarem o Código de Ética Esportiva estão sujeitos à desqualificação imediata e suspensão temporária do circuito oficial. É vedada qualquer manifestação antidesportiva, ofensiva ou discriminatória dentro ou fora das áreas de luta.</p>
+            
+            <p style="margin-bottom: 12px;"><strong>4. DA ARBITRAGEM E SEGURANÇA:</strong> Todo evento chancelado contará com árbitros diplomados pelo Curso Oficial de Arbitragem da FEAMCRJ. É obrigatório o policiamento local, equipe médica especializada com ambulância UTI móvel contratada pela diretoria de eventos da Federação.</p>
+            
+            <p style="margin-top: 16px;">Este regulamento entra em vigor na data de sua publicação oficial, revogando as disposições em contrário.</p>
+          </div>
+        `;
+      } else if (id === 'doc-2') {
+        bodyHTML = `
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-4">TABELA DE TAXAS ADMINISTRATIVAS, ANUIDADES E FILIAÇÕES DE LUTAS</h2>
+          
+          <div class="space-y-4 text-xs leading-relaxed" style="color: #1c1917;">
+            <p class="text-center font-medium mb-3">Abaixo estão estabelecidos os valores vigentes para as taxas de filiação anual, registros de equipes, chancelas e alvarás para o exercício de 2026:</p>
+            
+            <table class="w-full text-left border-collapse border border-zinc-300 mb-4" style="font-size: 11px; width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+              <thead>
+                <tr class="bg-zinc-100 font-bold border-b border-zinc-300" style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db;">
+                  <th class="border border-zinc-300 p-2" style="border: 1px solid #d1d5db; padding: 8px;">Item / Serviço</th>
+                  <th class="border border-zinc-300 p-2" style="border: 1px solid #d1d5db; padding: 8px;">Valor Vigente</th>
+                  <th class="border border-zinc-300 p-2" style="border: 1px solid #d1d5db; padding: 8px;">Periodicidade</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Filiação / Anuidade Atleta (Menor de Idade)</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 80,00</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Anual</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Filiação / Anuidade Atleta (Adulto/Master)</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 120,00</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Anual</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Filiação / Credenciamento de Professor</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 200,00</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Anual</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Alvará de Funcionamento de Academia / CT</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 350,00</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Anual</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Certificado de Graduação Faixas Coloridas</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 50,00</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Por Emissão</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Registro e Homologação de Faixa Preta</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 850,00</td>
+                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Registro Único</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="font-bold" style="margin-top: 12px; font-weight: bold;">SISTEMA INTEGRADO DE SPLIT FINANCEIRO (ATA DE DELIBERAÇÃO):</p>
+            <p class="text-justify" style="text-align: justify;">A FEAMCRJ opera um sistema automatizado de divisão de valores de pagamentos on-line (Split): Inscrições de alunos em Torneios possuem repasse de 30% automático ao Professor Líder da equipe. Exames de Faixa Colorida possuem 60% de repasse ao Professor Examinador. Todos os pagamentos de alunos/filiados são centralizados por meio de PIX chave oficial.</p>
+          </div>
+        `;
+      } else if (id === 'doc-3') {
+        bodyHTML = `
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">MANUAL DE PADRONIZAÇÃO DE GRADUAÇÕES E EXAMES DE FAIXA PRETA</h2>
+          
+          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917;">
+            <p style="margin-bottom: 12px;"><strong>1. DO TEMPO MÍNIMO DE CARÊNCIA EM CADA GRADUAÇÃO:</strong> Os professores de cada modalidade devem seguir estritamente o tempo regulamentar antes de promover ou indicar alunos para graduação: No Jiu-Jitsu (BJJ), segue o tempo mínimo internacional (Branca para Azul: 1 a 2 anos; Azul para Roxa: 2 anos; Roxa para Marrom: 1,5 ano; Marrom para Preta: 1 ano). No Muay Thai e Kickboxing, o sistema de Kruangs exige 6 meses por grau e exame técnico centralizado de 6 horas para Grau Preto perante banca oficial.</p>
+            
+            <p style="margin-bottom: 12px;"><strong>2. DO EXAME CENTRALIZADO DE FAIXA PRETA:</strong> Os exames de faixa preta e graus superiores serão realizados duas vezes ao ano (Junho e Dezembro) no Centro de Treinamento Oficial da FEAMCRJ. A banca examinadora será composta pelo Diretor Técnico da modalidade e dois Mestres convidados devidamente homologados. O candidato deve apresentar monografia sobre a história da sua modalidade, certidão civil negativa e certificado de primeiros socorros válido.</p>
+            
+            <p style="margin-bottom: 12px;"><strong>3. RECONHECIMENTO DE DIPLOMAS EXTERNOS:</strong> Professores vindos de outras entidades devem solicitar a Homologação por Equivalência de Linhagem Marcial, comprovando sua árvore de graduações e filiação anterior.</p>
+          </div>
+        `;
+      } else if (id === 'doc-4') {
+        bodyHTML = `
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-4">FICHA DE FILIAÇÃO COLETIVA PARA ACADEMIAS E CTS</h2>
+          
+          <div class="space-y-3 text-[10px] leading-relaxed" style="color: #1c1917;">
+            <div class="border border-zinc-300 p-3 rounded space-y-2" style="border: 1px solid #d1d5db; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+              <p><strong>DADOS DO CENTRO DE TREINAMENTO / ACADEMIA:</strong></p>
+              <p>Nome da Equipe: __________________________________________________________________________</p>
+              <p>Professor Responsável: ___________________________________ Registro FEAMCRJ: _________________</p>
+              <p>Endereço Completo: _______________________________________________________________________</p>
+            </div>
+
+            <div class="border border-zinc-300 p-3 rounded space-y-2" style="border: 1px solid #d1d5db; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+              <p><strong>RELAÇÃO DE ATLETAS A FILIAR:</strong></p>
+              <table class="w-full text-left border-collapse" style="font-size: 10px; width: 100%;">
+                <thead>
+                  <tr class="bg-zinc-100 font-bold border-b border-zinc-300" style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db;">
+                    <th class="p-1">Nome Completo</th>
+                    <th class="p-1">CPF / RG</th>
+                    <th class="p-1">Nascimento</th>
+                    <th class="p-1">Graduação / Peso</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td class="p-1 py-2">1. _________________________________</td>
+                    <td class="p-1">_________________</td>
+                    <td class="p-1">__/__/____</td>
+                    <td class="p-1">_________ / _____ kg</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td class="p-1 py-2">2. _________________________________</td>
+                    <td class="p-1">_________________</td>
+                    <td class="p-1">__/__/____</td>
+                    <td class="p-1">_________ / _____ kg</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td class="p-1 py-2">3. _________________________________</td>
+                    <td class="p-1">_________________</td>
+                    <td class="p-1">__/__/____</td>
+                    <td class="p-1">_________ / _____ kg</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="italic text-center text-[9px]" style="font-style: italic; text-align: center; font-size: 9px; margin-top: 12px;">"Declaro que todos os atletas acima listados estão com exames médicos em dia, aptos a praticar artes marciais de contato e devidamente matriculados em meu estabelecimento."</p>
+          </div>
+        `;
+      } else if (id === 'doc-5') {
+        bodyHTML = `
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">TERMO DE RESPONSABILIDADE E ISENÇÃO MÉDICA (MENORES)</h2>
+          
+          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917;">
+            <p style="margin-bottom: 12px;">Eu, ______________________________________________________________________, portador do RG nº ____________________ e CPF nº ____________________, na qualidade de Pai / Mãe ou Responsável Legal do menor atleta ___________________________________________________, nascido em __/__/____, filiado à equipe ________________________, declaro para os devidos fins de inscrição em competição da FEAMCRJ:</p>
+            
+            <p style="margin-bottom: 12px;"><strong>1. APTIDÃO FÍSICA:</strong> Que o referido menor encontra-se em perfeitas condições de saúde física e mental, estando plenamente apto para disputar campeonatos de combate de contato físico e artes marciais de alta intensidade chancelados por esta Federação.</p>
+            
+            <p style="margin-bottom: 12px;"><strong>2. ISENÇÃO DE RESPONSABILIDADE:</strong> Que isento a Federação Esportiva de Arte Marcial e Combate do Estado do Rio de Janeiro (FEAMCRJ), organizadores, patrocinadores, árbitros e o ginásio de qualquer responsabilidade por acidentes, lesões físicas, traumas ou qualquer intercorrência que possa ocorrer no decorrer dos combates.</p>
+            
+            <p style="margin-bottom: 12px;"><strong>3. DIREITOS DE IMAGEM:</strong> Autorizo o uso de imagem e voz do atleta menor para fins de divulgação esportiva em mídias sociais, fotos jornalísticas e transmissão oficial dos eventos da Federação.</p>
+          </div>
+        `;
+      }
+
+      optDiv.innerHTML = `
+        <!-- HEADER DO DOCUMENTO -->
+        <div class="border-b-4 border-red-700 pb-4 mb-6" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b91c1c; padding-bottom: 12px; margin-bottom: 24px;">
+          <div style="text-align: left;">
+            <h1 style="color: #b91c1c; font-size: 18px; margin: 0; font-weight: 900;">FEAMCRJ</h1>
+            <p style="font-size: 9px; text-transform: uppercase; color: #4b5563; font-weight: bold; margin: 0;">Federação Esportiva de Arte Marcial e Combate do Estado do RJ</p>
+            <p style="font-size: 8px; color: #6b7280; margin: 0;">CNPJ: 42.128.812/0001-90 | Reg. Cartório Civil nº 812.428-RJ</p>
+            <p style="font-size: 8px; color: #6b7280; margin: 0;">Sede: Rua Conde de Bonfim, 342 - Tijuca, Rio de Janeiro - RJ</p>
+          </div>
+          <div style="text-align: right;">
+            <span style="font-size: 9px; font-family: monospace; font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 10px; border-radius: 4px; display: inline-block;">DOC-ID: ${id.toUpperCase()}</span>
+            <span style="font-size: 8px; color: #9ca3af; display: block; margin-top: 4px; font-family: monospace;">Homologação FEAMCRJ-2026</span>
+          </div>
+        </div>
+
+        <!-- CORPO DO DOCUMENTO -->
+        <div style="margin-bottom: 30px; flex-grow: 1;">
+          ${bodyHTML}
+        </div>
+
+        <!-- FOOTER DO DOCUMENTO -->
+        <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-top: auto;">
+          <div style="display: grid; grid-template-cols: 1fr 1fr; gap: 32px; text-align: center; font-size: 10px; margin-bottom: 24px;">
+            <div>
+              <div style="border-top: 1px solid #9ca3af; width: 160px; margin: 0 auto; padding-top: 4px;"></div>
+              <p style="font-weight: bold; color: #1f2937; margin: 2px 0 0 0;">Grão-Mestre Roberto Albuquerque</p>
+              <p style="font-size: 8px; color: #6b7280; text-transform: uppercase; margin: 0;">Presidente FEAMCRJ</p>
+            </div>
+            <div>
+              <div style="border-top: 1px solid #9ca3af; width: 160px; margin: 0 auto; padding-top: 4px;"></div>
+              <p style="font-weight: bold; color: #1f2937; margin: 2px 0 0 0;">Mestre Alexandre Silva</p>
+              <p style="font-size: 8px; color: #6b7280; text-transform: uppercase; margin: 0;">Vice-Presidente & Secretário Geral</p>
+            </div>
+          </div>
+
+          <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 12px; border-radius: 4px; text-align: center; font-family: monospace; font-size: 7px; color: #9ca3af;">
+            <p style="font-weight: bold; color: #6b7280; font-size: 8px; margin: 0 0 4px 0;">Selo Eletrônico de Autenticidade FEAMCRJ - Assinado Digitalmente</p>
+            <p style="margin: 0;">Chave SHA256: e87f893da8ef6938d87ea0b1c23ea8909dbef890a8de09a8ec89a7fb3</p>
+            <p style="margin: 0;">Este documento possui valor oficial legal e substitui cópias físicas para todos os efeitos de filiação civil.</p>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(optDiv);
+
+      const opt = {
+        margin:       15,
+        filename:     `feamcrj_${id}_${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Generate PDF
+      html2pdf().from(optDiv).set(opt).save().then(() => {
+        document.body.removeChild(optDiv);
+      }).catch(e => {
+        console.error("PDF generation failed:", e);
+        document.body.removeChild(optDiv);
+      });
     }
   </script>
 </body>

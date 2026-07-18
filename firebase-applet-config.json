@@ -1,11 +1,12 @@
 {
-  "projectId": "equipe-gaditas",
-  "appId": "1:228465556497:web:119d9cf4ee2a1a8d5b45b0",
-  "apiKey": "AIzaSyA13DkwxQPbznhjz6k02w7XP88JCn3-EVI",
-  "authDomain": "equipe-gaditas.firebaseapp.com",
-  "storageBucket": "equipe-gaditas.firebasestorage.app",
-  "messagingSenderId": "228465556497",
+  "projectId": "feamcrj-dcfaa",
+  "appId": "1:72630680924:web:726f1e31d436ba5220d599",
+  "apiKey": "AIzaSyBoXqh1dYaCDGVLpPZ8tSZhQIHlQRFlp4U",
+  "authDomain": "feamcrj-dcfaa.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-feamcrjfederaoes-91246755-2038-4b5d-a55f-d54783e79085",
+  "storageBucket": "feamcrj-dcfaa.firebasestorage.app",
+  "messagingSenderId": "72630680924",
   "measurementId": "",
-  "oAuthClientId": "228465556497-jeluhn8hb2grdjcvqd9qh3du79b7vtfr.apps.googleusercontent.com",
+  "oAuthClientId": "72630680924-o2gtn2jdbbcqmv7pu8s81noqemo0hlkr.apps.googleusercontent.com",
   "recaptchaSiteKey": ""
 }

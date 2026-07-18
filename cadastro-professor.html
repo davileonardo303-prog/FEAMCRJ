@@ -170,10 +170,22 @@
 
       try {
         const novaAcad = await cadastrarAcademia(acadData);
-        alert('🎉 Academia credenciada com sucesso!\nO certificado oficial da temporada foi emitido para seu painel.');
-        window.location.href = 'painel.html';
+        showPixPaymentModal({
+          title: 'CT Cadastrado!',
+          message: 'O credenciamento do seu Centro de Treinamento foi cadastrado com sucesso e está pendente de aprovação!\n\nPara homologar seu CT e liberar a emissão do seu Certificado Anual oficial, realize o pagamento da taxa de credenciamento de R$ 70,00 via PIX.',
+          amount: '70,00',
+          email: acadData.email,
+          name: acadData.name,
+          onConfirm: () => {
+            window.location.href = 'login.html';
+          }
+        });
       } catch (error) {
-        alert('Falha ao cadastrar: ' + error.message);
+        showCustomModal({
+          title: 'Erro ao Cadastrar',
+          message: 'Falha ao cadastrar: ' + error.message,
+          type: 'error'
+        });
       }
     });
   </script>

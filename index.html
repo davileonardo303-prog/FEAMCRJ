@@ -207,6 +207,402 @@
       </div>
     </section>
 
+    <!-- NEXT TOURNAMENT COUNTDOWN -->
+    <section class="py-12 bg-zinc-950 border-b border-zinc-900 relative overflow-hidden">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.03),transparent_60%)]"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="bg-zinc-900/50 border border-zinc-800/80 rounded-3xl p-6 sm:p-8 flex flex-col lg:flex-row items-center justify-between gap-8 animate-fade-in-up">
+          <div class="space-y-2 text-center lg:text-left">
+            <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-extrabold uppercase tracking-widest">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+              <span>PRÓXIMO EVENTO CHANCELADO</span>
+            </span>
+            <h3 class="text-xl sm:text-2xl font-black uppercase text-white tracking-tight">Copa Rio de Janeiro de Artes Marciais 2026</h3>
+            <p class="text-zinc-400 text-xs sm:text-sm font-light">Chancela FEAMCRJ • Local: Arena Carioca 1, Parque Olímpico, Barra da Tijuca</p>
+          </div>
+          
+          <!-- Animated Countdown Timer -->
+          <div class="flex items-center gap-2 sm:gap-4 select-none">
+            <div class="flex flex-col items-center justify-center bg-zinc-950 border border-zinc-850 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl">
+              <span id="countdown-days" class="text-xl sm:text-2xl font-black text-amber-500 font-display">00</span>
+              <span class="text-[8px] sm:text-[9px] text-zinc-500 uppercase font-bold tracking-wider">Dias</span>
+            </div>
+            <span class="text-zinc-600 text-xl font-bold animate-pulse">:</span>
+            <div class="flex flex-col items-center justify-center bg-zinc-950 border border-zinc-850 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl">
+              <span id="countdown-hours" class="text-xl sm:text-2xl font-black text-white font-display">00</span>
+              <span class="text-[8px] sm:text-[9px] text-zinc-500 uppercase font-bold tracking-wider">Horas</span>
+            </div>
+            <span class="text-zinc-600 text-xl font-bold animate-pulse">:</span>
+            <div class="flex flex-col items-center justify-center bg-zinc-950 border border-zinc-850 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl">
+              <span id="countdown-minutes" class="text-xl sm:text-2xl font-black text-white font-display">00</span>
+              <span class="text-[8px] sm:text-[9px] text-zinc-500 uppercase font-bold tracking-wider">Minutos</span>
+            </div>
+            <span class="text-zinc-600 text-xl font-bold animate-pulse">:</span>
+            <div class="flex flex-col items-center justify-center bg-zinc-950 border border-zinc-850 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl">
+              <span id="countdown-seconds" class="text-xl sm:text-2xl font-black text-red-500 font-display">00</span>
+              <span class="text-[8px] sm:text-[9px] text-zinc-500 uppercase font-bold tracking-wider">Segundos</span>
+            </div>
+          </div>
+
+          <div class="shrink-0 w-full lg:w-auto">
+            <a href="torneios.html" class="block w-full text-center px-6 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-zinc-950 font-black text-xs uppercase tracking-widest transition-transform transform hover:-translate-y-0.5">
+              Garantir Inscrição
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORLD MARTIAL ARTS ANNIVERSARY COUNTDOWN -->
+    <section class="py-20 bg-zinc-900/20 border-b border-zinc-900 relative overflow-hidden">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.04),transparent_50%)]"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <div class="text-center max-w-3xl mx-auto mb-12 animate-fade-in-up">
+          <span class="text-xs font-black uppercase tracking-widest text-amber-500 bg-amber-500/5 border border-amber-500/10 px-3 py-1.5 rounded-full">CELEBRAÇÃO ANUAL MUNDIAL</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold uppercase text-white mt-4">
+            Aniversário de <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-amber-500">Todas as Artes Marciais</span>
+          </h2>
+          <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+          <p class="mt-6 text-zinc-400 text-sm leading-relaxed font-light">
+            O Dia Mundial das Artes Marciais (12 de Outubro) celebra a união, o respeito, a honra e o desenvolvimento de todas as vertentes de luta. O relógio abaixo aponta para a nossa grande celebração unificada!
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-zinc-950 p-6 sm:p-10 rounded-3xl border border-zinc-850 shadow-2xl animate-fade-in-up">
+          
+          <!-- Big Interactive Clock -->
+          <div class="lg:col-span-7 flex flex-col items-center justify-center space-y-6">
+            <span class="text-[10px] font-black uppercase text-zinc-500 tracking-widest">TEMPO RESTANTE PARA A GRANDE HOMENAGEM</span>
+            
+            <div class="flex items-center gap-2 sm:gap-6 select-none">
+              <!-- Days -->
+              <div class="relative group">
+                <div class="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-600 opacity-20 group-hover:opacity-40 blur-sm transition-all"></div>
+                <div class="relative flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800 w-20 h-20 sm:w-28 sm:h-28 rounded-2xl">
+                  <span id="anniversary-days" class="text-3xl sm:text-5xl font-black text-amber-500 font-display">00</span>
+                  <span class="text-[9px] sm:text-[11px] text-zinc-400 uppercase font-bold tracking-widest mt-1">Dias</span>
+                </div>
+              </div>
+              <span class="text-zinc-700 text-2xl font-bold animate-pulse">:</span>
+              <!-- Hours -->
+              <div class="relative group">
+                <div class="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-600 opacity-20 group-hover:opacity-40 blur-sm transition-all"></div>
+                <div class="relative flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800 w-20 h-20 sm:w-28 sm:h-28 rounded-2xl">
+                  <span id="anniversary-hours" class="text-3xl sm:text-5xl font-black text-white font-display">00</span>
+                  <span class="text-[9px] sm:text-[11px] text-zinc-400 uppercase font-bold tracking-widest mt-1">Horas</span>
+                </div>
+              </div>
+              <span class="text-zinc-700 text-2xl font-bold animate-pulse">:</span>
+              <!-- Minutes -->
+              <div class="relative group">
+                <div class="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-600 opacity-20 group-hover:opacity-40 blur-sm transition-all"></div>
+                <div class="relative flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800 w-20 h-20 sm:w-28 sm:h-28 rounded-2xl">
+                  <span id="anniversary-minutes" class="text-3xl sm:text-5xl font-black text-white font-display">00</span>
+                  <span class="text-[9px] sm:text-[11px] text-zinc-400 uppercase font-bold tracking-widest mt-1">Minutos</span>
+                </div>
+              </div>
+              <span class="text-zinc-700 text-2xl font-bold animate-pulse">:</span>
+              <!-- Seconds -->
+              <div class="relative group">
+                <div class="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-amber-500 to-red-600 opacity-20 group-hover:opacity-40 blur-sm transition-all"></div>
+                <div class="relative flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800 w-20 h-20 sm:w-28 sm:h-28 rounded-2xl">
+                  <span id="anniversary-seconds" class="text-3xl sm:text-5xl font-black text-red-500 font-display">00</span>
+                  <span class="text-[9px] sm:text-[11px] text-zinc-400 uppercase font-bold tracking-widest mt-1">Segundos</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic progress bar of the year progress towards Oct 12 -->
+            <div class="w-full max-w-md space-y-1.5">
+              <div class="flex justify-between text-[10px] text-zinc-500 uppercase font-bold tracking-wider">
+                <span>Progresso do Ano</span>
+                <span id="anniversary-progress-text">0%</span>
+              </div>
+              <div class="w-full h-2 bg-zinc-900 rounded-full border border-zinc-800 overflow-hidden">
+                <div id="anniversary-progress-bar" class="h-full bg-gradient-to-r from-red-600 to-amber-500 rounded-full transition-all duration-1000" style="width: 0%"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Wisdom / Interaction Card -->
+          <div class="lg:col-span-5 bg-zinc-900/60 rounded-2xl border border-zinc-800 p-6 space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center space-x-2">
+                <span class="text-amber-500">⛩️</span>
+                <h3 class="text-xs font-black uppercase tracking-widest text-white">Filosofia do Dia Mundial</h3>
+              </div>
+              <p class="text-zinc-400 text-xs leading-relaxed font-light">
+                Independente de usar kimono, luvas ou treinar descalço, a essência do budo (caminho marcial) é o autoconhecimento. No Aniversário das Artes Marciais, celebramos a união de todas as linhagens.
+              </p>
+              
+              <!-- Quote card -->
+              <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-850 text-xs italic text-zinc-300 relative">
+                <span class="absolute -top-2.5 left-3 px-2 bg-zinc-950 border border-zinc-850 rounded text-[8px] font-bold text-amber-500 uppercase tracking-widest">Ensinamento Marcial</span>
+                <p class="mt-1 transition-opacity duration-300" id="dynamic-martial-quote">"A arte marcial não é para ferir os outros; ela serve para nos ajudar a superar o nosso próprio ego."</p>
+                <p class="text-right text-[10px] text-zinc-500 uppercase font-bold mt-2 transition-opacity duration-300" id="dynamic-martial-author">— Gichin Funakoshi</p>
+              </div>
+            </div>
+
+            <button onclick="rotateMartialQuote()" class="w-full py-2.5 bg-zinc-950 hover:bg-zinc-850 border border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors cursor-pointer select-none">
+              🔄 Próximo Pensamento
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAMPION'S WALL / DESTAQUES FEAMCRJ -->
+    <section class="py-24 bg-zinc-950 border-b border-zinc-900 relative">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(245,158,11,0.03),transparent_50%)]"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
+        
+        <!-- Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-black uppercase tracking-widest text-amber-500 bg-amber-500/5 border border-amber-500/10 px-3 py-1.5 rounded-full">ESTRELAS DO COMBATE</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold uppercase text-white mt-4">
+            Mural de <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-amber-500">Destaques da Temporada</span>
+          </h2>
+          <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+          <p class="mt-6 text-zinc-400 text-sm leading-relaxed font-light">
+            Confira os atletas mais ativos e vitoriosos homologados no circuito oficial FEAMCRJ. A constância e a técnica levam ao topo do pódio!
+          </p>
+        </div>
+
+        <!-- Interactive Grid showing 4 top athletes -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <!-- Athlete 1 -->
+          <div class="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 flex flex-col justify-between hover:border-amber-500/30 transition-all group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <!-- Avatar placeholder styled beautifully -->
+                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 to-red-600 p-[1.5px] shadow-lg shadow-amber-950/20">
+                  <div class="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center font-black text-white text-base">
+                    TM
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="block text-[10px] font-black uppercase text-amber-500 tracking-wider">#1 RANKING BJJ</span>
+                  <span class="inline-flex items-center space-x-1 text-zinc-400 font-mono text-[9px] font-bold">
+                    <span>🏆 4 Ouros</span>
+                  </span>
+                </div>
+              </div>
+              <div>
+                <h4 class="text-base font-black text-white group-hover:text-amber-500 transition-colors uppercase">Thiago Montenegro</h4>
+                <p class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Jiu-Jitsu • Faixa Preta</p>
+                <p class="text-zinc-400 text-xs mt-2 italic font-light">"Representando com maestria a GFTeam Tijuca no circuito estadual."</p>
+              </div>
+            </div>
+            <div class="border-t border-zinc-850 pt-4 mt-4 flex justify-between items-center text-[10px] text-zinc-500">
+              <span>CT: GFTeam Tijuca</span>
+              <span class="font-mono text-zinc-400 font-bold">12 Lutas / 11 Vitórias</span>
+            </div>
+          </div>
+
+          <!-- Athlete 2 -->
+          <div class="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 flex flex-col justify-between hover:border-red-500/30 transition-all group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-red-600 to-orange-500 p-[1.5px] shadow-lg shadow-red-950/20">
+                  <div class="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center font-black text-white text-base">
+                    AR
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="block text-[10px] font-black uppercase text-red-400 tracking-wider">#1 MUAY THAI</span>
+                  <span class="inline-flex items-center space-x-1 text-zinc-400 font-mono text-[9px] font-bold">
+                    <span>🥊 3 KO's</span>
+                  </span>
+                </div>
+              </div>
+              <div>
+                <h4 class="text-base font-black text-white group-hover:text-red-400 transition-colors uppercase">Amanda Ribeiro</h4>
+                <p class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Muay Thai • Grau Preto</p>
+                <p class="text-zinc-400 text-xs mt-2 italic font-light">"Infiltrável com chutes potentes e uma defesa técnica impecável."</p>
+              </div>
+            </div>
+            <div class="border-t border-zinc-850 pt-4 mt-4 flex justify-between items-center text-[10px] text-zinc-500">
+              <span>CT: Thai Boxe SG</span>
+              <span class="font-mono text-zinc-400 font-bold">8 Lutas / 8 Vitórias</span>
+            </div>
+          </div>
+
+          <!-- Athlete 3 -->
+          <div class="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 flex flex-col justify-between hover:border-purple-500/30 transition-all group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 p-[1.5px] shadow-lg shadow-purple-950/20">
+                  <div class="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center font-black text-white text-base">
+                    JS
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="block text-[10px] font-black uppercase text-purple-400 tracking-wider">DESTAQUE MMA AMADOR</span>
+                  <span class="inline-flex items-center space-x-1 text-zinc-400 font-mono text-[9px] font-bold">
+                    <span>🔒 2 Submissões</span>
+                  </span>
+                </div>
+              </div>
+              <div>
+                <h4 class="text-base font-black text-white group-hover:text-purple-400 transition-colors uppercase">Jefferson Silva</h4>
+                <p class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">MMA • Graduação Roxa</p>
+                <p class="text-zinc-400 text-xs mt-2 italic font-light">"Dominou o Grand Prix Amador Meio-Pesado com inteligência de octógono."</p>
+              </div>
+            </div>
+            <div class="border-t border-zinc-850 pt-4 mt-4 flex justify-between items-center text-[10px] text-zinc-500">
+              <span>CT: Nova União Centro</span>
+              <span class="font-mono text-zinc-400 font-bold">6 Lutas / 6 Vitórias</span>
+            </div>
+          </div>
+
+          <!-- Athlete 4 -->
+          <div class="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 flex flex-col justify-between hover:border-amber-500/30 transition-all group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 to-orange-600 p-[1.5px] shadow-lg shadow-amber-950/20">
+                  <div class="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center font-black text-white text-base">
+                    BC
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="block text-[10px] font-black uppercase text-amber-500 tracking-wider">#1 RANKING NO-GI</span>
+                  <span class="inline-flex items-center space-x-1 text-zinc-400 font-mono text-[9px] font-bold">
+                    <span>🥇 Copa Rio NoGi</span>
+                  </span>
+                </div>
+              </div>
+              <div>
+                <h4 class="text-base font-black text-white group-hover:text-amber-500 transition-colors uppercase">Bruno Carvalho</h4>
+                <p class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Grappling • Faixa Marrom</p>
+                <p class="text-zinc-400 text-xs mt-2 italic font-light">"Passador nato com excelente transição para chaves de calcanhar."</p>
+              </div>
+            </div>
+            <div class="border-t border-zinc-850 pt-4 mt-4 flex justify-between items-center text-[10px] text-zinc-500">
+              <span>CT: Alliance Copacabana</span>
+              <span class="font-mono text-zinc-400 font-bold">10 Lutas / 9 Vitórias</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INTERACTIVE WEIGHT & CATEGORY CALCULATOR -->
+    <section class="py-24 bg-zinc-900/10 border-b border-zinc-900 relative">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.02),transparent_60%)]"></div>
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-black uppercase tracking-widest text-amber-500 bg-amber-500/5 border border-amber-500/10 px-3 py-1.5 rounded-full">GUIA DE COMPETIÇÃO</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold uppercase text-white mt-4">
+            Simulador de <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-amber-500">Categoria Oficial</span>
+          </h2>
+          <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+          <p class="mt-6 text-zinc-400 text-sm leading-relaxed font-light">
+            Insira seu ano de nascimento, sexo e peso atual para descobrir instantaneamente sua categoria de idade e divisão de peso oficial para torneios FEAMCRJ.
+          </p>
+        </div>
+
+        <!-- Interactive Calculator Card -->
+        <div class="bg-zinc-900/60 border border-zinc-850 rounded-3xl p-6 sm:p-10 shadow-2xl shadow-black/20">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            
+            <!-- Form Side -->
+            <div class="space-y-5">
+              <h3 class="text-sm font-black uppercase tracking-wider text-white border-b border-zinc-850 pb-2 flex items-center">
+                <svg class="w-4 h-4 text-amber-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                Dados do Atleta
+              </h3>
+              
+              <!-- Modality Selection -->
+              <div class="space-y-1.5">
+                <label class="block text-[10px] font-black uppercase text-zinc-500 tracking-wider">Modalidade</label>
+                <select id="calc-modality" onchange="runCategoryCalculator()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer">
+                  <option value="bjj-gi">Jiu-Jitsu (Com Kimono)</option>
+                  <option value="bjj-nogi">Jiu-Jitsu No-Gi (Sem Kimono)</option>
+                  <option value="muay-thai">Muay Thai / Kickboxing</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <!-- Birth Year Selection -->
+                <div class="space-y-1.5">
+                  <label class="block text-[10px] font-black uppercase text-zinc-500 tracking-wider">Ano de Nascimento</label>
+                  <input type="number" id="calc-birth-year" value="1995" min="1940" max="2022" oninput="runCategoryCalculator()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                
+                <!-- Gender Selection -->
+                <div class="space-y-1.5">
+                  <label class="block text-[10px] font-black uppercase text-zinc-500 tracking-wider">Gênero</label>
+                  <select id="calc-gender" onchange="runCategoryCalculator()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer">
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Current Weight Slider/Input -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between items-center">
+                  <label class="block text-[10px] font-black uppercase text-zinc-500 tracking-wider">Peso Atual (com uniforme/roupa)</label>
+                  <span id="calc-weight-val" class="font-mono text-xs font-bold text-amber-500">78.5 kg</span>
+                </div>
+                <input type="range" id="calc-weight" min="40" max="130" step="0.1" value="78.5" oninput="updateWeightVal(this.value); runCategoryCalculator()" class="w-full h-1 bg-zinc-950 rounded-lg appearance-none cursor-pointer accent-amber-500">
+              </div>
+
+            </div>
+
+            <!-- Result Side -->
+            <div class="bg-zinc-950 border border-zinc-850 rounded-2xl p-6 h-full flex flex-col justify-between space-y-6">
+              <div>
+                <h3 class="text-xs font-black uppercase tracking-wider text-zinc-400 mb-4 flex items-center">
+                  <span class="w-2 h-2 rounded-full bg-amber-500 mr-2"></span>
+                  Resultado da Simulação
+                </h3>
+                
+                <div class="space-y-4">
+                  <!-- Age division result -->
+                  <div class="bg-zinc-900/60 rounded-xl p-3 border border-zinc-900">
+                    <span class="block text-[8px] font-black uppercase text-zinc-500 tracking-widest">Divisão de Idade</span>
+                    <span id="res-age-category" class="block text-sm font-black text-white mt-1 uppercase">Adulto (31 anos)</span>
+                  </div>
+
+                  <!-- Weight class result -->
+                  <div class="bg-zinc-900/60 rounded-xl p-3 border border-zinc-900">
+                    <span class="block text-[8px] font-black uppercase text-zinc-500 tracking-widest">Categoria de Peso</span>
+                    <span id="res-weight-category" class="block text-sm font-black text-amber-500 mt-1 uppercase">Meio-Pesado</span>
+                  </div>
+
+                  <!-- Details and weight limit -->
+                  <div class="space-y-1 text-xs text-zinc-400 px-1 font-light leading-normal">
+                    <p id="res-weight-limit">• Limite máximo da categoria: <strong class="text-zinc-200" id="res-weight-limit-val">82.3 kg</strong></p>
+                    <p id="res-recommendation">• Status: <span class="text-emerald-400 font-medium">Bate o peso com segurança! (Diferença de 3.8 kg)</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Extra CTA -->
+              <div class="pt-4 border-t border-zinc-900">
+                <a href="cadastro-atleta.html" class="block text-center py-2.5 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-white font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all">
+                  Filiar-me nesta categoria
+                </a>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <!-- Footer Dinâmico -->
@@ -214,6 +610,250 @@
 
   <!-- Scripts Globais (Ordem de importação é crucial) -->
   <script src="firebase-config.js"></script>
+  <script src="components.js"></script>
+
+  <script>
+    // --- 1. DYNAMIC COUNTDOWN TIMER ---
+    const eventDate = new Date();
+    eventDate.setDate(eventDate.getDate() + 18); // Dynamic future date (18 days from now)
+    eventDate.setHours(9, 0, 0, 0);
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const difference = eventDate.getTime() - now;
+
+      if (difference <= 0) {
+        document.getElementById('countdown-days').textContent = "00";
+        document.getElementById('countdown-hours').textContent = "00";
+        document.getElementById('countdown-minutes').textContent = "00";
+        document.getElementById('countdown-seconds').textContent = "00";
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      document.getElementById('countdown-days').textContent = String(days).padStart(2, '0');
+      document.getElementById('countdown-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // --- 2. WEIGHT & CATEGORY CALCULATOR ---
+    function updateWeightVal(val) {
+      document.getElementById('calc-weight-val').textContent = parseFloat(val).toFixed(1) + " kg";
+    }
+
+    function runCategoryCalculator() {
+      const modality = document.getElementById('calc-modality').value;
+      const birthYear = parseInt(document.getElementById('calc-birth-year').value) || 1995;
+      const gender = document.getElementById('calc-gender').value;
+      const weight = parseFloat(document.getElementById('calc-weight').value) || 75;
+
+      const currentYear = new Date().getFullYear();
+      const age = currentYear - birthYear;
+
+      // 1. Calculate Age Category
+      let ageCat = "Adulto";
+      if (age < 16) {
+        ageCat = `Infantil/Juvenil (${age} anos)`;
+      } else if (age >= 16 && age <= 17) {
+        ageCat = `Juvenil (${age} anos)`;
+      } else if (age >= 18 && age <= 29) {
+        ageCat = `Adulto (${age} anos)`;
+      } else if (age >= 30 && age <= 35) {
+        ageCat = `Master 1 (${age} anos)`;
+      } else if (age >= 36 && age <= 40) {
+        ageCat = `Master 2 (${age} anos)`;
+      } else if (age >= 41 && age <= 45) {
+        ageCat = `Master 3 (${age} anos)`;
+      } else {
+        ageCat = `Master 4+ (${age} anos)`;
+      }
+      document.getElementById('res-age-category').textContent = ageCat;
+
+      // 2. Calculate Weight Category
+      let weightCat = "Absoluto";
+      let limit = 999;
+
+      if (modality === 'bjj-gi') {
+        if (gender === 'masculino') {
+          const classes = [
+            { name: "Galo", max: 57.5 },
+            { name: "Pluma", max: 64.0 },
+            { name: "Pena", max: 70.0 },
+            { name: "Leve", max: 76.0 },
+            { name: "Médio", max: 82.3 },
+            { name: "Meio-Pesado", max: 88.3 },
+            { name: "Pesado", max: 94.3 },
+            { name: "Super-Pesado", max: 100.5 },
+            { name: "Pesadíssimo", max: 130.0 }
+          ];
+          const matched = classes.find(c => weight <= c.max) || classes[classes.length - 1];
+          weightCat = matched.name;
+          limit = matched.max;
+        } else {
+          const classes = [
+            { name: "Galo", max: 48.5 },
+            { name: "Pluma", max: 53.5 },
+            { name: "Pena", max: 58.5 },
+            { name: "Leve", max: 64.0 },
+            { name: "Médio", max: 69.0 },
+            { name: "Meio-Pesado", max: 74.0 },
+            { name: "Pesado", max: 80.0 },
+            { name: "Super-Pesado", max: 120.0 }
+          ];
+          const matched = classes.find(c => weight <= c.max) || classes[classes.length - 1];
+          weightCat = matched.name;
+          limit = matched.max;
+        }
+      } else if (modality === 'bjj-nogi') {
+        if (gender === 'masculino') {
+          const classes = [
+            { name: "Galo", max: 55.5 },
+            { name: "Pluma", max: 61.5 },
+            { name: "Pena", max: 67.5 },
+            { name: "Leve", max: 73.5 },
+            { name: "Médio", max: 79.5 },
+            { name: "Meio-Pesado", max: 85.5 },
+            { name: "Pesado", max: 91.5 },
+            { name: "Super-Pesado", max: 97.5 },
+            { name: "Pesadíssimo", max: 125.0 }
+          ];
+          const matched = classes.find(c => weight <= c.max) || classes[classes.length - 1];
+          weightCat = matched.name;
+          limit = matched.max;
+        } else {
+          const classes = [
+            { name: "Galo", max: 46.5 },
+            { name: "Pluma", max: 51.5 },
+            { name: "Pena", max: 56.5 },
+            { name: "Leve", max: 61.5 },
+            { name: "Médio", max: 66.5 },
+            { name: "Meio-Pesado", max: 71.5 },
+            { name: "Pesado", max: 76.5 },
+            { name: "Super-Pesado", max: 115.0 }
+          ];
+          const matched = classes.find(c => weight <= c.max) || classes[classes.length - 1];
+          weightCat = matched.name;
+          limit = matched.max;
+        }
+      } else {
+        const classes = [
+          { name: "Super Mosca", max: 52.0 },
+          { name: "Pena", max: 57.0 },
+          { name: "Leve", max: 61.0 },
+          { name: "Super Leve", max: 63.5 },
+          { name: "Meio-Médio", max: 67.0 },
+          { name: "Super Meio-Médio", max: 71.0 },
+          { name: "Médio", max: 75.0 },
+          { name: "Super Médio", max: 81.0 },
+          { name: "Meio-Pesado", max: 86.0 },
+          { name: "Pesado", max: 91.0 },
+          { name: "Super Pesado", max: 130.0 }
+        ];
+        const matched = classes.find(c => weight <= c.max) || classes[classes.length - 1];
+        weightCat = matched.name;
+        limit = matched.max;
+      }
+
+      document.getElementById('res-weight-category').textContent = weightCat;
+      document.getElementById('res-weight-limit-val').textContent = limit.toFixed(1) + " kg";
+
+      const diffWeight = limit - weight;
+      const recEl = document.getElementById('res-recommendation');
+      if (diffWeight >= 0) {
+        recEl.innerHTML = `• Status: <span class="text-emerald-400 font-bold">Peso Confirmado!</span> Sobram <strong class="text-emerald-400">${diffWeight.toFixed(1)} kg</strong> para o limite.`;
+      } else {
+        recEl.innerHTML = `• Status: <span class="text-red-500 font-bold">Excedeu o Limite!</span> Reduza <strong class="text-red-400">${Math.abs(diffWeight).toFixed(1)} kg</strong> ou mude de categoria.`;
+      }
+    }
+
+    // Run initial calculate
+    runCategoryCalculator();
+
+    // --- 3. ANNIVERSARY OF ALL MARTIAL ARTS COUNTDOWN (October 12) ---
+    const anniversaryDate = new Date();
+    anniversaryDate.setMonth(9); // October is 9 (0-indexed)
+    anniversaryDate.setDate(12);
+    anniversaryDate.setHours(0, 0, 0, 0);
+
+    // If October 12 has already passed this year, set it for next year
+    const nowTime = new Date();
+    if (nowTime.getTime() > anniversaryDate.getTime()) {
+      anniversaryDate.setFullYear(anniversaryDate.getFullYear() + 1);
+    }
+
+    function updateAnniversaryCountdown() {
+      const now = new Date().getTime();
+      const difference = anniversaryDate.getTime() - now;
+
+      if (difference <= 0) {
+        document.getElementById('anniversary-days').textContent = "00";
+        document.getElementById('anniversary-hours').textContent = "00";
+        document.getElementById('anniversary-minutes').textContent = "00";
+        document.getElementById('anniversary-seconds').textContent = "00";
+        document.getElementById('anniversary-progress-bar').style.width = "100%";
+        document.getElementById('anniversary-progress-text').textContent = "100%";
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      document.getElementById('anniversary-days').textContent = String(days).padStart(2, '0');
+      document.getElementById('anniversary-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('anniversary-minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('anniversary-seconds').textContent = String(seconds).padStart(2, '0');
+
+      // Calculate progress of current year towards October 12
+      const startOfYear = new Date(anniversaryDate.getFullYear() - 1, 9, 12).getTime();
+      const totalYearMs = anniversaryDate.getTime() - startOfYear;
+      const elapsedMs = now - startOfYear;
+      const percent = Math.min(Math.max((elapsedMs / totalYearMs) * 100, 0), 100);
+
+      document.getElementById('anniversary-progress-bar').style.width = percent.toFixed(1) + "%";
+      document.getElementById('anniversary-progress-text').textContent = percent.toFixed(1) + "%";
+    }
+
+    setInterval(updateAnniversaryCountdown, 1000);
+    updateAnniversaryCountdown();
+
+    // Rotate Martial Quotes
+    const martialQuotes = [
+      { quote: "A arte marcial não é para ferir os outros; ela serve para nos ajudar a superar o nosso próprio ego.", author: "Gichin Funakoshi" },
+      { quote: "Não se trata de quão forte você bate, mas sim de quão forte você consegue apanhar e continuar seguindo em frente.", author: "Rocky Balboa" },
+      { quote: "Esvazie sua mente, seja amorfo, sem forma, como a água. Se você coloca água em um copo, ela se torna o copo.", author: "Bruce Lee" },
+      { quote: "O jiu-jitsu é a proteção do mais fraco, o controle do agressivo e a vitória da inteligência sobre a força.", author: "Hélio Gracie" },
+      { quote: "A força não vem da capacidade física, ela vem de uma vontade indomável.", author: "Mahatma Gandhi" },
+      { quote: "O maior erro é antecipar o resultado do combate; você não deve pensar se ele terminará em vitória ou derrota.", author: "Bruce Lee" },
+      { quote: "O tatame é o espelho da vida. O que você faz aqui dentro, reflete no homem que você é lá fora.", author: "Mestre Carlos Gracie" }
+    ];
+
+    let currentQuoteIndex = 0;
+    function rotateMartialQuote() {
+      currentQuoteIndex = (currentQuoteIndex + 1) % martialQuotes.length;
+      const elQuote = document.getElementById('dynamic-martial-quote');
+      const elAuthor = document.getElementById('dynamic-martial-author');
+      
+      elQuote.style.opacity = 0;
+      elAuthor.style.opacity = 0;
+      
+      setTimeout(() => {
+        elQuote.textContent = `"${martialQuotes[currentQuoteIndex].quote}"`;
+        elAuthor.textContent = `— ${martialQuotes[currentQuoteIndex].author}`;
+        elQuote.style.opacity = 1;
+        elAuthor.style.opacity = 1;
+      }, 200);
+    }
+  </script>
   <script src="components.js"></script>
 </body>
 </html>

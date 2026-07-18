@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loja Oficial de Lutas - FEAMCRJ</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+  </style>
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- Header Dinâmico -->
+  <div id="header-container"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Page Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-4">
+        <span class="text-xs font-black uppercase tracking-widest text-amber-500 bg-amber-500/5 border border-amber-500/10 px-3 py-1.5 rounded-full">MATERIAIS E EQUIPAMENTOS HOMOLOGADOS</span>
+        <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-none mt-2">
+          Loja Oficial <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-500">FEAMCRJ</span>
+        </h1>
+        <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+        <p class="text-zinc-400 text-sm sm:text-base font-light">
+          Adquira equipamentos, kimonos e vestuários oficiais chancelados. Parte das vendas é automaticamente destinada à comissão de sua equipe/professor afiliado!
+        </p>
+      </div>
+
+      <!-- Main Layout Grid: Products + Cart -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- PRODUCTS LISTING (Takes 8 cols) -->
+        <div class="lg:col-span-8 space-y-6">
+          <div class="flex items-center justify-between border-b border-zinc-900 pb-4">
+            <h2 class="text-lg font-black uppercase tracking-wider text-white">Equipamentos Disponíveis</h2>
+            <span class="text-xs text-zinc-500 font-mono" id="products-count">8 produtos homologados</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="products-grid">
+            <!-- Dynamic products will be loaded here -->
+          </div>
+        </div>
+
+        <!-- CART & CHECKOUT PANEL (Takes 4 cols) -->
+        <div class="lg:col-span-4 bg-zinc-900/60 border border-zinc-800 rounded-3xl p-6 space-y-6 sticky top-24">
+          <div class="flex items-center space-x-2.5 border-b border-zinc-800 pb-4">
+            <span class="text-amber-500 text-lg">🛒</span>
+            <h3 class="text-xs font-black uppercase tracking-widest text-white">Carrinho de Compras</h3>
+          </div>
+
+          <!-- Affiliation Association Alert -->
+          <div class="bg-zinc-950 p-3.5 rounded-xl border border-zinc-850 space-y-2">
+            <span class="text-[9px] font-black uppercase text-amber-500 tracking-wider">REPASSE DE LIDERANÇA</span>
+            <p class="text-zinc-400 text-[10px] leading-relaxed font-light">
+              Professores ganham <strong class="text-white">30% de comissão direta</strong> em compras efetuadas por alunos afiliados às suas academias!
+            </p>
+            <div class="space-y-1.5 pt-1">
+              <label class="block text-[8px] font-bold text-zinc-500 uppercase tracking-wider">Vincular Minha Academia / Equipe</label>
+              <select id="cart-academy-select" onchange="updateAcademySplit()" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-[11px] text-white focus:outline-none focus:border-amber-500">
+                <option value="">Nenhuma (Venda direta FEAMCRJ)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Items list container -->
+          <div id="cart-items" class="space-y-3 max-h-[220px] overflow-y-auto pr-1">
+            <!-- Empty state default -->
+            <div class="text-center py-8 text-zinc-500 text-xs italic">
+              Seu carrinho está vazio. Adicione produtos ao lado!
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="border-t border-zinc-800 pt-4 space-y-2 text-xs">
+            <div class="flex justify-between text-zinc-500">
+              <span>Subtotal</span>
+              <span id="cart-subtotal">R$ 0,00</span>
+            </div>
+            <div class="flex justify-between text-zinc-500">
+              <span>Frete (Todo RJ)</span>
+              <span class="text-emerald-400 font-bold uppercase text-[10px]">Grátis</span>
+            </div>
+            
+            <!-- Commision visual split -->
+            <div class="bg-zinc-950/80 p-3 rounded-lg border border-zinc-850/60 flex flex-col space-y-1 mt-2">
+              <div class="flex justify-between text-[10px] text-zinc-500 uppercase font-bold tracking-wider">
+                <span>Destinação FEAMCRJ (70%)</span>
+                <span id="cart-split-federation" class="text-zinc-400">R$ 0,00</span>
+              </div>
+              <div class="flex justify-between text-[10px] text-amber-500 uppercase font-black tracking-wider">
+                <span>Comissão da Equipe (30%)</span>
+                <span id="cart-split-professor">R$ 0,00</span>
+              </div>
+            </div>
+
+            <div class="flex justify-between text-sm font-black text-white pt-2 border-t border-zinc-800/60">
+              <span>VALOR TOTAL</span>
+              <span class="text-amber-500 font-mono text-base" id="cart-total">R$ 0,00</span>
+            </div>
+          </div>
+
+          <button onclick="openCheckoutModal()" id="checkout-btn" disabled class="w-full py-4 rounded-xl bg-zinc-800 text-zinc-500 text-xs font-black uppercase tracking-widest cursor-not-allowed transition-all">
+            Selecionar Forma de Pagamento
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL DE CHECKOUT INTEGRADO -->
+  <div id="checkout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/85 backdrop-blur-sm">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full relative space-y-6 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Close button -->
+      <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="text-center pb-4 border-b border-zinc-800">
+        <span class="text-[10px] font-black uppercase tracking-widest text-amber-500">PAGAMENTO EXCLUSIVO VIA PIX</span>
+        <h3 class="text-2xl font-black uppercase text-white mt-1 font-display">Finalizar Compra</h3>
+        <p class="text-zinc-400 text-xs font-light mt-1" id="checkout-modal-summary">Valor Total: R$ 0,00 • Divisão Ativa</p>
+      </div>
+
+      <!-- PIX ONLY CONTENT -->
+      <div id="panel-pix" class="space-y-6 flex flex-col items-center justify-center py-2 text-center">
+        <!-- PIX QR Code and Key -->
+        <div class="p-3 bg-white rounded-2xl border-4 border-zinc-950 flex items-center justify-center w-44 h-44 select-none relative group">
+          <svg class="w-full h-full text-zinc-950" viewBox="0 0 100 100" fill="currentColor">
+            <path d="M10,10h25v25h-25V10z M15,15v15h15V15H15z M10,65h25v25h-25V65z M15,70v15h15V70H15z M65,10h25v25h-25V10z M70,15v15h15V15H70z M40,15h10v10h-10V15z M50,25h10v10h-10V25z M45,45h10v10h-10V45z M35,45h10v5h-10V45z M55,55h10v10h-10V55z M65,45h10v10h-10V45z M75,45h10v10h-10V45z M65,65h15v5h-15V65z M80,75h10v15h-10V75z M65,80h10v10h-10V80z M45,65h10v15h-10V65z M45,85h15v5h-15V85z M35,75h10v10h-10V75z" />
+          </svg>
+          <div class="absolute inset-0 bg-zinc-900/40 opacity-0 group-hover:opacity-100 backdrop-blur-[1px] transition-opacity flex items-center justify-center rounded-2xl">
+            <span class="text-[9px] font-bold text-white uppercase tracking-widest">CHAVE: 21993370397</span>
+          </div>
+        </div>
+
+        <div class="text-center space-y-3 w-full">
+          <div class="space-y-1">
+            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block">CHAVE PIX OFICIAL (CELULAR)</span>
+            <div class="flex items-center space-x-2 bg-zinc-950 border border-zinc-850 rounded-xl px-3.5 py-2.5 max-w-sm mx-auto">
+              <input type="text" readonly id="pix-copy-key" value="21993370397" class="bg-transparent border-none text-center text-sm font-bold text-amber-500 font-mono focus:outline-none w-full select-all">
+              <button onclick="copyPixKey()" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black text-[10px] uppercase tracking-wider shrink-0 transition-colors">Copiar</button>
+            </div>
+          </div>
+
+          <!-- IMPORTANT INSTRUCTION TO SEND RECEIPT -->
+          <div class="bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl text-left space-y-2 max-w-sm mx-auto">
+            <div class="flex items-center space-x-2 text-amber-500">
+              <span class="text-base">📲</span>
+              <span class="text-[10px] font-black uppercase tracking-wider">COMPROVANTE DE PAGAMENTO</span>
+            </div>
+            <p class="text-zinc-300 text-[11px] leading-relaxed font-light">
+              Após concluir a transferência do valor, envie <strong class="text-amber-500">obrigatoriamente o comprovante</strong> do PIX para o mesmo número de WhatsApp: <strong class="text-white font-mono">(21) 99337-0397</strong>.
+            </p>
+          </div>
+
+          <p class="text-[10px] text-zinc-500 leading-normal max-w-sm mx-auto">
+            A comissão de <strong id="pix-split-text" class="text-amber-500">30%</strong> será destinada automaticamente para o repasse da liderança e desenvolvimento da equipe afiliada associada.
+          </p>
+        </div>
+
+        <!-- GENERATE BOLETO / RECIBO REAL PDF BUTTON -->
+        <button onclick="downloadBoletoPDF()" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-amber-950/20 transition-all flex items-center justify-center space-x-2.5">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span>Gerar e Baixar Boleto / Recibo PDF</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer Dinâmico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts Globais -->
+  <script src="firebase-config.js"></script>
+  <script src="components.js"></script>
+
+  <!-- Lógica da Loja -->
+  <script>
+    const STORE_PRODUCTS = [
+      {
+        id: 'p1',
+        title: 'Kimono Oficial de Competição FEAMCRJ (Vulkan)',
+        category: 'Grappling / Jiu-Jitsu',
+        price: 380.00,
+        description: 'Kimono trançado ultra-resistente, patch bordado oficial da federação no peito e ombros. Homologado para estaduais e campeonatos nacionais.',
+        image: 'https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=400&auto=format&fit=crop'
+      },
+      {
+        id: 'p2',
+        title: 'Luvas Profissionais de Couro FEAM (Boxe/Muay Thai)',
+        category: 'Percussão / Luta em Pé',
+        price: 190.00,
+        description: 'Luvas de couro legítimo de alta absorção com velcro largo nos punhos. Ideal para competições estaduais de Boxe, Kickboxing e Muay Thai.',
+        image: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?q=80&w=400&auto=format&fit=crop'
+      },
+      {
+        id: 'p3',
+        title: 'Rash Guard Premium FEAM No-Gi / Submission',
+        category: 'Grappling / No-Gi',
+        price: 120.00,
+        description: 'Rash guard em poliéster e elastano de compressão térmica profissional. Costuras planas reforçadas e grafismo em sublimação de alta durabilidade.',
+        image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=400&auto=format&fit=crop'
+      },
+      {
+        id: 'p4',
+        title: 'Caneleira Profissional de Muay Thai/Kickboxing',
+        category: 'Percussão / Luta em Pé',
+        price: 160.00,
+        description: 'Caneleira anatômica com proteção dupla na tíbia e pé, enchimento em gel de alta densidade e fecho triplo de segurança em velcro de alto contato.',
+        image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=400&auto=format&fit=crop'
+      },
+      {
+        id: 'p5',
+        title: 'Bandagem Elástica Profissional (4.5 metros) - Par',
+        category: 'Acessórios / Luta em Pé',
+        price: 40.00,
+        description: 'Bandagem elástica com elastano de compressão perfeita para proteção do punho e metacarpo. Presilha de polegar e velcro reforçado.',
+        image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=400&auto=format&fit=crop'
+      },
+      {
+        id: 'p6',
+        title: 'Camisa Oficial de Torcedor FEAMCRJ "Templo do Combate"',
+        category: 'Vestuário / Casual',
+        price: 75.00,
+        description: 'Camiseta de algodão premium 30.1 com estampa artística de combate do Rio de Janeiro. Confortável, durável e ideal para prestigiar os campeonatos.',
+        image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=400&auto=format&fit=crop'
+      },
+      {
+        id: 'p7',
+        title: 'Protetor Bucal Profissional Moldável em Gel',
+        category: 'Acessórios / Segurança',
+        price: 30.00,
+        description: 'Bucal anatômico de gel termomoldável com canais de respiração frontal de alta performance. Proteção extra para maxilar superior e dentes.',
+        image: 'https://images.unsplash.com/photo-1512223792601-592a9809eed4?q=80&w=400&auto=format&fit=crop'
+      },
+      {
+        id: 'p8',
+        title: 'Manoplas de Foco Curvas Profissionais (Par)',
+        category: 'Equipamentos / Treino',
+        price: 220.00,
+        description: 'Manoplas curvas de foco projetadas para absorção de impactos pesados. Alça de encaixe anatômico com ventilação de dedos.',
+        image: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=400&auto=format&fit=crop'
+      }
+    ];
+
+    let cart = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      renderProducts();
+      await populateAcademiasSelector();
+      loadCartFromStorage();
+    });
+
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+      let html = '';
+      
+      STORE_PRODUCTS.forEach(p => {
+        html += `
+          <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-zinc-700 transition-all group">
+            <div class="h-44 w-full overflow-hidden relative">
+              <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent"></div>
+              <div class="absolute bottom-3 left-3">
+                <span class="px-2 py-0.5 rounded bg-zinc-950 text-amber-500 border border-zinc-850 font-bold uppercase tracking-wider text-[8px]">${p.category}</span>
+              </div>
+            </div>
+
+            <div class="p-5 space-y-4 flex-grow flex flex-col justify-between">
+              <div class="space-y-2">
+                <h3 class="text-sm font-bold text-white group-hover:text-amber-500 transition-colors line-clamp-1">${p.title}</h3>
+                <p class="text-zinc-500 text-[11px] leading-relaxed line-clamp-2 font-light">${p.description}</p>
+              </div>
+
+              <div class="flex items-center justify-between border-t border-zinc-850/60 pt-3">
+                <span class="text-amber-500 font-mono font-black text-sm">R$ ${p.price.toFixed(2)}</span>
+                <button onclick="addToCart('${p.id}')" class="px-3 py-1.5 rounded-lg bg-zinc-950 hover:bg-amber-500 border border-zinc-850 text-zinc-300 hover:text-zinc-950 transition-colors text-[10px] font-black uppercase tracking-wider select-none">
+                  + Adicionar
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html;
+    }
+
+    async function populateAcademiasSelector() {
+      const selector = document.getElementById('cart-academy-select');
+      try {
+        const academies = await getAcademias();
+        academies.forEach(acad => {
+          const opt = document.createElement('option');
+          opt.value = acad.id;
+          opt.textContent = `${acad.ctName} - Prof. ${acad.leaderName}`;
+          selector.appendChild(opt);
+        });
+
+        // Prefill with logged user academy if present
+        const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+        if (loggedUserJson) {
+          const user = JSON.parse(loggedUserJson);
+          if (user.tipo === 'atleta' && user.detalhes && user.detalhes.academyId) {
+            selector.value = user.detalhes.academyId;
+          } else if (user.tipo === 'professor' && user.id) {
+            selector.value = user.id;
+          }
+        }
+      } catch (error) {
+        console.warn("Failed to populate academies list:", error);
+      }
+    }
+
+    function addToCart(productId) {
+      const p = STORE_PRODUCTS.find(item => item.id === productId);
+      if (!p) return;
+
+      const idx = cart.findIndex(item => item.id === productId);
+      if (idx !== -1) {
+        cart[idx].qty += 1;
+      } else {
+        cart.push({ ...p, qty: 1 });
+      }
+
+      saveCartToStorage();
+      renderCart();
+    }
+
+    function changeQty(productId, delta) {
+      const idx = cart.findIndex(item => item.id === productId);
+      if (idx === -1) return;
+
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) {
+        cart.splice(idx, 1);
+      }
+
+      saveCartToStorage();
+      renderCart();
+    }
+
+    function updateAcademySplit() {
+      renderCart();
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cart-items');
+      const checkoutBtn = document.getElementById('checkout-btn');
+      
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-zinc-500 text-xs italic">
+            Seu carrinho está vazio. Adicione produtos ao lado!
+          </div>
+        `;
+        document.getElementById('cart-subtotal').textContent = 'R$ 0,00';
+        document.getElementById('cart-total').textContent = 'R$ 0,00';
+        document.getElementById('cart-split-federation').textContent = 'R$ 0,00';
+        document.getElementById('cart-split-professor').textContent = 'R$ 0,00';
+        
+        checkoutBtn.disabled = true;
+        checkoutBtn.className = "w-full py-4 rounded-xl bg-zinc-800 text-zinc-500 text-xs font-black uppercase tracking-widest cursor-not-allowed transition-all";
+        return;
+      }
+
+      let html = '';
+      let subtotal = 0;
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
+
+        html += `
+          <div class="bg-zinc-950 border border-zinc-850 p-3 rounded-xl flex items-center justify-between gap-3">
+            <div class="space-y-0.5 max-w-[150px]">
+              <h4 class="text-white font-bold text-[11px] truncate">${item.title}</h4>
+              <span class="block text-[10px] text-zinc-500 font-mono">R$ ${item.price.toFixed(2)}</span>
+            </div>
+            <div class="flex items-center space-x-2 shrink-0">
+              <button onclick="changeQty('${item.id}', -1)" class="w-5 h-5 bg-zinc-900 hover:bg-zinc-850 text-white rounded flex items-center justify-center font-bold text-xs cursor-pointer">-</button>
+              <span class="text-xs font-bold text-white min-w-[12px] text-center">${item.qty}</span>
+              <button onclick="changeQty('${item.id}', 1)" class="w-5 h-5 bg-zinc-900 hover:bg-zinc-850 text-white rounded flex items-center justify-center font-bold text-xs cursor-pointer">+</button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // Calculations with Split
+      const hasAcademy = document.getElementById('cart-academy-select').value !== "";
+      const splitPercent = hasAcademy ? 0.30 : 0.00; // 30% goes to academy if selected
+
+      const federationAmt = subtotal * (1 - splitPercent);
+      const professorAmt = subtotal * splitPercent;
+
+      document.getElementById('cart-subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+      document.getElementById('cart-total').textContent = `R$ ${subtotal.toFixed(2)}`;
+      document.getElementById('cart-split-federation').textContent = `R$ ${federationAmt.toFixed(2)}`;
+      document.getElementById('cart-split-professor').textContent = `R$ ${professorAmt.toFixed(2)}`;
+
+      checkoutBtn.disabled = false;
+      checkoutBtn.className = "w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md shadow-amber-950/20 transition-all cursor-pointer";
+    }
+
+    function saveCartToStorage() {
+      localStorage.setItem('feamcrj_store_cart', JSON.stringify(cart));
+    }
+
+    function loadCartFromStorage() {
+      const stored = localStorage.getItem('feamcrj_store_cart');
+      if (stored) {
+        cart = JSON.parse(stored);
+        renderCart();
+      }
+    }
+
+    // Modal Checkout Actions
+    function openCheckoutModal() {
+      const totalStr = document.getElementById('cart-total').textContent;
+      const hasAcademy = document.getElementById('cart-academy-select').value !== "";
+      
+      document.getElementById('checkout-modal-summary').innerHTML = `
+        Valor Total: <strong class="text-white">${totalStr}</strong> • Divisão de Valores Ativa
+      `;
+
+      // Update PIX split description
+      const splitText = hasAcademy ? "30% (Destinado à Academia Filiada vinculada)" : "Isenta (Sem academia vinculada)";
+      document.getElementById('pix-split-text').textContent = splitText;
+
+      document.getElementById('checkout-modal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').classList.add('hidden');
+    }
+
+    let activePaymentTab = 'pix';
+    function selectPaymentTab(tab) {
+      activePaymentTab = tab;
+      
+      const tabs = ['pix', 'card', 'boleto'];
+      tabs.forEach(t => {
+        const tabEl = document.getElementById(`tab-${t}`);
+        const panelEl = document.getElementById(`panel-${t}`);
+
+        if (t === tab) {
+          tabEl.className = "py-2.5 rounded-xl border border-amber-500/30 bg-amber-500/5 text-amber-500 text-[10px] font-black uppercase tracking-wider transition-all flex flex-col items-center justify-center gap-1.5";
+          panelEl.classList.remove('hidden');
+        } else {
+          tabEl.className = "py-2.5 rounded-xl border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 text-[10px] font-black uppercase tracking-wider transition-all flex flex-col items-center justify-center gap-1.5";
+          panelEl.classList.add('hidden');
+        }
+      });
+    }
+
+    function copyPixKey() {
+      const el = document.getElementById('pix-copy-key');
+      el.select();
+      el.setSelectionRange(0, 99999); // For mobile
+      navigator.clipboard.writeText(el.value);
+      
+      alert('⚡ Chave PIX da FEAMCRJ (21993370397) copiada com sucesso!\nCopie e realize o pagamento no aplicativo do seu banco.');
+    }
+
+    async function handleSuccessfulPurchase(method) {
+      const total = document.getElementById('cart-total').textContent;
+      const academyId = document.getElementById('cart-academy-select').value;
+      const selectAcademyText = academyId ? "com split de comissão automática de 30% destinado à equipe afiliada" : "em benefício integral do desporto estadual (FEAMCRJ)";
+
+      // Build simulated transaction object for panel.html tracking
+      const transId = 'tr-' + Math.floor(100000 + Math.random() * 900000);
+      const subtotalNumeric = parseFloat(total.replace('R$', '').trim().replace('.', '').replace(',', '.'));
+      
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      const email = loggedUserJson ? JSON.parse(loggedUserJson).email : "comprador@anonimo.com.br";
+
+      const novaTransacao = {
+        id: transId,
+        ctId: academyId || 'admin-feam',
+        ctName: academyId ? "Split Academia" : "FEAMCRJ Sede",
+        tipo: 'entrada',
+        categoria: 'loja',
+        descricao: `Compra de Materiais (${method}) - Loja FEAMCRJ`,
+        valor: subtotalNumeric,
+        formaPagamento: 'pix',
+        data: new Date().toISOString().split('T')[0],
+        usuarioEmail: email
+      };
+
+      // Push to localStorage
+      try {
+        if (typeof registrarTransacao === 'function') {
+          await registrarTransacao(novaTransacao);
+        } else {
+          const trans = JSON.parse(localStorage.getItem('feam_transacoes')) || [];
+          trans.push(novaTransacao);
+          localStorage.setItem('feam_transacoes', JSON.stringify(trans));
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+
+      alert(`🎉 Pedido registrado com sucesso!\nValor total: ${total} ${selectAcademyText}.\n\n⚠️ IMPORTANTE: Realize o pagamento via PIX para o celular 21993370397 e envie o comprovante para este mesmo número por WhatsApp para liberação e envio dos seus produtos!`);
+      
+      cart = [];
+      saveCartToStorage();
+      renderCart();
+      closeCheckoutModal();
+    }
+
+    function downloadBoletoPDF() {
+      const total = document.getElementById('cart-total').textContent;
+      const academyId = document.getElementById('cart-academy-select').value;
+      
+      // Determine selected academy text for split
+      let splitHTML = '<p class="text-zinc-500">Beneficiário Integral: FEAMCRJ Sede (100% dos recursos)</p>';
+      if (academyId) {
+        const academySelect = document.getElementById('cart-academy-select');
+        const selectedText = academySelect.options[academySelect.selectedIndex].text;
+        splitHTML = `
+          <p class="font-bold text-zinc-700">Split de Valores Ativo (Comissão):</p>
+          <p class="text-zinc-600">70% Caixa Geral da FEAMCRJ • 30% Repasse automático para: <strong>${selectedText}</strong></p>
+        `;
+      }
+
+      // Generate product list table rows
+      let itemsHTML = '';
+      cart.forEach(item => {
+        itemsHTML += `
+          <tr style="border-bottom: 1px solid #e5e7eb; font-size: 11px;">
+            <td style="padding: 10px; text-align: left; color: #1f2937;">${item.title}</td>
+            <td style="padding: 10px; text-align: center; color: #4b5563;">${item.qty}</td>
+            <td style="padding: 10px; text-align: right; color: #4b5563;">R$ ${item.price.toFixed(2)}</td>
+            <td style="padding: 10px; text-align: right; font-weight: bold; color: #1f2937;">R$ ${(item.price * item.qty).toFixed(2)}</td>
+          </tr>
+        `;
+      });
+
+      // Create offscreen container styled as a beautiful corporate invoice/boleto
+      const optDiv = document.createElement('div');
+      optDiv.className = "bg-white text-zinc-950 p-10 font-sans border-8 border-double border-zinc-300 w-[794px] min-h-[1123px] flex flex-col justify-between mx-auto text-left";
+      optDiv.style.boxSizing = "border-box";
+      optDiv.style.position = "fixed";
+      optDiv.style.top = "-10000px";
+      optDiv.style.left = "-10000px";
+
+      optDiv.innerHTML = `
+        <!-- HEADER DO BOLETO -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b91c1c; padding-bottom: 12px; margin-bottom: 24px;">
+          <div style="text-align: left;">
+            <h1 style="color: #b91c1c; font-size: 20px; margin: 0; font-weight: 900; tracking-tight: -0.05em;">FEAMCRJ</h1>
+            <p style="font-size: 9px; text-transform: uppercase; color: #4b5563; font-weight: bold; margin: 0;">Federação Esportiva de Arte Marcial e Combate do Estado do RJ</p>
+            <p style="font-size: 8px; color: #6b7280; margin: 0;">CNPJ: 42.128.812/0001-90 | Reg. Cartório Civil nº 812.428-RJ</p>
+            <p style="font-size: 8px; color: #6b7280; margin: 0;">Sede: Rua Conde de Bonfim, 342 - Tijuca, Rio de Janeiro - RJ</p>
+          </div>
+          <div style="text-align: right;">
+            <span style="font-size: 9px; font-family: monospace; font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 10px; border-radius: 4px; display: inline-block;">BOLETO REGISTRADO</span>
+            <span style="font-size: 8px; color: #9ca3af; display: block; margin-top: 4px; font-family: monospace;">Emissão: ${new Date().toLocaleDateString('pt-BR')}</span>
+          </div>
+        </div>
+
+        <!-- CONTEÚDO PRINCIPAL (FATURA) -->
+        <div style="flex-grow: 1; margin-bottom: 30px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="font-size: 15px; font-weight: bold; text-transform: uppercase; color: #1f2937; margin: 0 0 4px 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px;">BOLETO DE COBRANÇA PIX & COMPROVANTE DE PEDIDO</h2>
+          </div>
+
+          <!-- DADOS DO PAGAMENTO -->
+          <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 11px;">
+            <p style="margin: 0 0 6px 0; font-weight: bold; color: #374151;">DADOS DO BENEFICIÁRIO:</p>
+            <p style="margin: 0 0 4px 0; color: #4b5563;"><strong>Nome:</strong> Federação Esportiva de Arte Marcial e Combate do Estado do RJ (FEAMCRJ)</p>
+            <p style="margin: 0 0 4px 0; color: #4b5563;"><strong>Chave PIX Oficial (Celular):</strong> <span style="font-size: 12px; font-weight: bold; color: #b91c1c;">21993370397</span></p>
+            <p style="margin: 0; color: #4b5563;"><strong>Vencimento:</strong> ${new Date(Date.now() + 86400000).toLocaleDateString('pt-BR')} (Próximo Dia Útil)</p>
+          </div>
+
+          <!-- TABELA DE ITENS COMPRADOS -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+            <thead>
+              <tr style="background-color: #f3f4f6; border-bottom: 2px solid #d1d5db; font-size: 11px; font-weight: bold;">
+                <th style="padding: 10px; text-align: left;">Produto Oficial Homologado</th>
+                <th style="padding: 10px; text-align: center; width: 60px;">Qtd</th>
+                <th style="padding: 10px; text-align: right; width: 100px;">Unitário</th>
+                <th style="padding: 10px; text-align: right; width: 110px;">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHTML}
+            </tbody>
+          </table>
+
+          <!-- RESUMO DE VALORES -->
+          <div style="display: flex; justify-content: flex-end; font-size: 12px; margin-bottom: 30px;">
+            <div style="width: 260px; text-align: right; background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 12px; border-radius: 6px;">
+              <p style="margin: 0 0 6px 0; color: #4b5563;">Subtotal: <strong>${total}</strong></p>
+              <p style="margin: 0 0 8px 0; color: #10b981; font-weight: bold;">Frete (RJ): GRÁTIS</p>
+              <div style="border-top: 2px solid #e5e7eb; padding-top: 6px; font-size: 14px; font-weight: bold; color: #b91c1c;">
+                VALOR COBRADO: ${total}
+              </div>
+            </div>
+          </div>
+
+          <!-- INSTRUÇÕES DE PAGAMENTO IMPORTANTES -->
+          <div style="border: 2px solid #f59e0b; background-color: #fffbeb; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 11px;">
+            <p style="margin: 0 0 8px 0; font-weight: bold; color: #d97706; font-size: 12px; display: flex; align-items: center; gap: 6px;">⚠️ INSTRUÇÃO IMPORTANTE DE CONFIRMAÇÃO:</p>
+            <ol style="margin: 0; padding-left: 16px; color: #b45309; line-height: 1.6;">
+              <li>Realize a transferência do valor total (<strong>${total}</strong>) via PIX para o celular: <strong style="color: #1f2937; font-size: 12px;">21993370397</strong>.</li>
+              <li>Envie <strong>obrigatoriamente o comprovante de pagamento</strong> para o mesmo número por WhatsApp (<strong style="color: #1f2937;">21 99337-0397</strong>).</li>
+              <li>Após o recebimento do comprovante, sua compra será liberada e despachada imediatamente em até 24 horas pela diretoria de almoxarifado.</li>
+            </ol>
+          </div>
+
+          <!-- REPASSE ACADEMIA -->
+          <div style="font-size: 10px; border-top: 1px solid #e5e7eb; padding-top: 12px; margin-bottom: 30px;">
+            ${splitHTML}
+          </div>
+        </div>
+
+        <!-- FOOTER E CODIGO DE BARRAS -->
+        <div style="border-top: 1px solid #e5e7eb; padding-top: 20px;">
+          <!-- Linha Digitavel Realistica -->
+          <div style="font-family: monospace; font-size: 10px; color: #4b5563; text-align: center; margin-bottom: 12px; background-color: #f3f4f6; padding: 8px; border-radius: 4px; font-weight: bold;">
+            Linha Digitável: 34191.79001 01043.513184 91020.150008 7 96210000035000
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8px; color: #9ca3af; font-family: monospace;">
+            <span>Chave Autenticação SHA256: e87f893da8ef6938d87ea0b1c23ea8909dbef890a8de09a8ec89a7fb3</span>
+            <span>Documento Registrado no Cartório Civil de Lutas e Federações RJ</span>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(optDiv);
+
+      const opt = {
+        margin:       12,
+        filename:     `boleto_feamcrj_loja_${Date.now()}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Generate PDF & finalize
+      html2pdf().from(optDiv).set(opt).save().then(() => {
+        document.body.removeChild(optDiv);
+        handleSuccessfulPurchase("PIX");
+      }).catch(e => {
+        console.error("Boleto PDF generation failed:", e);
+        document.body.removeChild(optDiv);
+        handleSuccessfulPurchase("PIX");
+      });
+    }
+  </script>
+</body>
+</html>

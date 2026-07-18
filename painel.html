@@ -57,6 +57,35 @@
         </div>
       </div>
 
+      <!-- ALERTA DE PAGAMENTO E APROVAÇÃO PENDENTE -->
+      <div id="pending-payment-banner" class="hidden flex flex-col md:flex-row items-center justify-between p-6 bg-gradient-to-r from-amber-500/10 via-amber-600/10 to-red-600/10 border border-amber-500/20 rounded-3xl gap-4">
+        <div class="flex items-start space-x-4">
+          <div class="w-12 h-12 rounded-full bg-amber-500/15 border border-amber-500/35 flex items-center justify-center text-amber-500 shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-black uppercase text-amber-500 tracking-tight font-display">Filiação Pendente de Aprovação</h3>
+            <p class="text-zinc-300 text-xs leading-relaxed mt-1">
+              Seu cadastro está aguardando homologação pela diretoria da FEAMCRJ. Para ativar sua Carteira Digital oficial e seu acesso completo, realize o pagamento da <strong>Taxa de Filiação de R$ 70,00</strong> via PIX.
+            </p>
+            <div class="mt-3 flex flex-wrap gap-4 text-[11px] text-zinc-400 font-mono">
+              <span>Chave PIX (Celular): <strong class="text-white select-all">21993370397</strong></span>
+              <span>Beneficiário: <strong class="text-white">FEAMCRJ</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col sm:flex-row items-stretch md:items-center gap-3 w-full md:w-auto shrink-0">
+          <button onclick="copyPixKeyGlobal()" class="px-4 py-3 bg-zinc-950 hover:bg-zinc-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider border border-zinc-800 transition-all active:scale-95 cursor-pointer">
+            Copiar Chave PIX
+          </button>
+          <a id="btn-envia-whatsapp-comprovante" href="#" target="_blank" class="px-4 py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-center rounded-xl text-xs font-black uppercase tracking-wider shadow-md transition-all active:scale-95 no-underline flex items-center justify-center">
+            Enviar Comprovante
+          </a>
+        </div>
+      </div>
+
       <!-- SEÇÃO DO FILIADO / ATLETA -->
       <div id="filiado-view" class="grid grid-cols-1 lg:grid-cols-12 gap-8 hidden">
         
@@ -64,57 +93,115 @@
         <div class="lg:col-span-5 space-y-6">
           <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Sua Identidade Esportiva</h2>
           
-          <!-- CARTEIRA DIGITAL PREMIUM (Bento box look) -->
-          <div class="relative w-full max-w-sm mx-auto aspect-[1.58/1] rounded-2xl bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-850 border border-amber-500/45 p-6 shadow-2xl shadow-amber-950/15 overflow-hidden flex flex-col justify-between group">
-            
-            <!-- Metallic background badge design -->
-            <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-amber-500/5 blur-xl group-hover:bg-amber-500/10 transition-colors"></div>
-            
-            <!-- Top Card: Logo Header -->
-            <div class="flex items-center justify-between border-b border-zinc-800/80 pb-3">
-              <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-red-600 to-amber-500 p-[1px]">
-                  <div class="flex items-center justify-center w-full h-full bg-zinc-950 rounded-[7px]">
-                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          <!-- CARTEIRA DIGITAL PREMIUM COM EFEITO DE GIRO 3D (Bento box look) -->
+          <div class="relative w-full max-w-sm mx-auto perspective-1000 cursor-pointer select-none group" onclick="toggleCardFlip()">
+            <div id="card-inner" class="relative w-full aspect-[1.58/1] preserve-3d transform-duration-600">
+              
+              <!-- FRENTE DA CARTEIRA -->
+              <div class="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-850 border border-amber-500/45 p-5 shadow-2xl shadow-amber-950/15 overflow-hidden flex flex-col justify-between backface-hidden">
+                <!-- Metallic background badge design -->
+                <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-amber-500/5 blur-xl group-hover:bg-amber-500/10 transition-colors"></div>
+                
+                <!-- Top Card: Logo Header -->
+                <div class="flex items-center justify-between border-b border-zinc-800/80 pb-3">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-red-600 to-amber-500 p-[1px]">
+                      <div class="flex items-center justify-center w-full h-full bg-zinc-950 rounded-[7px]">
+                        <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                      </div>
+                    </div>
+                    <div>
+                      <span class="block text-xs font-black text-white leading-none">FEAMCRJ</span>
+                      <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest leading-none">Carteira Digital</span>
+                    </div>
+                  </div>
+                  
+                  <!-- QR Mock icon -->
+                  <div class="w-7 h-7 bg-white p-0.5 rounded flex items-center justify-center opacity-85">
+                    <svg class="w-full h-full text-zinc-950" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 15h6v6H3v-6zm2 2v2h2v-2H5zm10-2h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-4-4h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 2h2v2h-2v-2zm6-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm4 4h2v2h-2v-2z"/>
+                    </svg>
                   </div>
                 </div>
-                <div>
-                  <span class="block text-xs font-black text-white leading-none">FEAMCRJ</span>
-                  <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest leading-none">Carteira Digital</span>
+
+                <!-- Middle Card: Athlete Info -->
+                <div class="py-2 space-y-1 flex-grow flex flex-col justify-center">
+                  <span id="card-name" class="block text-base font-black uppercase text-white tracking-wide truncate">NOME DO FILIADO</span>
+                  <div class="flex items-center space-x-2 text-[10px]">
+                    <span class="font-bold text-amber-500 uppercase tracking-widest" id="card-modality">Jiu-Jitsu</span>
+                    <span class="text-zinc-600">•</span>
+                    <span class="text-zinc-400 font-semibold" id="card-rank">Faixa Preta</span>
+                  </div>
+                  <span id="card-academy" class="block text-[10px] text-zinc-500 uppercase font-medium">Alliance Copacabana</span>
+                </div>
+
+                <!-- Bottom Card: Registration Details -->
+                <div class="flex items-center justify-between border-t border-zinc-800/80 pt-2.5 text-[9px] text-zinc-500">
+                  <div>
+                    <span class="block text-[7px] uppercase tracking-wider text-zinc-600 font-bold">Registro de Atleta</span>
+                    <span class="font-mono font-semibold text-zinc-300" id="card-reg-number">FEAM-2026-XXXX</span>
+                  </div>
+                  <div class="text-right">
+                    <span class="block text-[7px] uppercase tracking-wider text-zinc-600 font-bold">Status Cadastral</span>
+                    <span class="font-bold text-emerald-500 uppercase tracking-wider" id="card-status-text">● VERIFICADO</span>
+                  </div>
                 </div>
               </div>
               
-              <!-- QR Mock icon -->
-              <div class="w-7 h-7 bg-white p-0.5 rounded flex items-center justify-center opacity-85">
-                <svg class="w-full h-full text-zinc-950" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 15h6v6H3v-6zm2 2v2h2v-2H5zm10-2h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-4-4h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 2h2v2h-2v-2zm6-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm4 4h2v2h-2v-2z"/>
-                </svg>
-              </div>
-            </div>
+              <!-- VERSO DA CARTEIRA -->
+              <div class="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 border border-zinc-800 p-5 shadow-2xl shadow-black/40 overflow-hidden flex flex-col justify-between backface-hidden rotate-y-180">
+                <!-- Metallic background details -->
+                <div class="absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-red-500/5 blur-xl"></div>
+                
+                <div class="space-y-2">
+                  <!-- Tarja magnética simulada -->
+                  <div class="h-5 -mx-5 bg-zinc-950 border-y border-zinc-800/80 flex items-center px-5">
+                    <span class="font-mono text-[6px] text-zinc-600 tracking-wider">MAGNETIC SECURITY STRIP - FEAMCRJ SECURITY PORTAL</span>
+                  </div>
+                  
+                  <!-- Regras e homologações em letras minúsculas -->
+                  <div class="text-[6.5px] text-zinc-400 leading-tight space-y-1">
+                    <p class="font-bold text-zinc-300">CHANCELA DE AFILIAÇÃO OFICIAL:</p>
+                    <p>Esta credencial digital é pessoal, intransmissível e comprova a filiação oficial do atleta junto à Federação Esportiva de Arte Marcial e Combate do Estado do Rio de Janeiro para o ano vigente.</p>
+                    <p>O filiado está sujeito ao Código de Ética e Justiça Esportiva da FEAMCRJ, podendo disputar qualquer torneio oficial do calendário estadual.</p>
+                  </div>
+                </div>
 
-            <!-- Middle Card: Athlete Info -->
-            <div class="py-2 space-y-1 flex-grow flex flex-col justify-center">
-              <span id="card-name" class="block text-lg font-black uppercase text-white tracking-wide truncate">NOME DO FILIADO</span>
-              <div class="flex items-center space-x-2 text-[10px]">
-                <span class="font-bold text-amber-500 uppercase tracking-widest" id="card-modality">Jiu-Jitsu</span>
-                <span class="text-zinc-600">•</span>
-                <span class="text-zinc-400 font-semibold" id="card-rank">Faixa Preta</span>
-              </div>
-              <span id="card-academy" class="block text-[10px] text-zinc-500 uppercase font-medium">Alliance Copacabana</span>
-            </div>
+                <!-- Assinatura digital do Presidente & Barcode -->
+                <div class="flex items-end justify-between border-t border-zinc-800/60 pt-2.5">
+                  <div class="text-left">
+                    <span class="block text-[6px] uppercase text-zinc-500 leading-none">Chancela da Presidência</span>
+                    <span class="block font-serif text-[10px] text-zinc-300 italic font-bold tracking-wide mt-0.5 select-none">Roberto Albuquerque</span>
+                    <span class="block text-[5px] uppercase text-zinc-600 tracking-widest mt-0.5">Grão-Mestre e Presidente</span>
+                  </div>
+                  
+                  <!-- Código de barras simulado -->
+                  <div class="flex flex-col items-end space-y-0.5">
+                    <div class="h-5 w-20 bg-white/10 relative flex items-center justify-center p-0.5 rounded overflow-hidden">
+                      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent animate-pulse"></div>
+                      <div class="flex w-full h-full items-stretch justify-between px-0.5 opacity-80">
+                        <div class="w-0.5 bg-zinc-400"></div><div class="w-[1px] bg-zinc-400"></div><div class="w-1 bg-zinc-400"></div>
+                        <div class="w-[1px] bg-zinc-400"></div><div class="w-0.5 bg-zinc-400"></div><div class="w-0.5 bg-zinc-400"></div>
+                        <div class="w-1 bg-zinc-400"></div><div class="w-[1px] bg-zinc-400"></div><div class="w-0.5 bg-zinc-400"></div>
+                        <div class="w-[1px] bg-zinc-400"></div><div class="w-[1px] bg-zinc-400"></div><div class="w-1 bg-zinc-400"></div>
+                        <div class="w-0.5 bg-zinc-400"></div><div class="w-[1px] bg-zinc-400"></div><div class="w-0.5 bg-zinc-400"></div>
+                        <div class="w-1 bg-zinc-400"></div><div class="w-[1px] bg-zinc-400"></div><div class="w-0.5 bg-zinc-400"></div>
+                      </div>
+                    </div>
+                    <span class="font-mono text-[5px] text-zinc-600 tracking-widest uppercase leading-none">FEAM-LIC-2026</span>
+                  </div>
+                </div>
 
-            <!-- Bottom Card: Registration Details -->
-            <div class="flex items-center justify-between border-t border-zinc-800/80 pt-3 text-[9px] text-zinc-500">
-              <div>
-                <span class="block text-[7px] uppercase tracking-wider text-zinc-600 font-bold">Registro de Atleta</span>
-                <span class="font-mono font-semibold text-zinc-300" id="card-reg-number">FEAM-2026-XXXX</span>
               </div>
-              <div class="text-right">
-                <span class="block text-[7px] uppercase tracking-wider text-zinc-600 font-bold">Status Cadastral</span>
-                <span class="font-bold text-emerald-500 uppercase tracking-wider">● VERIFICADO</span>
-              </div>
-            </div>
 
+            </div>
+          </div>
+          
+          <!-- Indicator to flip -->
+          <div class="text-center pt-1">
+            <button onclick="toggleCardFlip()" class="inline-flex items-center space-x-1.5 text-[9px] font-bold text-zinc-500 uppercase tracking-widest hover:text-amber-500 transition-colors cursor-pointer select-none">
+              <span>🔄 Toque no cartão para girar</span>
+            </button>
           </div>
 
           <!-- Quick statistics / action box -->
@@ -178,86 +265,248 @@
       </div>
 
       <!-- SEÇÃO EXCLUSIVA DE PROFESSORES / DIRETORES DE CT (Gerenciamento do CT Próprio) -->
-      <div id="professor-view" class="grid grid-cols-1 lg:grid-cols-12 gap-8 hidden">
+      <div id="professor-view" class="grid grid-cols-1 lg:grid-cols-12 gap-6 hidden">
         
-        <!-- COLUNA ESQUERDA: GESTÃO DO CT (Takes 5 cols) -->
-        <div class="lg:col-span-5 space-y-6">
-          <div class="flex items-center justify-between">
-            <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Meu Centro de Treinamento (CT)</h2>
-            <span class="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-amber-500 uppercase text-center">
-              Credenciado Até: <span id="prof-ct-certified">2027-12-31</span>
-            </span>
+        <!-- SUB-TABS DO PROFESSOR (AUTOMAÇÃO COMERCIAL) -->
+        <div class="lg:col-span-12 flex flex-wrap items-center gap-2 border-b border-zinc-900 pb-4 mb-2">
+          <button type="button" id="tab-prof-ct-alunos" onclick="switchProfTab('ct-alunos')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-zinc-950 transition-all uppercase tracking-wider cursor-pointer">
+            🏠 CT & Atletas
+          </button>
+          <button type="button" id="tab-prof-caixa-fluxo" onclick="switchProfTab('caixa-fluxo')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            💰 Caixa & Fluxo (POS)
+          </button>
+          <button type="button" id="tab-prof-mensalidades" onclick="switchProfTab('mensalidades')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            👥 Mensalidades dos Alunos
+          </button>
+        </div>
+
+        <!-- CONTEÚDO 1: CT & ATLETAS (LAYOUT ORIGINAL PRESERVADO) -->
+        <div id="prof-content-ct-alunos" class="lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <!-- COLUNA ESQUERDA: GESTÃO DO CT (Takes 5 cols) -->
+          <div class="lg:col-span-5 space-y-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Meu Centro de Treinamento (CT)</h2>
+              <span class="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-amber-500 uppercase text-center">
+                Credenciado Até: <span id="prof-ct-certified">2027-12-31</span>
+              </span>
+            </div>
+
+            <!-- Form de Gestão do CT -->
+            <div class="bg-zinc-900 border border-zinc-850 rounded-2xl p-6 space-y-4">
+              <form id="prof-ct-form" class="space-y-4">
+                <input type="hidden" id="prof-ct-id">
+                
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome do CT / Academia</label>
+                  <input type="text" id="prof-ct-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Nome do CT">
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Professor Responsável / Diretor Técnico</label>
+                  <input type="text" id="prof-ct-instructor" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Seu nome">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Telefone de Contato</label>
+                    <input type="text" id="prof-ct-phone" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="(21) 99999-9999">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cidade</label>
+                    <input type="text" id="prof-ct-city" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Rio de Janeiro">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Endereço do CT</label>
+                    <input type="text" id="prof-ct-address" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Av. Principal, 100">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Bairro</label>
+                    <input type="text" id="prof-ct-neighborhood" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Copacabana">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modalidades Oferecidas (Vírgulas)</label>
+                  <input type="text" id="prof-ct-modalities" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Jiu-Jitsu, Muay Thai">
+                </div>
+
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md transition-all cursor-pointer">
+                  Salvar Dados do meu CT
+                </button>
+              </form>
+            </div>
           </div>
 
-          <!-- Form de Gestão do CT -->
-          <div class="bg-zinc-900 border border-zinc-850 rounded-2xl p-6 space-y-4">
-            <form id="prof-ct-form" class="space-y-4">
-              <input type="hidden" id="prof-ct-id">
-              
-              <div>
-                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome do CT / Academia</label>
-                <input type="text" id="prof-ct-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Nome do CT">
-              </div>
+          <!-- COLUNA DIREITA: GESTÃO DE ATLETAS (Takes 7 cols) -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Alunos Filiados do meu CT</h2>
+              <span id="prof-atletas-count" class="text-xs bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider">0 Atletas</span>
+            </div>
 
-              <div>
-                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Professor Responsável / Diretor Técnico</label>
-                <input type="text" id="prof-ct-instructor" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Seu nome">
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Telefone de Contato</label>
-                  <input type="text" id="prof-ct-phone" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="(21) 99999-9999">
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Cidade</label>
-                  <input type="text" id="prof-ct-city" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Rio de Janeiro">
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Endereço do CT</label>
-                  <input type="text" id="prof-ct-address" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Av. Principal, 100">
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Bairro</label>
-                  <input type="text" id="prof-ct-neighborhood" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Copacabana">
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modalidades Oferecidas (Vírgulas)</label>
-                <input type="text" id="prof-ct-modalities" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Jiu-Jitsu, Muay Thai">
-              </div>
-
-              <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md transition-all cursor-pointer">
-                Salvar Dados do meu CT
-              </button>
-            </form>
+            <!-- Tabela de Alunos vinculados -->
+            <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+              <table class="w-full text-left text-xs text-zinc-400">
+                <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                  <tr>
+                    <th class="p-3">Atleta</th>
+                    <th class="p-3">Registro FEAM</th>
+                    <th class="p-3">Graduação</th>
+                    <th class="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="prof-atletas-tbody" class="divide-y divide-zinc-900">
+                  <!-- Dynamic athlete list row will be injected here -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <!-- COLUNA DIREITA: GESTÃO DE ATLETAS (Takes 7 cols) -->
-        <div class="lg:col-span-7 space-y-6">
-          <div class="flex items-center justify-between">
-            <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Alunos Filiados do meu CT</h2>
-            <span id="prof-atletas-count" class="text-xs bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider">0 Atletas</span>
+        <!-- CONTEÚDO 2: CAIXA & FLUXO DE CAIXA (POS DO CT) -->
+        <div id="prof-content-caixa-fluxo" class="lg:col-span-12 hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- LADO ESQUERDO: FRENTE DE CAIXA / VENDA RÁPIDA (Takes 5 cols) -->
+          <div class="lg:col-span-5 space-y-6">
+            <div>
+              <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Frente de Caixa Rápido (POS)</h2>
+              <p class="text-zinc-500 text-[11px] mt-1">Registre vendas locais de produtos, day-passes ou despesas imediatas.</p>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-850 rounded-2xl p-6 space-y-4">
+              <form id="prof-pos-form" class="space-y-4">
+                
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Descrição da Operação</label>
+                  <input type="text" id="prof-pos-desc" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Ex: Venda de Protetor Bucal">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Tipo</label>
+                    <select id="prof-pos-tipo" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="entrada" class="bg-zinc-900 text-white">🟢 Entrada (Receita)</option>
+                      <option value="saida" class="bg-zinc-900 class text-white">🔴 Saída (Despesa)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Categoria</label>
+                    <select id="prof-pos-cat" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="venda_caixa" class="bg-zinc-900 text-white">Venda de Caixa</option>
+                      <option value="despesa" class="bg-zinc-900 text-white">Despesa Geral</option>
+                      <option value="mensalidade" class="bg-zinc-900 text-white">Mensalidade</option>
+                      <option value="outros" class="bg-zinc-900 text-white">Outros</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Valor (R$)</label>
+                    <input type="number" id="prof-pos-val" required min="0.01" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="0,00">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Forma de Pagamento</label>
+                    <select id="prof-pos-forma" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="pix" class="bg-zinc-900 text-white">PIX</option>
+                      <option value="dinheiro" class="bg-zinc-900 text-white">Dinheiro em Espécie</option>
+                      <option value="cartao" class="bg-zinc-900 text-white">Cartão Crédito/Débito</option>
+                      <option value="boleto" class="bg-zinc-900 text-white">Boleto Bancário</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-xs font-black uppercase tracking-widest text-white hover:from-emerald-500 hover:to-teal-400 shadow-md transition-all cursor-pointer">
+                  ⚡ Confirmar Lançamento de Caixa
+                </button>
+              </form>
+            </div>
           </div>
 
-          <!-- Tabela de Alunos vinculados -->
+          <!-- LADO DIREITO: FLUXO DE CAIXA / HISTÓRICO LOCAL (Takes 7 cols) -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Fluxo de Caixa do CT</h2>
+                <p class="text-zinc-500 text-[11px] mt-1">Lançamentos de receitas e despesas efetuados para o seu CT.</p>
+              </div>
+              
+              <!-- Cards Rápidos de Caixa -->
+              <div class="flex gap-2">
+                <div class="bg-zinc-900/60 border border-zinc-800 px-3 py-2 rounded-xl text-center min-w-[90px]">
+                  <span class="block text-[9px] uppercase font-bold text-zinc-500 leading-none">Saldo CT</span>
+                  <span id="prof-val-saldo" class="text-xs font-extrabold text-white mt-1 block">R$ 0,00</span>
+                </div>
+                <div class="bg-zinc-900/60 border border-zinc-800 px-3 py-2 rounded-xl text-center min-w-[90px]">
+                  <span class="block text-[9px] uppercase font-bold text-zinc-500 leading-none">Entradas</span>
+                  <span id="prof-val-entradas" class="text-xs font-extrabold text-emerald-400 mt-1 block">R$ 0,00</span>
+                </div>
+                <div class="bg-zinc-900/60 border border-zinc-800 px-3 py-2 rounded-xl text-center min-w-[90px]">
+                  <span class="block text-[9px] uppercase font-bold text-zinc-500 leading-none">Saídas</span>
+                  <span id="prof-val-saidas" class="text-xs font-extrabold text-red-400 mt-1 block">R$ 0,00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabela do Fluxo de Caixa -->
+            <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+              <table class="w-full text-left text-xs text-zinc-400">
+                <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                  <tr>
+                    <th class="p-3">Data</th>
+                    <th class="p-3">Categoria</th>
+                    <th class="p-3">Descrição</th>
+                    <th class="p-3">Forma</th>
+                    <th class="p-3">Valor</th>
+                    <th class="p-3 text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="prof-caixa-tbody" class="divide-y divide-zinc-900">
+                  <!-- Transações locais do CT injetadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTEÚDO 3: MENSALIDADES DOS ALUNOS (SISTEMA COMERCIAL) -->
+        <div id="prof-content-mensalidades" class="lg:col-span-12 hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Painel Comercial de Mensalidades</h2>
+              <p class="text-zinc-500 text-[11px] mt-1">Monitore o pagamento da mensalidade de seus alunos ativos no CT.</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <!-- Mês de Referência Selector -->
+              <span class="text-zinc-400 text-xs font-bold uppercase">Mês de Referência:</span>
+              <select id="prof-mens-mes" onchange="loadProfessorMensalidades()" class="bg-zinc-900 border border-zinc-850 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                <option value="2026-07">Julho / 2026</option>
+                <option value="2026-08">Agosto / 2026</option>
+                <option value="2026-09">Setembro / 2026</option>
+                <option value="2026-06">Junho / 2026</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tabela de Controle de Mensalidades -->
           <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
             <table class="w-full text-left text-xs text-zinc-400">
               <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
                 <tr>
-                  <th class="p-3">Atleta</th>
-                  <th class="p-3">Registro FEAM</th>
-                  <th class="p-3">Graduação</th>
-                  <th class="p-3">Status</th>
+                  <th class="p-4">Aluno Atleta</th>
+                  <th class="p-4">Matrícula FEAM</th>
+                  <th class="p-4">Valor Mensalidade</th>
+                  <th class="p-4">Mês Referência</th>
+                  <th class="p-4">Status de Pagamento</th>
+                  <th class="p-4 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody id="prof-atletas-tbody" class="divide-y divide-zinc-900">
-                <!-- Dynamic athlete list row will be injected here -->
+              <tbody id="prof-mensalidades-tbody" class="divide-y divide-zinc-900">
+                <!-- Alunos e status de mensalidade injetados dinamicamente -->
               </tbody>
             </table>
           </div>
@@ -293,6 +542,12 @@
           </button>
           <button onclick="switchAdminTab('novo-usuario')" id="tab-novo-usuario" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
             👥 Membros / ADMs
+          </button>
+          <button onclick="switchAdminTab('financeiro-global')" id="tab-financeiro-global" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            📊 Financeiro Global
+          </button>
+          <button onclick="switchAdminTab('suporte-chat')" id="tab-suporte-chat" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            💬 Atendimento Chat
           </button>
         </div>
 
@@ -404,6 +659,22 @@
               <p class="text-zinc-500 text-xs">Visualize e gerencie a base cadastral de atletas filiados sob a FEAMCRJ.</p>
             </div>
             <span class="self-start sm:self-center text-xs bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider" id="admin-atletas-count">0 Atletas</span>
+          </div>
+
+          <!-- Filtros e Busca de Atletas -->
+          <div class="flex flex-col md:flex-row gap-4 justify-between bg-zinc-950 p-4 rounded-2xl border border-zinc-900">
+            <div class="flex-1 relative">
+              <input type="text" id="admin-atletas-search" oninput="loadAdminAtletas()" placeholder="Buscar por nome, e-mail ou matrícula..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors">
+              <svg class="absolute left-3.5 top-3.5 w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <div class="w-full md:w-64">
+              <select id="admin-atletas-filter-status" onchange="loadAdminAtletas()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer">
+                <option value="all">Todos os Status</option>
+                <option value="pending">⏳ Pendentes de Aprovação</option>
+                <option value="active">🟢 Ativos</option>
+                <option value="suspended">🔴 Suspensos</option>
+              </select>
+            </div>
           </div>
 
           <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
@@ -795,6 +1066,287 @@
           </div>
         </div>
 
+        <!-- TAB CONTENT: FINANCEIRO GLOBAL -->
+        <div id="content-financeiro-global" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Painel Financeiro & Comercial Global (FEAMCRJ)</h2>
+              <p class="text-zinc-500 text-xs">Visão geral unificada das finanças da Federação e de todos os Centros de Treinamento (CTs) credenciados.</p>
+            </div>
+          </div>
+
+          <!-- CARDS DE RESUMO FINANCEIRO GLOBAL -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-zinc-900 border border-zinc-850 p-5 rounded-2xl flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Saldo Geral Consolidado</span>
+                <span id="adm-fin-saldo" class="text-xl font-black text-white block mt-1">R$ 0,00</span>
+              </div>
+              <div class="w-10 h-10 bg-amber-500/10 rounded-xl border border-amber-500/20 flex items-center justify-center text-amber-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 16V5"></path></svg>
+              </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-850 p-5 rounded-2xl flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Total Receitas (Entradas)</span>
+                <span id="adm-fin-entradas" class="text-xl font-black text-emerald-400 block mt-1">R$ 0,00</span>
+              </div>
+              <div class="w-10 h-10 bg-emerald-500/10 rounded-xl border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v12"></path></svg>
+              </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-850 p-5 rounded-2xl flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Total Despesas (Saídas)</span>
+                <span id="adm-fin-saidas" class="text-xl font-black text-red-500 block mt-1">R$ 0,00</span>
+              </div>
+              <div class="w-10 h-10 bg-red-500/10 rounded-xl border border-red-500/20 flex items-center justify-center text-red-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13l-3 3m0 0l-3-3m3 3V3"></path></svg>
+              </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-850 p-5 rounded-2xl flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">CTs Homologados Ativos</span>
+                <span id="adm-fin-cts" class="text-xl font-black text-amber-500 block mt-1">0 Academias</span>
+              </div>
+              <div class="w-10 h-10 bg-amber-500/10 rounded-xl border border-amber-500/20 flex items-center justify-center text-amber-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- FILTRAGEM E AUTOMAÇÃO COMERCIAL -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- COLUNA ESQUERDA: LISTAGEM DE TRANSAÇÕES FILTRADA (Takes 8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+              
+              <!-- FILTROS DE PESQUISA -->
+              <div class="bg-zinc-900/40 border border-zinc-900 p-4 rounded-2xl flex flex-wrap gap-3 items-center justify-between">
+                <div class="flex flex-wrap items-center gap-3">
+                  
+                  <!-- Dropdown de CTs -->
+                  <div>
+                    <label class="block text-[9px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Filtrar por CT / Academia</label>
+                    <select id="adm-fin-filter-ct" onchange="loadAdminFinanceiroGlobal()" class="bg-zinc-950 border border-zinc-850 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="todos">-- Todos os CTs / Geral --</option>
+                      <option value="admin-feam">FEAMCRJ Federação</option>
+                      <!-- Demais CTs serão populados dinamicamente -->
+                    </select>
+                  </div>
+
+                  <!-- Dropdown de Categoria -->
+                  <div>
+                    <label class="block text-[9px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Filtrar Categoria</label>
+                    <select id="adm-fin-filter-cat" onchange="loadAdminFinanceiroGlobal()" class="bg-zinc-950 border border-zinc-850 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="todas">-- Todas as Categorias --</option>
+                      <option value="mensalidade">Mensalidades</option>
+                      <option value="venda_caixa">Vendas de Caixa</option>
+                      <option value="federacao">Anuidades e Filiações</option>
+                      <option value="inscricao">Inscrições em Torneios</option>
+                      <option value="despesa">Despesas</option>
+                      <option value="outros">Outros</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Input de Busca textual -->
+                <div class="flex-grow max-w-xs">
+                  <label class="block text-[9px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Buscar por Descrição</label>
+                  <input type="text" id="adm-fin-search" oninput="loadAdminFinanceiroGlobal()" class="w-full bg-zinc-950 border border-zinc-850 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Digite para filtrar...">
+                </div>
+              </div>
+
+              <!-- Tabela de Lançamentos do Livro Caixa Global -->
+              <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+                <table class="w-full text-left text-xs text-zinc-400">
+                  <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                    <tr>
+                      <th class="p-3">Data</th>
+                      <th class="p-3">CT / Origem</th>
+                      <th class="p-3">Categoria</th>
+                      <th class="p-3">Descrição</th>
+                      <th class="p-3">Forma</th>
+                      <th class="p-3">Valor</th>
+                      <th class="p-3 text-right">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adm-fin-tbody" class="divide-y divide-zinc-900">
+                    <!-- Registros financeiros consolidados injetados por JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- COLUNA DIREITA: REGISTRO CENTRAL E CHART VISUAL (Takes 4 cols) -->
+            <div class="lg:col-span-4 space-y-6">
+              
+              <!-- CAIXA CENTRAL / LANÇAMENTO RÁPIDO DA FEDERAÇÃO -->
+              <div class="bg-zinc-900 border border-zinc-850 p-6 rounded-2xl space-y-4">
+                <div>
+                  <h3 class="text-xs font-black uppercase text-amber-500 tracking-wider flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    Caixa Central da Federação
+                  </h3>
+                  <p class="text-[11px] text-zinc-500 mt-1">Lançar anuidades de academias, taxas de filiações centrais ou despesas de campeonatos.</p>
+                </div>
+
+                <form id="adm-fin-form" class="space-y-4">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Descrição</label>
+                    <input type="text" id="adm-fin-desc" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Filiação Anual Copacabana BJJ">
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Tipo</label>
+                      <select id="adm-fin-tipo" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                        <option value="entrada" class="bg-zinc-900 text-white">🟢 Entrada</option>
+                        <option value="saida" class="bg-zinc-900 text-white">🔴 Saída</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Categoria</label>
+                      <select id="adm-fin-cat" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                        <option value="federacao" class="bg-zinc-900 text-white">Filiação / Anuidade</option>
+                        <option value="inscricao" class="bg-zinc-900 text-white">Inscrição Evento</option>
+                        <option value="despesa" class="bg-zinc-900 text-white">Despesa Geral</option>
+                        <option value="venda_caixa" class="bg-zinc-900 text-white">Vendas de Caixa</option>
+                        <option value="outros" class="bg-zinc-900 text-white">Outros</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Valor (R$)</label>
+                      <input type="number" id="adm-fin-val" required min="0.01" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="0,00">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Forma</label>
+                      <select id="adm-fin-forma" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                        <option value="pix" class="bg-zinc-900 text-white">PIX</option>
+                        <option value="dinheiro" class="bg-zinc-900 text-white">Dinheiro</option>
+                        <option value="cartao" class="bg-zinc-900 text-white">Cartão</option>
+                        <option value="boleto" class="bg-zinc-900 text-white">Boleto</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-xs font-black uppercase tracking-widest text-zinc-950 hover:from-amber-400 hover:to-orange-400 shadow-md transition-all cursor-pointer">
+                    📥 Registrar na Federação
+                  </button>
+                </form>
+              </div>
+
+              <!-- PERFORMANCE DE ENTRADAS POR CT (CHART VISUAL USANDO HTML/CSS E TALEWIND) -->
+              <div class="bg-zinc-900 border border-zinc-850 p-6 rounded-2xl space-y-4">
+                <div>
+                  <h3 class="text-xs font-black uppercase text-zinc-300 tracking-wider">Desempenho Comercial dos CTs</h3>
+                  <p class="text-[11px] text-zinc-500 mt-1">Faturamento acumulado em cada unidade esportiva.</p>
+                </div>
+
+                <div id="adm-fin-performance-list" class="space-y-3 pt-2">
+                  <!-- Barras horizontais de faturamento injetadas dinamicamente -->
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: ATENDIMENTO CHAT ONLINE (TEMPO REAL) -->
+        <div id="content-suporte-chat" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Atendimento & Suporte Online</h2>
+              <p class="text-zinc-500 text-xs">Converse diretamente com seus filiados em tempo real sem precisar de redirecionamento para o WhatsApp.</p>
+            </div>
+            <button onclick="limparHistoricoChats()" class="self-start sm:self-center px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-950 border border-zinc-850 text-red-500 hover:bg-red-500 hover:text-white transition-all uppercase tracking-wider font-display cursor-pointer">
+              🗑️ Limpar Todo o Histórico
+            </button>
+          </div>
+
+          <!-- BENTO CONVERSATION PANEL -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[600px] border border-zinc-900 rounded-3xl overflow-hidden bg-zinc-950/40">
+            <!-- LEFT PANEL: SESSION LIST (Takes 4 cols) -->
+            <div class="lg:col-span-4 border-r border-zinc-900 flex flex-col h-full bg-zinc-950/20">
+              <div class="p-4 border-b border-zinc-900 shrink-0">
+                <h3 class="text-xs font-black uppercase tracking-wider text-amber-500 flex items-center gap-2">
+                  <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.9 1.9 0 01-2-2V10m0 0a2 2 0 012-2h4a2 2 0 012 2m-6 4h.01"></path></svg>
+                  Conversas Recentes
+                </h3>
+              </div>
+              <div id="admin-chat-list" class="flex-1 overflow-y-auto divide-y divide-zinc-900 scrollbar-thin">
+                <!-- Session items dynamically injected -->
+                <div class="text-center py-8 text-xs text-zinc-500">
+                  Nenhuma conversa ativa no momento...
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT PANEL: ACTIVE CHAT SCREEN (Takes 8 cols) -->
+            <div class="lg:col-span-8 flex flex-col h-full bg-zinc-900/10">
+              <!-- STATE 1: NO CHAT SELECTED -->
+              <div id="admin-no-chat-selected" class="flex-1 flex flex-col items-center justify-center text-center p-8 space-y-3">
+                <div class="w-16 h-16 rounded-full bg-zinc-900 flex items-center justify-center border border-zinc-850 text-zinc-600">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-zinc-300">Nenhum Atendimento Selecionado</h4>
+                  <p class="text-xs text-zinc-500 max-w-sm mt-1">Selecione uma conversa ao lado para visualizar o histórico e responder em tempo real.</p>
+                </div>
+              </div>
+
+              <!-- STATE 2: CHAT ACTIVE -->
+              <div id="admin-chat-active" class="hidden flex-1 flex flex-col h-full overflow-hidden">
+                <!-- Header -->
+                <div class="p-4 bg-zinc-950/40 border-b border-zinc-900 flex items-center justify-between gap-3 shrink-0">
+                  <div class="flex items-center gap-3">
+                    <div id="admin-active-chat-avatar" class="w-10 h-10 rounded-2xl bg-amber-500 text-zinc-950 font-black text-xs uppercase flex items-center justify-center border border-amber-400">
+                      <span>FS</span>
+                    </div>
+                    <div>
+                      <h4 id="admin-active-chat-name" class="text-xs font-bold text-white">Carregando Nome...</h4>
+                      <p id="admin-active-chat-email" class="text-[10px] text-zinc-500 font-medium">Carregando Contato...</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button onclick="responderWhatsAppAdmin()" class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5">
+                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.458h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                      </svg>
+                      <span>Responder no WhatsApp</span>
+                    </button>
+                    <button onclick="fecharChatAtivoAdmin()" class="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white text-[10px] font-bold transition-all cursor-pointer">
+                      Encerrar Atendimento
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Messages -->
+                <div id="admin-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-950/10 flex flex-col scrollbar-thin">
+                  <!-- Messages injected here dynamically -->
+                </div>
+
+                <!-- Input area -->
+                <div class="p-3 bg-zinc-950/40 border-t border-zinc-900 flex gap-2 items-center shrink-0">
+                  <input id="admin-chat-input" type="text" placeholder="Digite sua resposta..." class="flex-1 bg-zinc-950 border border-zinc-850 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 placeholder-zinc-500 transition-all font-medium" />
+                  <button id="admin-chat-send-btn" class="p-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 transition-all cursor-pointer flex items-center justify-center focus:outline-none">
+                    <svg class="w-4 h-4 transform rotate-45 -mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- MODAL: EDITAR TORNEIO (ADMIN) -->
         <div id="modal-edit-torneio" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/85 backdrop-blur-sm hidden">
           <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-6 relative shadow-2xl text-left">
@@ -980,6 +1532,36 @@
       
       // Carrega informações na tela
       document.getElementById('welcome-name').textContent = loggedUser.name;
+
+      // Buscar status mais recente em tempo real se não for admin
+      let currentStatus = loggedUser.status || (loggedUser.detalhes && loggedUser.detalhes.status) || 'active';
+      if (loggedUser.tipo !== 'admin') {
+        if (isFirebaseActive) {
+          try {
+            const collection = loggedUser.tipo === 'professor' ? 'academias' : 'atletas';
+            const doc = await db.collection(collection).doc(loggedUser.id || loggedUser.uid).get();
+            if (doc.exists) {
+              const fresh = doc.data();
+              currentStatus = fresh.status || 'pending';
+              loggedUser.status = currentStatus;
+              if (loggedUser.detalhes) loggedUser.detalhes.status = currentStatus;
+              localStorage.setItem('feamcrj_logged_user', JSON.stringify(loggedUser));
+            }
+          } catch (e) {
+            console.warn("Erro ao buscar dados atualizados do banco:", e);
+          }
+        } else {
+          const key = loggedUser.tipo === 'professor' ? 'feam_academias' : 'feam_atletas';
+          const list = JSON.parse(localStorage.getItem(key)) || [];
+          const found = list.find(a => a.id === loggedUser.id);
+          if (found) {
+            currentStatus = found.status || 'pending';
+            loggedUser.status = currentStatus;
+            if (loggedUser.detalhes) loggedUser.detalhes.status = currentStatus;
+            localStorage.setItem('feamcrj_logged_user', JSON.stringify(loggedUser));
+          }
+        }
+      }
       
       // Se for admin, carrega os dados de admin
       if (loggedUser.tipo === 'admin') {
@@ -1001,6 +1583,16 @@
         
         document.getElementById('welcome-name').textContent = "Professor / Diretor de CT";
         
+        // Se estiver pendente, mostra o alerta de PIX
+        if (currentStatus === 'pending') {
+          const banner = document.getElementById('pending-payment-banner');
+          banner.classList.remove('hidden');
+          const textMsg = encodeURIComponent(`Olá! Sou Professor/Diretor do CT ${loggedUser.name} e gostaria de enviar o comprovante de pagamento do credenciamento da academia (R$ 70,00). Meu email é: ${loggedUser.email}.`);
+          document.getElementById('btn-envia-whatsapp-comprovante').href = `https://wa.me/5521993370397?text=${textMsg}`;
+        } else {
+          document.getElementById('pending-payment-banner').classList.add('hidden');
+        }
+
         await loadProfessorCT();
       } else {
         // Carrega informações normais de atleta na tela
@@ -1015,6 +1607,26 @@
         document.getElementById('card-rank').textContent = userDetails.rank || 'Credenciado';
         document.getElementById('card-academy').textContent = userDetails.academyName || userDetails.address || 'Academia Federada';
         document.getElementById('card-reg-number').textContent = userDetails.registrationNumber || 'FEAM-CRED-' + loggedUser.id.toUpperCase();
+
+        // Se estiver pendente, mostra o alerta de PIX e atualiza carteira
+        const statusTextEl = document.getElementById('card-status-text');
+        if (currentStatus === 'pending') {
+          const banner = document.getElementById('pending-payment-banner');
+          banner.classList.remove('hidden');
+          const textMsg = encodeURIComponent(`Olá! Sou o atleta filiado ${loggedUser.name} e gostaria de enviar o comprovante de pagamento de R$ 70,00 da minha filiação. Meu email cadastrado é: ${loggedUser.email}.`);
+          document.getElementById('btn-envia-whatsapp-comprovante').href = `https://wa.me/5521993370397?text=${textMsg}`;
+          
+          if (statusTextEl) {
+            statusTextEl.textContent = '● AGUARDANDO PIX';
+            statusTextEl.className = 'font-bold text-amber-500 uppercase tracking-wider animate-pulse';
+          }
+        } else {
+          document.getElementById('pending-payment-banner').classList.add('hidden');
+          if (statusTextEl) {
+            statusTextEl.textContent = '● VERIFICADO';
+            statusTextEl.className = 'font-bold text-emerald-500 uppercase tracking-wider';
+          }
+        }
 
         renderUserRegistrations(loggedUser.email);
       }
@@ -1102,6 +1714,10 @@
       }
       
       document.getElementById('prof-atletas-count').textContent = `${ctAtletas.length} Atletas`;
+
+      // Inicializa os módulos Financeiro e de Automação Comercial (Caixa e Mensalidades do CT)
+      await loadProfessorCaixa();
+      await loadProfessorMensalidades();
     }
 
     // Salvar modificações do CT (Módulo do Professor)
@@ -1246,7 +1862,7 @@
     }
 
     function switchAdminTab(tabName) {
-      const tabs = ['inscricoes', 'torneios', 'atletas', 'academias', 'edit-torneios', 'edit-academias', 'config-site', 'novo-usuario'];
+      const tabs = ['inscricoes', 'torneios', 'atletas', 'academias', 'edit-torneios', 'edit-academias', 'config-site', 'novo-usuario', 'financeiro-global'];
       tabs.forEach(t => {
         const btn = document.getElementById('tab-' + t);
         const content = document.getElementById('content-' + t);
@@ -1266,6 +1882,9 @@
       if (tabName === 'novo-usuario') {
         populateAcademiesDropdown();
         loadAdminMembersList();
+      }
+      if (tabName === 'financeiro-global') {
+        loadAdminFinanceiroGlobal();
       }
     }
 
@@ -1333,16 +1952,81 @@
       tbody.innerHTML = '';
 
       const atletas = await getAtletas();
-      countBadge.textContent = `${atletas.length} Atletas`;
+      
+      const searchText = (document.getElementById('admin-atletas-search')?.value || '').toLowerCase().trim();
+      const statusFilter = document.getElementById('admin-atletas-filter-status')?.value || 'all';
 
-      if (atletas.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-zinc-500">Nenhum atleta registrado no banco de dados local ainda.</td></tr>`;
+      let filteredAtletas = atletas;
+      if (statusFilter !== 'all') {
+        filteredAtletas = filteredAtletas.filter(ath => (ath.status || 'active') === statusFilter);
+      }
+      if (searchText) {
+        filteredAtletas = filteredAtletas.filter(ath => {
+          const name = (ath.name || '').toLowerCase();
+          const email = (ath.email || '').toLowerCase();
+          const reg = (ath.registrationNumber || '').toLowerCase();
+          return name.includes(searchText) || email.includes(searchText) || reg.includes(searchText);
+        });
+      }
+
+      countBadge.textContent = `${filteredAtletas.length} Atletas`;
+
+      if (filteredAtletas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-zinc-500">Nenhum atleta localizado para os filtros selecionados.</td></tr>`;
         return;
       }
 
-      atletas.forEach(ath => {
+      filteredAtletas.forEach(ath => {
         const tr = document.createElement('tr');
         tr.className = "hover:bg-zinc-900/30 transition-colors";
+
+        let statusBadge = '';
+        if (ath.status === 'pending') {
+          const pixBadge = (ath.pago === true || ath.paymentStatus === 'paid')
+            ? '<span class="block mt-1 px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase w-fit">PIX Confirmado</span>'
+            : '<span class="block mt-1 px-2 py-0.5 rounded text-[9px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase w-fit">PIX Pendente (R$70)</span>';
+          statusBadge = `
+            <span class="px-2 py-1 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase">
+              Aguardando Aprovação
+            </span>
+            ${pixBadge}
+          `;
+        } else if (ath.status === 'active') {
+          statusBadge = `
+            <span class="px-2 py-1 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">
+              Ativo
+            </span>
+            <span class="block mt-1 px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase w-fit">PIX Confirmado</span>
+          `;
+        } else {
+          statusBadge = `
+            <span class="px-2 py-1 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 uppercase">
+              Suspenso
+            </span>
+          `;
+        }
+
+        let actionsHtml = '';
+        if (ath.status === 'pending') {
+          actionsHtml = `
+            <button onclick="admApproveAtleta('${ath.id}')" class="px-2.5 py-1 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-lg text-[10px] font-black uppercase tracking-wider cursor-pointer">
+              Aprovar
+            </button>
+            <button onclick="admDeletarAtleta('${ath.id}', true)" class="px-2.5 py-1 bg-zinc-950 border border-zinc-800 text-red-500 hover:bg-red-500 hover:text-white rounded-lg text-[10px] font-bold cursor-pointer">
+              Recusar / Excluir
+            </button>
+          `;
+        } else {
+          actionsHtml = `
+            <button onclick="admToggleStatusAtleta('${ath.id}', '${ath.status === 'active' ? 'suspended' : 'active'}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 hover:text-white text-[10px] font-bold cursor-pointer">
+              ${ath.status === 'active' ? 'Suspender' : 'Ativar'}
+            </button>
+            <button onclick="admDeletarAtleta('${ath.id}', false)" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-red-500 hover:bg-red-500 hover:text-white text-[10px] font-bold cursor-pointer">
+              Excluir
+            </button>
+          `;
+        }
+
         tr.innerHTML = `
           <td class="p-4 font-mono font-bold text-amber-500 text-[11px]">${ath.registrationNumber || 'Pendente'}</td>
           <td class="p-4 font-semibold text-white">${ath.name}</td>
@@ -1351,21 +2035,20 @@
           <td class="p-4 text-zinc-300">${ath.modality || 'Grappling'} <span class="text-zinc-500">(${ath.rank || 'Branca'})</span></td>
           <td class="p-4 text-zinc-500">${ath.affiliationDate || '-'}</td>
           <td class="p-4">
-            <span class="px-2 py-1 rounded text-[10px] font-bold ${ath.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}">
-              ${ath.status === 'active' ? 'Ativo' : 'Suspenso'}
-            </span>
+            ${statusBadge}
           </td>
           <td class="p-4 text-right space-x-2 whitespace-nowrap">
-            <button onclick="admToggleStatusAtleta('${ath.id}', '${ath.status === 'active' ? 'suspended' : 'active'}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 hover:text-white text-[10px] font-bold cursor-pointer">
-              ${ath.status === 'active' ? 'Suspender' : 'Ativar'}
-            </button>
-            <button onclick="admDeletarAtleta('${ath.id}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-red-500 hover:bg-red-500 hover:text-white text-[10px] font-bold cursor-pointer">
-              Excluir
-            </button>
+            ${actionsHtml}
           </td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    async function admApproveAtleta(id) {
+      await alterarStatusAtleta(id, 'active');
+      alert('🟢 Atleta homologado e filiação aprovada com sucesso!');
+      await loadAdminAtletas();
     }
 
     async function admToggleStatusAtleta(id, status) {
@@ -1373,9 +2056,13 @@
       await loadAdminAtletas();
     }
 
-    async function admDeletarAtleta(id) {
-      if (confirm('Atenção: deseja deletar permanentemente este atleta da Federação? Todos os seus dados serão excluídos.')) {
+    async function admDeletarAtleta(id, isReject = false) {
+      const msg = isReject 
+        ? 'Deseja realmente REJEITAR e excluir este cadastro pendente?' 
+        : 'Atenção: deseja deletar permanentemente este atleta da Federação? Todos os seus dados serão excluídos.';
+      if (confirm(msg)) {
         await excluirAtleta(id);
+        alert(isReject ? '❌ Cadastro pendente rejeitado e removido com sucesso.' : 'Atleta excluído com sucesso.');
         await loadAdminAtletas();
       }
     }
@@ -1410,13 +2097,36 @@
           <td class="p-4 text-zinc-400 max-w-[150px] truncate" title="${mods}">${mods}</td>
           <td class="p-4 text-zinc-500 font-mono text-[11px]">${acad.certifiedUntil || '-'}</td>
           <td class="p-4">
-            <span class="px-2 py-1 rounded text-[10px] font-bold ${acad.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}">
-              ${acad.status === 'active' ? 'Homologada' : 'Inativa'}
-            </span>
+            ${(() => {
+              if (acad.status === 'pending') {
+                const pixBadge = (acad.pago === true || acad.paymentStatus === 'paid')
+                  ? '<span class="block mt-1 px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase w-fit">PIX Confirmado</span>'
+                  : '<span class="block mt-1 px-2 py-0.5 rounded text-[9px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase w-fit">PIX Pendente (R$70)</span>';
+                return `
+                  <span class="px-2 py-1 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase">
+                    Aguardando Aprovação
+                  </span>
+                  ${pixBadge}
+                `;
+              } else if (acad.status === 'active') {
+                return `
+                  <span class="px-2 py-1 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">
+                    Homologada
+                  </span>
+                  <span class="block mt-1 px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase w-fit">PIX Confirmado</span>
+                `;
+              } else {
+                return `
+                  <span class="px-2 py-1 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 uppercase">
+                    Inativa
+                  </span>
+                `;
+              }
+            })()}
           </td>
           <td class="p-4 text-right space-x-2 whitespace-nowrap">
-            <button onclick="admToggleStatusAcademia('${acad.id}', '${acad.status === 'active' ? 'inactive' : 'active'}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 hover:text-white text-[10px] font-bold cursor-pointer">
-              ${acad.status === 'active' ? 'Desativar' : 'Aprovar'}
+            <button onclick="admToggleStatusAcademia('${acad.id}', '${acad.status === 'active' ? 'inactive' : 'active'}')" class="px-2.5 py-1 ${acad.status === 'pending' ? 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950' : 'bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white'} rounded-lg text-[10px] font-black uppercase tracking-wider cursor-pointer font-display">
+              ${acad.status === 'active' ? 'Desativar' : 'Aprovar / Homologar'}
             </button>
             <button onclick="admDeletarAcademia('${acad.id}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-red-500 hover:bg-red-500 hover:text-white text-[10px] font-bold cursor-pointer">
               Excluir
@@ -2018,6 +2728,746 @@
       }
     });
 
+    // ==========================================
+    // SISTEMA DE SUPORTE CHAT ONLINE EM TEMPO REAL (FIREBASE)
+    // ==========================================
+    let adminChatsUnsubscribe = null;
+    let selectedChatId = null;
+    let activeChatUserContact = "";
+    let activeChatUserName = "";
+
+    function responderWhatsAppAdmin() {
+      if (!activeChatUserName) {
+        alert("Nenhum atendimento ativo selecionado.");
+        return;
+      }
+      
+      // Clean phone number from activeChatUserContact (remove non-digits)
+      let cleanedPhone = activeChatUserContact.replace(/\D/g, '');
+      
+      // If it doesn't look like a phone number, ask admin to confirm/enter the correct phone number
+      if (cleanedPhone.length < 8) {
+        const userInput = prompt(`O contato fornecido ("${activeChatUserContact}") não parece ser um número de telefone válido.\n\nPor favor, digite o número do WhatsApp do filiado com DDD para iniciar a conversa (apenas números):`, "");
+        if (!userInput) return;
+        cleanedPhone = userInput.replace(/\D/g, '');
+      }
+      
+      // Format number: make sure country code is present (default 55 for Brazil)
+      if (cleanedPhone.length === 10 || cleanedPhone.length === 11) {
+        cleanedPhone = "55" + cleanedPhone;
+      }
+      
+      const welcomeText = `Olá ${activeChatUserName}! Sou o administrador do suporte da FEAMCRJ. Recebi sua dúvida no site e estou entrando em contato para ajudar você.`;
+      const url = `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(welcomeText)}`;
+      
+      window.open(url, '_blank');
+    }
+
+    async function loadAdminSupportChats() {
+      if (typeof isFirebaseActive === 'undefined' || !isFirebaseActive || !db) return;
+
+      if (adminChatsUnsubscribe) adminChatsUnsubscribe();
+
+      const listContainer = document.getElementById('admin-chat-list');
+
+      adminChatsUnsubscribe = db.collection('suporte_chats')
+        .orderBy('lastMessageTime', 'desc')
+        .onSnapshot(snapshot => {
+          listContainer.innerHTML = '';
+          
+          if (snapshot.empty) {
+            listContainer.innerHTML = `
+              <div class="text-center py-8 text-xs text-zinc-500">
+                Nenhuma conversa ativa no momento...
+              </div>`;
+            return;
+          }
+
+          snapshot.forEach(doc => {
+            const chat = doc.data();
+            const isSelected = chat.id === selectedChatId;
+            const isUnread = chat.unreadByAdmin;
+            const statusDot = chat.status === 'active' ? 'bg-emerald-500' : 'bg-zinc-600';
+            
+            const item = document.createElement('div');
+            item.className = `p-4 cursor-pointer hover:bg-zinc-850/50 transition-all border-b border-zinc-850 flex items-center justify-between gap-3 ${isSelected ? 'bg-zinc-850 border-l-4 border-l-amber-500' : ''}`;
+            
+            let timeStr = '';
+            if (chat.lastMessageTime) {
+              const date = chat.lastMessageTime.toDate ? chat.lastMessageTime.toDate() : new Date(chat.lastMessageTime);
+              timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            item.innerHTML = `
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="w-2 h-2 rounded-full ${statusDot}"></span>
+                  <span class="font-bold text-xs text-white truncate block max-w-[150px]">${chat.userName}</span>
+                  ${isUnread ? '<span class="px-1.5 py-0.5 bg-amber-500 text-zinc-950 text-[8px] font-black uppercase rounded-md animate-pulse">NOVA</span>' : ''}
+                </div>
+                <p class="text-[11px] text-zinc-400 truncate">${chat.lastMessage || 'Sem mensagens'}</p>
+              </div>
+              <div class="text-right shrink-0 flex flex-col items-end gap-1">
+                <span class="text-[9px] text-zinc-500 font-bold">${timeStr}</span>
+                ${chat.typingByUser ? '<span class="text-[9px] text-emerald-400 font-bold animate-pulse">Digitando...</span>' : ''}
+              </div>
+            `;
+
+            item.onclick = () => selectAdminChat(chat.id);
+            listContainer.appendChild(item);
+          });
+
+          if (selectedChatId) {
+            const selectedDoc = snapshot.docs.find(d => d.id === selectedChatId);
+            if (selectedDoc) {
+              updateActiveChatWindow(selectedDoc.data());
+            }
+          }
+        }, err => {
+          console.error("Erro ao listar chats suporte:", err);
+        });
+    }
+
+    async function selectAdminChat(chatId) {
+      selectedChatId = chatId;
+      
+      document.getElementById('admin-no-chat-selected').classList.add('hidden');
+      document.getElementById('admin-chat-active').classList.remove('hidden');
+
+      try {
+        await db.collection('suporte_chats').doc(chatId).update({
+          unreadByAdmin: false
+        });
+      } catch(e){}
+    }
+
+    function updateActiveChatWindow(chatData) {
+      activeChatUserContact = chatData.userEmail || "";
+      activeChatUserName = chatData.userName || "";
+
+      document.getElementById('admin-active-chat-name').textContent = chatData.userName;
+      document.getElementById('admin-active-chat-email').textContent = chatData.userEmail || 'Nenhum e-mail/telefone fornecido';
+      
+      const initials = chatData.userName.substring(0, 2).toUpperCase();
+      document.getElementById('admin-active-chat-avatar').innerHTML = `<span>${initials}</span>`;
+
+      const messagesContainer = document.getElementById('admin-chat-messages');
+      messagesContainer.innerHTML = '';
+
+      const messages = chatData.messages || [];
+      messages.forEach(msg => {
+        const msgBlock = document.createElement('div');
+        
+        if (msg.sender === 'user') {
+          msgBlock.className = "bg-zinc-850 border border-zinc-800 text-zinc-200 self-start max-w-[80%] rounded-2xl rounded-tl-none p-3.5 text-xs leading-relaxed shadow-sm shrink-0";
+          msgBlock.textContent = msg.text;
+        } else if (msg.sender === 'system') {
+          msgBlock.className = "bg-zinc-950 text-zinc-500 self-center text-center max-w-[90%] rounded-xl px-3 py-1 text-[10px] uppercase font-bold tracking-wider border border-zinc-850 my-1 shrink-0";
+          msgBlock.textContent = msg.text;
+        } else {
+          msgBlock.className = "bg-amber-500 text-zinc-950 self-end max-w-[80%] rounded-2xl rounded-tr-none p-3.5 text-xs leading-relaxed shadow-md shrink-0";
+          msgBlock.textContent = msg.text;
+          
+          const ticks = document.createElement('span');
+          ticks.className = "block text-right text-[9px] text-zinc-950/70 mt-1 select-none leading-none";
+          ticks.innerHTML = `✓✓`;
+          msgBlock.appendChild(ticks);
+        }
+        messagesContainer.appendChild(msgBlock);
+      });
+      
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      const chatInput = document.getElementById('admin-chat-input');
+      const sendBtn = document.getElementById('admin-chat-send-btn');
+      if (chatData.status === 'closed') {
+        chatInput.disabled = true;
+        sendBtn.disabled = true;
+        chatInput.placeholder = "Esta conversa foi encerrada.";
+      } else {
+        chatInput.disabled = false;
+        sendBtn.disabled = false;
+        chatInput.placeholder = "Digite sua resposta...";
+      }
+    }
+
+    async function enviarMensagemAdmin() {
+      const input = document.getElementById('admin-chat-input');
+      const text = input.value.trim();
+      if (!text || !selectedChatId || typeof isFirebaseActive === 'undefined' || !isFirebaseActive) return;
+
+      input.value = '';
+      input.focus();
+
+      try {
+        const chatRef = db.collection('suporte_chats').doc(selectedChatId);
+        const doc = await chatRef.get();
+        if (doc.exists) {
+          const messages = doc.data().messages || [];
+          messages.push({
+            sender: 'admin',
+            text: text,
+            time: Date.now()
+          });
+
+          await chatRef.update({
+            messages: messages,
+            lastMessage: text,
+            lastMessageTime: firebase.firestore.FieldValue.serverTimestamp() || new Date(),
+            unreadByAdmin: false,
+            unreadByUser: true
+          });
+        }
+      } catch (err) {
+        console.error("Erro ao enviar mensagem como Admin:", err);
+      }
+    }
+
+    async function fecharChatAtivoAdmin() {
+      if (!selectedChatId || typeof isFirebaseActive === 'undefined' || !isFirebaseActive) return;
+      
+      if (!confirm("Deseja encerrar este atendimento de suporte?")) return;
+
+      try {
+        const chatRef = db.collection('suporte_chats').doc(selectedChatId);
+        const doc = await chatRef.get();
+        if (doc.exists) {
+          const messages = doc.data().messages || [];
+          messages.push({
+            sender: 'system',
+            text: 'Atendimento encerrado pelo suporte',
+            time: Date.now()
+          });
+
+          await chatRef.update({
+            status: 'closed',
+            messages: messages,
+            lastMessage: 'Atendimento encerrado',
+            lastMessageTime: firebase.firestore.FieldValue.serverTimestamp() || new Date()
+          });
+        }
+      } catch(e){
+        console.error(e);
+      }
+    }
+
+    async function limparHistoricoChats() {
+      if (typeof isFirebaseActive === 'undefined' || !isFirebaseActive || !db) return;
+      if (!confirm("Tem certeza de que deseja apagar permanentemente todas as conversas e históricos de chats de suporte?")) return;
+
+      try {
+        const snapshot = await db.collection('suporte_chats').get();
+        const batch = db.batch();
+        snapshot.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+        
+        selectedChatId = null;
+        document.getElementById('admin-chat-active').classList.add('hidden');
+        document.getElementById('admin-no-chat-selected').classList.remove('hidden');
+        
+        alert("Todos os históricos de chat foram apagados com sucesso!");
+      } catch (err) {
+        console.error("Erro ao limpar chats:", err);
+        alert("Ocorreu uma falha ao limpar as conversas.");
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const adminInput = document.getElementById('admin-chat-input');
+      const adminSendBtn = document.getElementById('admin-chat-send-btn');
+      
+      if (adminInput && adminSendBtn) {
+        adminSendBtn.onclick = enviarMensagemAdmin;
+        adminInput.onkeypress = (e) => {
+          if (e.key === 'Enter') enviarMensagemAdmin();
+        };
+
+        let adminTypingTimeout = null;
+        adminInput.addEventListener('input', () => {
+          if (selectedChatId && typeof isFirebaseActive !== 'undefined' && isFirebaseActive) {
+            db.collection('suporte_chats').doc(selectedChatId).update({ typingByAdmin: true });
+            
+            clearTimeout(adminTypingTimeout);
+            adminTypingTimeout = setTimeout(() => {
+              db.collection('suporte_chats').doc(selectedChatId).update({ typingByAdmin: false });
+            }, 1500);
+          }
+        });
+      }
+    });
+
+    // ==========================================
+    // SISTEMA FINANCEIRO, COMERCIAL & POS (AUTOMAÇÃO DE CTs & FEDERAÇÃO)
+    // ==========================================
+
+    function switchProfTab(tabName) {
+      const tabs = ['ct-alunos', 'caixa-fluxo', 'mensalidades'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab-prof-' + t);
+        const content = document.getElementById('prof-content-' + t);
+        if (!btn || !content) return;
+        if (t === tabName) {
+          btn.className = "px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-zinc-950 transition-all uppercase tracking-wider cursor-pointer";
+          content.classList.remove('hidden');
+        } else {
+          btn.className = "px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer";
+          content.classList.add('hidden');
+        }
+      });
+
+      if (tabName === 'caixa-fluxo') loadProfessorCaixa();
+      if (tabName === 'mensalidades') loadProfessorMensalidades();
+    }
+
+    // Submit handler para Frente de Caixa (POS) do CT
+    document.addEventListener('DOMContentLoaded', () => {
+      const profPosForm = document.getElementById('prof-pos-form');
+      if (profPosForm) {
+        profPosForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          try {
+            const ctId = document.getElementById('prof-ct-id').value || 'ct-proprio';
+            const ctName = document.getElementById('prof-ct-name').value || 'Meu Centro de Treinamento';
+            const desc = document.getElementById('prof-pos-desc').value;
+            const tipo = document.getElementById('prof-pos-tipo').value;
+            const cat = document.getElementById('prof-pos-cat').value;
+            const val = parseFloat(document.getElementById('prof-pos-val').value);
+            const forma = document.getElementById('prof-pos-forma').value;
+
+            await registrarTransacao({
+              ctId,
+              ctName,
+              tipo,
+              categoria: cat,
+              descricao: desc,
+              valor: val,
+              formaPagamento: forma,
+              data: new Date().toISOString().split('T')[0]
+            });
+
+            alert('🟢 Lançamento registrado com sucesso no Caixa do CT!');
+            profPosForm.reset();
+            await loadProfessorCaixa();
+          } catch (error) {
+            alert('Erro ao registrar fluxo: ' + error.message);
+          }
+        });
+      }
+    });
+
+    // Carrega dados do Caixa Local do CT
+    async function loadProfessorCaixa() {
+      const ctId = document.getElementById('prof-ct-id').value;
+      if (!ctId) return;
+
+      const tbody = document.getElementById('prof-caixa-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const transacoes = await getTransacoes();
+      const ctTrans = transacoes.filter(t => t.ctId === ctId);
+
+      // Ordena por data decrescente
+      ctTrans.sort((a, b) => new Date(b.data || '') - new Date(a.data || ''));
+
+      let saldo = 0;
+      let entradas = 0;
+      let saidas = 0;
+
+      if (ctTrans.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-zinc-500 text-xs">Nenhum lançamento no caixa deste CT ainda.</td></tr>`;
+      } else {
+        ctTrans.forEach(t => {
+          const val = parseFloat(t.valor || 0);
+          if (t.tipo === 'entrada') {
+            entradas += val;
+            saldo += val;
+          } else {
+            saidas += val;
+            saldo -= val;
+          }
+
+          const catBadge = getCategoryBadge(t.categoria);
+          const valClass = t.tipo === 'entrada' ? 'text-emerald-400 font-extrabold' : 'text-red-400 font-extrabold';
+          const valPrefix = t.tipo === 'entrada' ? '+' : '-';
+
+          const tr = document.createElement('tr');
+          tr.className = 'border-b border-zinc-900 hover:bg-zinc-900/20';
+          tr.innerHTML = `
+            <td class="p-3 text-zinc-500 font-mono text-[10px]">${t.data || ''}</td>
+            <td class="p-3">${catBadge}</td>
+            <td class="p-3 text-white font-medium">${t.descricao || ''}</td>
+            <td class="p-3 uppercase text-zinc-500 font-mono text-[10px]">${t.formaPagamento || ''}</td>
+            <td class="p-3 ${valClass}">${valPrefix} R$ ${val.toFixed(2)}</td>
+            <td class="p-3 text-right">
+              <button onclick="deletarLancamentoCaixa('${t.id}')" class="text-zinc-600 hover:text-red-400 transition-colors cursor-pointer p-1" title="Excluir Lançamento">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('prof-val-saldo').textContent = `R$ ${saldo.toFixed(2)}`;
+      document.getElementById('prof-val-entradas').textContent = `R$ ${entradas.toFixed(2)}`;
+      document.getElementById('prof-val-saidas').textContent = `R$ ${saidas.toFixed(2)}`;
+    }
+
+    async function deletarLancamentoCaixa(id) {
+      if (!confirm('Deseja realmente estornar/deletar este lançamento do caixa?')) return;
+      await excluirTransacao(id);
+      await loadProfessorCaixa();
+      
+      // Se a aba financeira administrativa global estiver aberta, sincroniza ela também
+      const isFinGlobal = document.getElementById('content-financeiro-global');
+      if (isFinGlobal && !isFinGlobal.classList.contains('hidden')) {
+        await loadAdminFinanceiroGlobal();
+      }
+    }
+
+    // Carrega mensalidades de alunos vinculados ao CT do Professor
+    async function loadProfessorMensalidades() {
+      const ctName = document.getElementById('prof-ct-name').value;
+      const ctId = document.getElementById('prof-ct-id').value;
+      if (!ctName) return;
+
+      const tbody = document.getElementById('prof-mensalidades-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const selectedMonth = document.getElementById('prof-mens-mes').value;
+
+      // Filtra atletas do CT
+      const atletas = await getAtletas();
+      const ctAtletas = atletas.filter(ath => {
+        const athAcad = (ath.academyName || '').toLowerCase().trim();
+        const ctNameLower = (ctName || '').toLowerCase().trim();
+        return athAcad && (athAcad.includes(ctNameLower) || ctNameLower.includes(athAcad));
+      });
+
+      const mensalidades = await getMensalidades();
+
+      if (ctAtletas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-zinc-500 text-xs">Nenhum atleta associado a este CT. Cadastre atletas com o nome do seu CT no painel para gerenciá-los comercialmente.</td></tr>`;
+        return;
+      }
+
+      ctAtletas.forEach(ath => {
+        const mens = mensalidades.find(m => m.alunoId === ath.id && m.mesReferencia === selectedMonth);
+        const isPago = mens && mens.status === 'pago';
+
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-zinc-900 hover:bg-zinc-900/20';
+
+        let statusBadge = '';
+        let actionBtn = '';
+
+        if (isPago) {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 uppercase">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              PAGO em ${mens.dataPagamento || ''} (${(mens.formaPagamento || 'pix').toUpperCase()})
+            </span>
+          `;
+          actionBtn = `
+            <span class="text-zinc-500 text-[11px] font-bold uppercase select-none">Lançamento Consolidado</span>
+          `;
+        } else {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black bg-red-500/10 text-red-500 border border-red-500/25 uppercase">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+              Pendente
+            </span>
+          `;
+          actionBtn = `
+            <button onclick="receberMensalidadeAluno('${ath.id}', '${ath.name.replace(/'/g, "\\'")}', '${ctId}', 150.00)" class="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 transition-colors text-[10.5px] font-extrabold uppercase tracking-wider cursor-pointer">
+              🟢 Receber R$ 150
+            </button>
+          `;
+        }
+
+        tr.innerHTML = `
+          <td class="p-4 flex items-center gap-3">
+            <div class="w-8 h-8 bg-zinc-850 rounded-full flex items-center justify-center font-black text-xs text-amber-500 border border-zinc-800">
+              ${ath.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <span class="font-extrabold text-white text-xs block leading-tight">${ath.name}</span>
+              <span class="text-zinc-500 text-[10px] block mt-0.5">${ath.email || ''}</span>
+            </div>
+          </td>
+          <td class="p-4 font-mono text-[10px] text-zinc-500">${ath.registrationNumber || 'Sem Registro'}</td>
+          <td class="p-4 font-extrabold text-white text-xs">R$ 150,00</td>
+          <td class="p-4 font-mono text-[10px] text-zinc-400">${selectedMonth}</td>
+          <td class="p-4">${statusBadge}</td>
+          <td class="p-4 text-right">${actionBtn}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function receberMensalidadeAluno(alunoId, alunoNome, ctId, valor) {
+      const forma = prompt(`Confirmar recebimento de mensalidade do aluno ${alunoNome}?\nFormas de pagamento válidas: pix, dinheiro, cartao, boleto`, 'pix');
+      if (forma === null) return;
+      const formaClean = (forma || 'pix').toLowerCase().trim();
+
+      const selectedMonth = document.getElementById('prof-mens-mes').value;
+      const ctName = document.getElementById('prof-ct-name').value || 'Meu CT';
+
+      // 1. Registrar transação no livro caixa do CT
+      await registrarTransacao({
+        ctId: ctId,
+        ctName: ctName,
+        tipo: 'entrada',
+        categoria: 'mensalidade',
+        descricao: `Mensalidade ${selectedMonth} - Aluno: ${alunoNome}`,
+        valor: parseFloat(valor),
+        formaPagamento: formaClean,
+        data: new Date().toISOString().split('T')[0]
+      });
+
+      // 2. Marcar mensalidade como paga
+      await salvarMensalidade({
+        ctId: ctId,
+        alunoId: alunoId,
+        alunoNome: alunoNome,
+        mesReferencia: selectedMonth,
+        valor: parseFloat(valor),
+        status: 'pago',
+        dataPagamento: new Date().toISOString().split('T')[0],
+        formaPagamento: formaClean
+      });
+
+      alert(`✅ Mensalidade de ${alunoNome} recebida com sucesso via ${formaClean.toUpperCase()}!`);
+      await loadProfessorMensalidades();
+    }
+
+    // Utilitário para Crachá de Categoria
+    function getCategoryBadge(cat) {
+      switch (cat) {
+        case 'mensalidade':
+          return '<span class="px-2.5 py-0.5 text-[9px] font-black uppercase rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Mensalidade</span>';
+        case 'venda_caixa':
+          return '<span class="px-2.5 py-0.5 text-[9px] font-black uppercase rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">Venda Caixa</span>';
+        case 'federacao':
+          return '<span class="px-2.5 py-0.5 text-[9px] font-black uppercase rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">Anuidade/Federação</span>';
+        case 'inscricao':
+          return '<span class="px-2.5 py-0.5 text-[9px] font-black uppercase rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Torneio</span>';
+        case 'despesa':
+          return '<span class="px-2.5 py-0.5 text-[9px] font-black uppercase rounded bg-red-500/10 text-red-400 border border-red-500/20">Despesa</span>';
+        default:
+          return '<span class="px-2.5 py-0.5 text-[9px] font-black uppercase rounded bg-zinc-800 text-zinc-400 border border-zinc-700">Outros</span>';
+      }
+    }
+
+    // ==========================================
+    // SEÇÃO ADMINISTRATIVA: FINANCEIRO GLOBAL DA FEDERAÇÃO (FEAMCRJ)
+    // ==========================================
+
+    async function loadAdminFinanceiroGlobal() {
+      const tbody = document.getElementById('adm-fin-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const transacoes = await getTransacoes();
+      const academies = await getAcademias();
+
+      // Atualiza badge de CTs
+      const cths = academies.filter(ac => ac.status === 'active');
+      document.getElementById('adm-fin-cts').textContent = `${cths.length} CTs Ativos`;
+
+      // Popula dropdown de filtros de CTs mantendo a seleção atual
+      const filterCtDropdown = document.getElementById('adm-fin-filter-ct');
+      const currentSelected = filterCtDropdown.value;
+      
+      filterCtDropdown.innerHTML = `
+        <option value="todos" class="bg-zinc-900 text-white">-- Todos os CTs / Geral --</option>
+        <option value="admin-feam" class="bg-zinc-900 text-white">FEAMCRJ Federação</option>
+      `;
+      academies.forEach(ac => {
+        const opt = document.createElement('option');
+        opt.value = ac.id;
+        opt.className = 'bg-zinc-900 text-white';
+        opt.textContent = ac.name;
+        filterCtDropdown.appendChild(opt);
+      });
+      filterCtDropdown.value = currentSelected || 'todos';
+
+      // Recupera filtros ativos
+      const selectedCt = filterCtDropdown.value;
+      const selectedCat = document.getElementById('adm-fin-filter-cat').value;
+      const searchText = (document.getElementById('adm-fin-search').value || '').toLowerCase().trim();
+
+      // Executa Filtragem
+      let filtered = transacoes;
+      
+      if (selectedCt !== 'todos') {
+        filtered = filtered.filter(t => t.ctId === selectedCt);
+      }
+      if (selectedCat !== 'todas') {
+        filtered = filtered.filter(t => t.categoria === selectedCat);
+      }
+      if (searchText) {
+        filtered = filtered.filter(t => {
+          const desc = (t.descricao || '').toLowerCase();
+          const name = (t.ctName || '').toLowerCase();
+          return desc.includes(searchText) || name.includes(searchText);
+        });
+      }
+
+      // Ordena por data decrescente
+      filtered.sort((a, b) => new Date(b.data || '') - new Date(a.data || ''));
+
+      let saldo = 0;
+      let entradas = 0;
+      let saidas = 0;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-zinc-500 text-xs">Nenhum lançamento contábil localizado com os filtros selecionados.</td></tr>`;
+      } else {
+        filtered.forEach(t => {
+          const val = parseFloat(t.valor || 0);
+          if (t.tipo === 'entrada') {
+            entradas += val;
+            saldo += val;
+          } else {
+            saidas += val;
+            saldo -= val;
+          }
+
+          const catBadge = getCategoryBadge(t.categoria);
+          const valClass = t.tipo === 'entrada' ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold';
+          const valPrefix = t.tipo === 'entrada' ? '+' : '-';
+
+          const tr = document.createElement('tr');
+          tr.className = 'border-b border-zinc-900 hover:bg-zinc-900/20';
+          tr.innerHTML = `
+            <td class="p-3 text-zinc-500 font-mono text-[10px]">${t.data || ''}</td>
+            <td class="p-3 font-semibold text-white text-xs">${t.ctName || 'Geral/FEAM'}</td>
+            <td class="p-3">${catBadge}</td>
+            <td class="p-3 text-zinc-300 text-xs font-medium">${t.descricao || ''}</td>
+            <td class="p-3 uppercase text-zinc-500 font-mono text-[10px]">${t.formaPagamento || ''}</td>
+            <td class="p-3 ${valClass}">${valPrefix} R$ ${val.toFixed(2)}</td>
+            <td class="p-3 text-right">
+              <button onclick="deletarLancamentoGlobal('${t.id}')" class="text-zinc-600 hover:text-red-400 transition-colors cursor-pointer p-1" title="Excluir Lançamento Permanente">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('adm-fin-saldo').textContent = `R$ ${saldo.toFixed(2)}`;
+      document.getElementById('adm-fin-entradas').textContent = `R$ ${entradas.toFixed(2)}`;
+      document.getElementById('adm-fin-saidas').textContent = `R$ ${saidas.toFixed(2)}`;
+
+      // Atualiza faturamento acumulado por CT (Gráfico de barras)
+      renderCtPerformanceChart(transacoes, academies);
+    }
+
+    async function deletarLancamentoGlobal(id) {
+      if (!confirm('Deseja realmente remover esta transação das contas globais e locais da federação?')) return;
+      await excluirTransacao(id);
+      await loadAdminFinanceiroGlobal();
+    }
+
+    function renderCtPerformanceChart(allTrans, academies) {
+      const container = document.getElementById('adm-fin-performance-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const revenues = {};
+      
+      // Inicializa com a conta central FEAM
+      revenues['admin-feam'] = { name: 'FEAMCRJ Federação', amount: 0 };
+      academies.forEach(ac => {
+        revenues[ac.id] = { name: ac.name, amount: 0 };
+      });
+
+      // Soma entradas
+      allTrans.forEach(t => {
+        if (t.tipo === 'entrada') {
+          const val = parseFloat(t.valor || 0);
+          const ctId = t.ctId || 'admin-feam';
+          if (revenues[ctId]) {
+            revenues[ctId].amount += val;
+          } else {
+            revenues[ctId] = { name: t.ctName || 'Outras Unidades', amount: val };
+          }
+        }
+      });
+
+      // Ordena por faturamento
+      const sorted = Object.values(revenues).sort((a, b) => b.amount - a.amount);
+      const maxRevenue = sorted[0] ? sorted[0].amount : 1;
+
+      sorted.forEach(item => {
+        if (item.amount === 0) return; // Oculta CTs vazios do gráfico para poupar espaço
+        const pct = maxRevenue > 0 ? (item.amount / maxRevenue) * 100 : 0;
+
+        const div = document.createElement('div');
+        div.className = 'space-y-1';
+        div.innerHTML = `
+          <div class="flex justify-between text-[11px] font-bold text-zinc-400">
+            <span class="truncate max-w-[170px]">${item.name}</span>
+            <span class="text-white font-mono">R$ ${item.amount.toFixed(2)}</span>
+          </div>
+          <div class="w-full bg-zinc-950 rounded-full h-1.5 overflow-hidden border border-zinc-900">
+            <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-full rounded-full" style="width: ${pct}%"></div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      if (container.children.length === 0) {
+        container.innerHTML = '<p class="text-zinc-600 text-[10px] text-center py-4">Nenhum faturamento registrado.</p>';
+      }
+    }
+
+    // Submit handler para o caixa central FEAM
+    document.addEventListener('DOMContentLoaded', () => {
+      const admFinForm = document.getElementById('adm-fin-form');
+      if (admFinForm) {
+        admFinForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          try {
+            const desc = document.getElementById('adm-fin-desc').value;
+            const tipo = document.getElementById('adm-fin-tipo').value;
+            const cat = document.getElementById('adm-fin-cat').value;
+            const val = parseFloat(document.getElementById('adm-fin-val').value);
+            const forma = document.getElementById('adm-fin-forma').value;
+
+            await registrarTransacao({
+              ctId: 'admin-feam',
+              ctName: 'FEAMCRJ Federação',
+              tipo,
+              categoria: cat,
+              descricao: desc,
+              valor: val,
+              formaPagamento: forma,
+              data: new Date().toISOString().split('T')[0]
+            });
+
+            alert('🟢 Lançamento financeiro chancelado na Federação com sucesso!');
+            admFinForm.reset();
+            await loadAdminFinanceiroGlobal();
+          } catch (error) {
+            alert('Erro ao registrar fluxo na Federação: ' + error.message);
+          }
+        });
+      }
+    });
+
+    function toggleCardFlip() {
+      const inner = document.getElementById('card-inner');
+      if (inner) {
+        inner.classList.toggle('rotate-y-180');
+      }
+    }
   </script>
 </body>
 </html>

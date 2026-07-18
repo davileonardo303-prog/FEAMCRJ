@@ -1,0 +1,103 @@
+{
+  "entities": {
+    "Atleta": {
+      "title": "Atleta",
+      "description": "Cadastro de atletas filiados",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nome completo do atleta"
+        },
+        "email": {
+          "type": "string",
+          "description": "E-mail de acesso"
+        },
+        "registrationNumber": {
+          "type": "string",
+          "description": "Número de filiação gerado pela federação"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status do cadastro (active, pending, suspended)"
+        },
+        "affiliationDate": {
+          "type": "string",
+          "description": "Data de filiação"
+        }
+      },
+      "required": ["name", "email"]
+    },
+    "Academia": {
+      "title": "Academia",
+      "description": "Cadastro de academias credenciadas",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nome da academia ou CT"
+        },
+        "email": {
+          "type": "string",
+          "description": "E-mail de contato / login"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status do credenciamento"
+        }
+      },
+      "required": ["name", "email"]
+    },
+    "Torneio": {
+      "title": "Torneio",
+      "description": "Campeonatos e eventos esportivos",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        }
+      },
+      "required": ["title", "date"]
+    },
+    "Inscricao": {
+      "title": "Inscricao",
+      "description": "Inscrições nos campeonatos",
+      "type": "object",
+      "properties": {
+        "atletaId": {
+          "type": "string"
+        },
+        "torneioId": {
+          "type": "string"
+        },
+        "pago": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "atletas": {
+      "schema": "Atleta",
+      "description": "Coleção de atletas filiados"
+    },
+    "academias": {
+      "schema": "Academia",
+      "description": "Coleção de academias credenciadas"
+    },
+    "torneios": {
+      "schema": "Torneio",
+      "description": "Coleção de campeonatos cadastrados"
+    },
+    "inscricoes": {
+      "schema": "Inscricao",
+      "description": "Inscrições em torneios e campeonatos"
+    },
+    "suporte_chats": {
+      "description": "Coleção de chats de suporte em tempo real"
+    }
+  }
+}

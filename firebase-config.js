@@ -32,7 +32,8 @@ let firebaseConfig = {
 // Tenta carregar as credenciais reais do sandbox / workspace do usuário de forma síncrona
 try {
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', '/firebase-applet-config.json', false); // síncrono
+  // Usamos um cache-buster (?t=...) para garantir que o navegador sempre carregue o arquivo de configuração mais recente e ignore o cache
+  xhr.open('GET', '/firebase-applet-config.json?t=' + Date.now(), false); // síncrono
   xhr.send(null);
   if (xhr.status === 200) {
     const appletConfig = JSON.parse(xhr.responseText);
@@ -44,9 +45,10 @@ try {
         storageBucket: appletConfig.storageBucket,
         messagingSenderId: appletConfig.messagingSenderId,
         appId: appletConfig.appId,
-        databaseId: appletConfig.firestoreDatabaseId
+        databaseId: appletConfig.firestoreDatabaseId,
+        firestoreDatabaseId: appletConfig.firestoreDatabaseId
       };
-      console.log("📦 Loaded workspace Firebase configuration successfully.");
+      console.log("📦 Loaded workspace Firebase configuration successfully. Project ID:", firebaseConfig.projectId, "Database ID:", firebaseConfig.databaseId);
     }
   }
 } catch (e) {
@@ -60,10 +62,16 @@ let isFirebaseActive = false;
 function inicializarFirebase() {
   if (typeof firebase !== 'undefined' && firebaseConfig.apiKey && firebaseConfig.apiKey !== "SUA_API_KEY_AQUI" && firebaseConfig.apiKey !== "INSIRA_SUA_API_KEY_AQUI") {
     try {
-      firebase.initializeApp(firebaseConfig);
-      if (firebaseConfig.databaseId) {
-        db = firebase.app().firestore(firebaseConfig.databaseId);
+      if (firebase.apps.length === 0) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      
+      const dbId = firebaseConfig.databaseId || firebaseConfig.firestoreDatabaseId;
+      if (dbId) {
+        console.log("🔥 Initializing named Firestore database ID:", dbId);
+        db = firebase.app().firestore(dbId);
       } else {
+        console.log("🔥 Initializing default Firestore database (default)");
         db = firebase.firestore();
       }
       auth = firebase.auth();
@@ -207,6 +215,84 @@ const INITIAL_ACADEMIES = [
 if (!localStorage.getItem('feam_atletas')) {
   localStorage.setItem('feam_atletas', JSON.stringify([]));
 }
+if (!localStorage.getItem('feam_transacoes')) {
+  localStorage.setItem('feam_transacoes', JSON.stringify([
+    {
+      id: 'tr-mock-1',
+      ctId: 'acad-1',
+      ctName: 'Alliance Jiu-Jitsu Copacabana',
+      tipo: 'entrada',
+      categoria: 'mensalidade',
+      descricao: 'Mensalidade - Carlos Silva (Julho/2026)',
+      valor: 150.00,
+      formaPagamento: 'pix',
+      data: '2026-07-15',
+      usuarioEmail: 'alliance.copacabana@alliance.com.br'
+    },
+    {
+      id: 'tr-mock-2',
+      ctId: 'acad-1',
+      ctName: 'Alliance Jiu-Jitsu Copacabana',
+      tipo: 'entrada',
+      categoria: 'venda_caixa',
+      descricao: 'Venda de Camiseta Oficial FEAM',
+      valor: 85.00,
+      formaPagamento: 'dinheiro',
+      data: '2026-07-16',
+      usuarioEmail: 'alliance.copacabana@alliance.com.br'
+    },
+    {
+      id: 'tr-mock-3',
+      ctId: 'acad-1',
+      ctName: 'Alliance Jiu-Jitsu Copacabana',
+      tipo: 'saida',
+      categoria: 'despesa',
+      descricao: 'Energia Elétrica (Light)',
+      valor: 230.00,
+      formaPagamento: 'boleto',
+      data: '2026-07-10',
+      usuarioEmail: 'alliance.copacabana@alliance.com.br'
+    },
+    {
+      id: 'tr-mock-4',
+      ctId: 'admin-feam',
+      ctName: 'FEAMCRJ Federação',
+      tipo: 'entrada',
+      categoria: 'federacao',
+      descricao: 'Filiação de Nova Academia - Gracie Barra JO',
+      valor: 350.00,
+      formaPagamento: 'pix',
+      data: '2026-07-12',
+      usuarioEmail: 'feamcrj@gmail.com'
+    }
+  ]));
+}
+if (!localStorage.getItem('feam_mensalidades')) {
+  localStorage.setItem('feam_mensalidades', JSON.stringify([
+    {
+      id: 'mens-mock-1',
+      ctId: 'acad-1',
+      alunoId: 'ath-mock-1',
+      alunoNome: 'Carlos Silva',
+      mesReferencia: '2026-07',
+      valor: 150.00,
+      status: 'pago',
+      dataPagamento: '2026-07-15',
+      formaPagamento: 'pix'
+    },
+    {
+      id: 'mens-mock-2',
+      ctId: 'acad-1',
+      alunoId: 'ath-mock-2',
+      alunoNome: 'Beatriz Santos',
+      mesReferencia: '2026-07',
+      valor: 150.00,
+      status: 'pendente',
+      dataPagamento: null,
+      formaPagamento: null
+    }
+  ]));
+}
 if (!localStorage.getItem('feam_academias')) {
   localStorage.setItem('feam_academias', JSON.stringify(INITIAL_ACADEMIES));
 }
@@ -251,7 +337,9 @@ async function cadastrarAtleta(atletaData) {
   const completo = {
     ...firestoreData,
     registrationNumber: numFiliacao,
-    status: 'active',
+    status: 'pending',
+    paymentStatus: 'pending',
+    pago: false,
     affiliationDate: new Date().toISOString().split('T')[0]
   };
 
@@ -261,7 +349,6 @@ async function cadastrarAtleta(atletaData) {
       const userCredential = await auth.createUserWithEmailAndPassword(atletaData.email, atletaData.password);
       // Salva os dados do perfil no Firestore usando o UID como ID do documento
       await db.collection('atletas').doc(userCredential.user.uid).set(completo);
-      salvarUsuarioLocal(userCredential.user.uid, completo, 'atleta');
       return { id: userCredential.user.uid, ...completo };
     } catch (e) {
       throw new Error(e.message);
@@ -273,8 +360,6 @@ async function cadastrarAtleta(atletaData) {
     atletas.push(novoAtleta);
     localStorage.setItem('feam_atletas', JSON.stringify(atletas));
     
-    // Salva sessão local automática
-    salvarUsuarioLocal(id, novoAtleta, 'atleta');
     return novoAtleta;
   }
 }
@@ -282,10 +367,28 @@ async function cadastrarAtleta(atletaData) {
 // Academias
 async function getAcademias() {
   if (isFirebaseActive) {
-    const snap = await db.collection('academias').get();
-    return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    try {
+      const snap = await db.collection('academias').get();
+      if (snap.empty) {
+        console.log("🌱 Seeding Firestore with default academies...");
+        for (const acad of INITIAL_ACADEMIES) {
+          await db.collection('academias').doc(acad.id).set(acad);
+        }
+        const freshSnap = await db.collection('academias').get();
+        return freshSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      }
+      return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+      console.warn("⚠️ Failed to load academies from Firestore, using LocalStorage fallback:", e);
+      return JSON.parse(localStorage.getItem('feam_academias')) || INITIAL_ACADEMIES;
+    }
   } else {
-    return JSON.parse(localStorage.getItem('feam_academias'));
+    const local = localStorage.getItem('feam_academias');
+    if (!local) {
+      localStorage.setItem('feam_academias', JSON.stringify(INITIAL_ACADEMIES));
+      return INITIAL_ACADEMIES;
+    }
+    return JSON.parse(local);
   }
 }
 
@@ -294,7 +397,9 @@ async function cadastrarAcademia(acadData) {
   const completo = {
     ...firestoreData,
     certifiedUntil: (new Date().getFullYear() + 1) + '-12-31',
-    status: 'active'
+    status: 'pending',
+    paymentStatus: 'pending',
+    pago: false
   };
 
   if (isFirebaseActive) {
@@ -323,10 +428,28 @@ async function cadastrarAcademia(acadData) {
 // Torneios e Inscrições
 async function getTorneios() {
   if (isFirebaseActive) {
-    const snap = await db.collection('torneios').get();
-    return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    try {
+      const snap = await db.collection('torneios').get();
+      if (snap.empty) {
+        console.log("🌱 Seeding Firestore with default tournaments...");
+        for (const t of INITIAL_TOURNAMENTS) {
+          await db.collection('torneios').doc(t.id).set(t);
+        }
+        const freshSnap = await db.collection('torneios').get();
+        return freshSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      }
+      return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+      console.warn("⚠️ Failed to load tournaments from Firestore, using LocalStorage fallback:", e);
+      return JSON.parse(localStorage.getItem('feam_torneios')) || INITIAL_TOURNAMENTS;
+    }
   } else {
-    return JSON.parse(localStorage.getItem('feam_torneios'));
+    const local = localStorage.getItem('feam_torneios');
+    if (!local) {
+      localStorage.setItem('feam_torneios', JSON.stringify(INITIAL_TOURNAMENTS));
+      return INITIAL_TOURNAMENTS;
+    }
+    return JSON.parse(local);
   }
 }
 
@@ -455,8 +578,12 @@ async function loginFiliado(email, senha) {
       const atletaSnap = await db.collection('atletas').where('email', '==', email).get();
       if (!atletaSnap.empty) {
         const d = atletaSnap.docs[0];
-        salvarUsuarioLocal(d.id, d.data(), 'atleta');
-        return { success: true, user: { id: d.id, ...d.data(), tipo: 'atleta' } };
+        const data = d.data();
+        if (data.status === 'pending') {
+          throw new Error('Sua filiação está pendente de aprovação pela diretoria da FEAMCRJ. Por favor, aguarde a homologação para acessar seu painel.');
+        }
+        salvarUsuarioLocal(d.id, data, 'atleta');
+        return { success: true, user: { id: d.id, ...data, tipo: 'atleta' } };
       }
       
       // Se não achar perfil mas autenticou
@@ -484,6 +611,9 @@ async function loginFiliado(email, senha) {
     if (atleta) {
       if (atleta.password && atleta.password !== senha) {
         throw new Error('Senha incorreta para esta conta de atleta.');
+      }
+      if (atleta.status === 'pending') {
+        throw new Error('Sua filiação está pendente de aprovação pela diretoria da FEAMCRJ. Por favor, aguarde a homologação para acessar seu painel.');
       }
       salvarUsuarioLocal(atleta.id, atleta, 'atleta');
       return { success: true, user: { ...atleta, tipo: 'atleta' } };
@@ -578,12 +708,21 @@ async function excluirAtleta(atletaId) {
 
 async function alterarStatusAtleta(atletaId, status) {
   if (isFirebaseActive) {
-    await db.collection('atletas').doc(atletaId).update({ status: status });
+    const updateData = { status: status };
+    if (status === 'active') {
+      updateData.paymentStatus = 'paid';
+      updateData.pago = true;
+    }
+    await db.collection('atletas').doc(atletaId).update(updateData);
   } else {
     const atletas = JSON.parse(localStorage.getItem('feam_atletas')) || [];
     const idx = atletas.findIndex(a => a.id === atletaId);
     if (idx !== -1) {
       atletas[idx].status = status;
+      if (status === 'active') {
+        atletas[idx].paymentStatus = 'paid';
+        atletas[idx].pago = true;
+      }
       localStorage.setItem('feam_atletas', JSON.stringify(atletas));
     }
   }
@@ -601,12 +740,21 @@ async function excluirAcademia(acadId) {
 
 async function alterarStatusAcademia(acadId, status) {
   if (isFirebaseActive) {
-    await db.collection('academias').doc(acadId).update({ status: status });
+    const updateData = { status: status };
+    if (status === 'active') {
+      updateData.paymentStatus = 'paid';
+      updateData.pago = true;
+    }
+    await db.collection('academias').doc(acadId).update(updateData);
   } else {
     const academias = JSON.parse(localStorage.getItem('feam_academias')) || [];
     const idx = academias.findIndex(a => a.id === acadId);
     if (idx !== -1) {
       academias[idx].status = status;
+      if (status === 'active') {
+        academias[idx].paymentStatus = 'paid';
+        academias[idx].pago = true;
+      }
       localStorage.setItem('feam_academias', JSON.stringify(academias));
     }
   }
@@ -900,4 +1048,96 @@ async function adicionarAtletaAdmin(atletaData) {
     localStorage.setItem('feam_atletas', JSON.stringify(atletas));
     return novoAtleta;
   }
+}
+
+// ==========================================
+// MÓDULO FINANCEIRO E AUTOMAÇÃO COMERCIAL (CTs & FEDERAÇÃO)
+// ==========================================
+
+async function getTransacoes() {
+  if (isFirebaseActive) {
+    try {
+      const snap = await db.collection('transacoes').get();
+      return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+      console.error("Erro ao buscar transacoes no Firestore: ", e);
+      return JSON.parse(localStorage.getItem('feam_transacoes')) || [];
+    }
+  } else {
+    return JSON.parse(localStorage.getItem('feam_transacoes')) || [];
+  }
+}
+
+async function registrarTransacao(data) {
+  const transacao = {
+    ...data,
+    id: data.id || 'tr-' + Math.floor(100000 + Math.random() * 900000),
+    data: data.data || new Date().toISOString().split('T')[0]
+  };
+
+  if (isFirebaseActive) {
+    try {
+      await db.collection('transacoes').doc(transacao.id).set(transacao);
+    } catch (e) {
+      console.error("Erro ao salvar transacao no Firestore: ", e);
+    }
+  }
+  
+  // Salva no LocalStorage em qualquer caso para garantir sync offline
+  const localTrans = JSON.parse(localStorage.getItem('feam_transacoes')) || [];
+  localTrans.push(transacao);
+  localStorage.setItem('feam_transacoes', JSON.stringify(localTrans));
+  return transacao;
+}
+
+async function excluirTransacao(id) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('transacoes').doc(id).delete();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  let localTrans = JSON.parse(localStorage.getItem('feam_transacoes')) || [];
+  localTrans = localTrans.filter(t => t.id !== id);
+  localStorage.setItem('feam_transacoes', JSON.stringify(localTrans));
+}
+
+async function getMensalidades() {
+  if (isFirebaseActive) {
+    try {
+      const snap = await db.collection('mensalidades').get();
+      return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+      console.error("Erro ao buscar mensalidades no Firestore: ", e);
+      return JSON.parse(localStorage.getItem('feam_mensalidades')) || [];
+    }
+  } else {
+    return JSON.parse(localStorage.getItem('feam_mensalidades')) || [];
+  }
+}
+
+async function salvarMensalidade(data) {
+  const mensalidade = {
+    ...data,
+    id: data.id || 'mens-' + Math.floor(100000 + Math.random() * 900000)
+  };
+
+  if (isFirebaseActive) {
+    try {
+      await db.collection('mensalidades').doc(mensalidade.id).set(mensalidade);
+    } catch (e) {
+      console.error("Erro ao salvar mensalidade no Firestore: ", e);
+    }
+  }
+
+  const localMens = JSON.parse(localStorage.getItem('feam_mensalidades')) || [];
+  const idx = localMens.findIndex(m => m.id === mensalidade.id || (m.alunoId === mensalidade.alunoId && m.mesReferencia === mensalidade.mesReferencia));
+  if (idx !== -1) {
+    localMens[idx] = { ...localMens[idx], ...mensalidade };
+  } else {
+    localMens.push(mensalidade);
+  }
+  localStorage.setItem('feam_mensalidades', JSON.stringify(localMens));
+  return mensalidade;
 }

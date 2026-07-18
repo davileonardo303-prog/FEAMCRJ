@@ -248,11 +248,21 @@
 
       try {
         await inscreverNoTorneio(inscData);
-        alert('🎉 Inscrição efetuada com sucesso!\nSua vaga foi garantida no campeonato.');
-        closeModal();
-        window.location.href = 'painel.html';
+        showCustomModal({
+          title: 'Inscrição Confirmada',
+          message: '🎉 Inscrição efetuada com sucesso!\nSua vaga foi garantida no campeonato.',
+          type: 'success',
+          onConfirm: () => {
+            closeModal();
+            window.location.href = 'painel.html';
+          }
+        });
       } catch (error) {
-        alert('Falha na inscrição: ' + error.message);
+        showCustomModal({
+          title: 'Falha na Inscrição',
+          message: 'Falha na inscrição: ' + error.message,
+          type: 'error'
+        });
       }
     });
   </script>
