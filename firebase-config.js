@@ -1359,3 +1359,123 @@ async function salvarMensalidade(data) {
   localStorage.setItem('feam_mensalidades', JSON.stringify(localMens));
   return mensalidade;
 }
+
+// Documentos Dinâmicos - FEAMCRJ
+async function getDocumentos() {
+  if (isFirebaseActive) {
+    try {
+      const snap = await db.collection('documentos').get();
+      if (!snap.empty) {
+        return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      }
+    } catch (err) {
+      console.error("Erro ao carregar documentos do Firestore:", err);
+    }
+  }
+  
+  let localDocs = JSON.parse(localStorage.getItem('feam_documentos'));
+  if (!localDocs || localDocs.length === 0) {
+    localDocs = [
+      {
+        id: 'doc-1',
+        title: 'Regulamento Geral Unificado de Competições FEAMCRJ 2026',
+        category: 'Regulamento',
+        uploadDate: '2026-01-10',
+        size: '2.4 MB',
+        format: 'PDF',
+        isDefault: true
+      },
+      {
+        id: 'doc-2',
+        title: 'Tabela de Taxas Administrativas, Anuidade e Filiações 2026',
+        category: 'Taxas',
+        uploadDate: '2026-01-05',
+        size: '850 KB',
+        format: 'PDF',
+        isDefault: true
+      },
+      {
+        id: 'doc-3',
+        title: 'Manual de Padronização de Graduações e Exames de Faixa Preta',
+        category: 'Manual',
+        uploadDate: '2026-02-18',
+        size: '4.1 MB',
+        format: 'PDF',
+        isDefault: true
+      },
+      {
+        id: 'doc-4',
+        title: 'Ficha Cadastral de Filiação Coletiva para Academias',
+        category: 'Formulário',
+        uploadDate: '2026-03-01',
+        size: '1.2 MB',
+        format: 'DOCX',
+        isDefault: true
+      },
+      {
+        id: 'doc-5',
+        title: 'Termo de Responsabilidade e Isenção Médica para Menores de Idade',
+        category: 'Formulário',
+        uploadDate: '2026-04-12',
+        size: '430 KB',
+        format: 'PDF',
+        isDefault: true
+      }
+    ];
+    localStorage.setItem('feam_documentos', JSON.stringify(localDocs));
+    
+    if (isFirebaseActive) {
+      for (const d of localDocs) {
+        try {
+          await db.collection('documentos').doc(d.id).set(d);
+        } catch (e) {
+          console.error("Erro ao salvar documento inicial no Firestore:", e);
+        }
+      }
+    }
+  }
+  return localDocs;
+}
+
+async function adicionarDocumento(docData) {
+  const newId = docData.id || "doc-" + Date.now();
+  const completo = {
+    id: newId,
+    title: docData.title,
+    category: docData.category,
+    uploadDate: docData.uploadDate || new Date().toISOString().split('T')[0],
+    size: docData.size || '1.5 MB',
+    format: docData.format || 'PDF',
+    customBody: docData.customBody || '',
+    fileUrl: docData.fileUrl || '', // Base64 ou link do documento anexado
+    fileName: docData.fileName || '',
+    isDefault: false
+  };
+
+  if (isFirebaseActive) {
+    try {
+      await db.collection('documentos').doc(newId).set(completo);
+    } catch (e) {
+      console.error("Erro ao adicionar documento no Firestore:", e);
+    }
+  }
+  
+  const docs = JSON.parse(localStorage.getItem('feam_documentos')) || [];
+  docs.push(completo);
+  localStorage.setItem('feam_documentos', JSON.stringify(docs));
+  return completo;
+}
+
+async function excluirDocumento(docId) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('documentos').doc(docId).delete();
+    } catch (err) {
+      console.error("Erro ao deletar documento do Firestore:", err);
+    }
+  }
+  let docs = JSON.parse(localStorage.getItem('feam_documentos')) || [];
+  docs = docs.filter(d => d.id !== docId);
+  localStorage.setItem('feam_documentos', JSON.stringify(docs));
+}
+

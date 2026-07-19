@@ -51,6 +51,75 @@
         <input type="text" id="doc-search" oninput="filterDocs()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Buscar por Título do Documento ou Categoria...">
       </div>
 
+      <!-- Admin Upload Section (Hidden by default) -->
+      <div id="admin-upload-section" class="hidden bg-zinc-900 border border-amber-500/20 rounded-2xl p-6 space-y-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          </div>
+          <div>
+            <h2 class="text-sm font-black uppercase tracking-wider text-amber-500">Painel de Publicação de Documentos</h2>
+            <p class="text-[11px] text-zinc-400">Publique novos regulamentos, manuais, termos de isenção ou tabelas. Atletas, professores e visitantes poderão baixar diretamente.</p>
+          </div>
+        </div>
+
+        <form id="add-doc-form" onsubmit="handleDocSubmit(event)" class="space-y-4 pt-2">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Título do Documento</label>
+              <input type="text" id="new-doc-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Tabela de Pesagem e Categorias Muay Thai 2026">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Categoria</label>
+              <select id="new-doc-category" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                <option value="Regulamento">Regulamento</option>
+                <option value="Taxas">Taxas</option>
+                <option value="Manual">Manual</option>
+                <option value="Formulário">Formulário</option>
+                <option value="Atletas">Atletas</option>
+                <option value="Professores">Professores</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Formato</label>
+              <select id="new-doc-format" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                <option value="PDF">PDF</option>
+                <option value="DOCX">DOCX</option>
+                <option value="XLSX">XLSX</option>
+                <option value="ZIP">ZIP</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Data de Publicação</label>
+              <input type="date" id="new-doc-date" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Anexar Documento / Arquivo</label>
+            <div id="drop-zone" class="border-2 border-dashed border-zinc-800 hover:border-amber-500/50 rounded-2xl p-6 text-center cursor-pointer transition-all bg-zinc-950/40 flex flex-col items-center justify-center space-y-2 group">
+              <div class="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center border border-zinc-800 group-hover:border-amber-500/30 transition-all">
+                <svg class="w-6 h-6 text-zinc-500 group-hover:text-amber-500 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+              </div>
+              <p id="file-status-text" class="text-xs text-zinc-400 font-medium">Arraste e solte o arquivo aqui, ou <span class="text-amber-500 font-bold underline">clique para selecionar</span></p>
+              <p class="text-[9px] text-zinc-500">Suporta arquivos PDF, DOCX, XLSX e ZIP até 15MB</p>
+              <input type="file" id="new-doc-file" onchange="handleFileSelect(event)" class="hidden">
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-2">
+            <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-lg hover:shadow-amber-500/10 transition-all cursor-pointer">
+              Publicar Novo Documento
+            </button>
+          </div>
+        </form>
+      </div>
+
       <!-- Documents list container -->
       <div id="docs-list" class="space-y-4">
         <!-- Dynamic docs will be loaded here -->
@@ -75,7 +144,8 @@
         category: 'Regulamento',
         uploadDate: '2026-01-10',
         size: '2.4 MB',
-        format: 'PDF'
+        format: 'PDF',
+        isDefault: true
       },
       {
         id: 'doc-2',
@@ -83,7 +153,8 @@
         category: 'Taxas',
         uploadDate: '2026-01-05',
         size: '850 KB',
-        format: 'PDF'
+        format: 'PDF',
+        isDefault: true
       },
       {
         id: 'doc-3',
@@ -91,7 +162,8 @@
         category: 'Manual',
         uploadDate: '2026-02-18',
         size: '4.1 MB',
-        format: 'PDF'
+        format: 'PDF',
+        isDefault: true
       },
       {
         id: 'doc-4',
@@ -99,7 +171,8 @@
         category: 'Formulário',
         uploadDate: '2026-03-01',
         size: '1.2 MB',
-        format: 'DOCX'
+        format: 'DOCX',
+        isDefault: true
       },
       {
         id: 'doc-5',
@@ -107,16 +180,159 @@
         category: 'Formulário',
         uploadDate: '2026-04-12',
         size: '430 KB',
-        format: 'PDF'
+        format: 'PDF',
+        isDefault: true
       }
     ];
 
-    document.addEventListener('DOMContentLoaded', () => {
-      renderDocs(INITIAL_DOCUMENTS);
+    let currentDocuments = [];
+    let attachedFileBase64 = '';
+    let attachedFileName = '';
+    let attachedFileSize = '';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Set current date on input date
+      const dateInput = document.getElementById('new-doc-date');
+      if (dateInput) {
+        dateInput.value = new Date().toISOString().split('T')[0];
+      }
+
+      await loadDocuments();
+      checkAdminAccess();
+      setupDragAndDrop();
     });
 
-    function renderDocs(list) {
+    async function loadDocuments() {
+      try {
+        currentDocuments = await getDocumentos();
+        // If firebase or local storage returned empty, fall back to initial
+        if (!currentDocuments || currentDocuments.length === 0) {
+          currentDocuments = INITIAL_DOCUMENTS;
+        }
+        filterDocs();
+      } catch (err) {
+        console.error("Erro ao carregar documentos:", err);
+        currentDocuments = INITIAL_DOCUMENTS;
+        filterDocs();
+      }
+    }
+
+    function checkAdminAccess() {
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (loggedUserJson) {
+        try {
+          const user = JSON.parse(loggedUserJson);
+          if (user && user.tipo === 'admin') {
+            const adminSection = document.getElementById('admin-upload-section');
+            if (adminSection) adminSection.classList.remove('hidden');
+            renderDocs(currentDocuments, true);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    function setupDragAndDrop() {
+      const dropZone = document.getElementById('drop-zone');
+      const fileInput = document.getElementById('new-doc-file');
+
+      if (dropZone && fileInput) {
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dropZone.classList.add('border-amber-500/50', 'bg-zinc-900/60');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+          dropZone.classList.remove('border-amber-500/50', 'bg-zinc-900/60');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('border-amber-500/50', 'bg-zinc-900/60');
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            processFile(e.dataTransfer.files[0]);
+          }
+        });
+      }
+    }
+
+    function handleFileSelect(event) {
+      if (event.target.files && event.target.files.length > 0) {
+        processFile(event.target.files[0]);
+      }
+    }
+
+    function processFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        attachedFileBase64 = e.target.result;
+        attachedFileName = file.name;
+        
+        // Format size
+        const sizeInKB = file.size / 1024;
+        if (sizeInKB > 1024) {
+          attachedFileSize = (sizeInKB / 1024).toFixed(1) + ' MB';
+        } else {
+          attachedFileSize = sizeInKB.toFixed(0) + ' KB';
+        }
+        
+        const statusText = document.getElementById('file-status-text');
+        if (statusText) {
+          statusText.innerHTML = `Anexado: <strong class="text-amber-500">${attachedFileName}</strong> (${attachedFileSize})`;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function handleDocSubmit(event) {
+      event.preventDefault();
+      
+      const title = document.getElementById('new-doc-title').value.trim();
+      const category = document.getElementById('new-doc-category').value;
+      const format = document.getElementById('new-doc-format').value;
+      const dateVal = document.getElementById('new-doc-date').value || new Date().toISOString().split('T')[0];
+      
+      if (!attachedFileBase64) {
+        alert("Por favor, anexe um arquivo para publicar o documento.");
+        return;
+      }
+      
+      const docData = {
+        title: title,
+        category: category,
+        format: format,
+        size: attachedFileSize || '1.0 MB',
+        fileUrl: attachedFileBase64,
+        fileName: attachedFileName,
+        uploadDate: dateVal
+      };
+      
+      try {
+        await adicionarDocumento(docData);
+        alert("🎉 Documento publicado com sucesso para download público!");
+        
+        // Reset form
+        document.getElementById('add-doc-form').reset();
+        attachedFileBase64 = '';
+        attachedFileName = '';
+        attachedFileSize = '';
+        const statusText = document.getElementById('file-status-text');
+        if (statusText) statusText.innerHTML = 'Arraste e solte o arquivo aqui, ou <span class="text-amber-500 font-bold underline">clique para selecionar</span>';
+        
+        // Reload list
+        await loadDocuments();
+      } catch (e) {
+        alert("Erro ao adicionar documento: " + e.message);
+      }
+    }
+
+    function renderDocs(list, isAdminMode = false) {
       const container = document.getElementById('docs-list');
+      if (!container) return;
+
       let listHTML = '';
 
       if (list.length === 0) {
@@ -128,7 +344,30 @@
         return;
       }
 
+      // Check if logged user is admin in case isAdminMode is false
+      if (!isAdminMode) {
+        const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+        if (loggedUserJson) {
+          try {
+            const user = JSON.parse(loggedUserJson);
+            if (user && user.tipo === 'admin') {
+              isAdminMode = true;
+            }
+          } catch (e) {}
+        }
+      }
+
       list.forEach(doc => {
+        let deleteBtn = '';
+        if (isAdminMode && !doc.isDefault) {
+          deleteBtn = `
+            <button onclick="handleDeleteDoc('${doc.id}')" class="px-3.5 py-3 rounded-xl bg-zinc-950 border border-zinc-850 hover:border-red-500 hover:text-red-500 text-xs text-zinc-500 font-bold transition-all flex items-center justify-center space-x-1 cursor-pointer">
+              <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              <span class="hidden sm:inline">Excluir</span>
+            </button>
+          `;
+        }
+
         listHTML += `
           <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-zinc-700 transition-all">
             <div class="flex items-start space-x-4">
@@ -144,10 +383,13 @@
               </div>
             </div>
             
-            <button onclick="downloadOfficialDoc('${doc.id}', '${doc.title}', '${doc.format}')" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-850 text-xs font-bold text-zinc-300 hover:text-white transition-all flex items-center justify-center space-x-2 shrink-0">
-              <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-              <span>Baixar Arquivo</span>
-            </button>
+            <div class="flex items-center space-x-2 w-full sm:w-auto">
+              <button onclick="downloadOfficialDoc('${doc.id}', '${doc.title}', '${doc.format}', '${doc.fileUrl || ''}')" class="flex-grow sm:flex-grow-0 px-5 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-850 text-xs font-bold text-zinc-300 hover:text-white transition-all flex items-center justify-center space-x-2 shrink-0 cursor-pointer">
+                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span>Baixar Arquivo</span>
+              </button>
+              ${deleteBtn}
+            </div>
           </div>
         `;
       });
@@ -155,9 +397,21 @@
       container.innerHTML = listHTML;
     }
 
+    async function handleDeleteDoc(docId) {
+      if (confirm("⚠️ Tem certeza que deseja excluir permanentemente este documento do portal?")) {
+        try {
+          await excluirDocumento(docId);
+          alert("Documento removido com sucesso!");
+          await loadDocuments();
+        } catch (e) {
+          alert("Erro ao excluir documento: " + e.message);
+        }
+      }
+    }
+
     function filterDocs() {
       const searchVal = document.getElementById('doc-search').value.toLowerCase();
-      let filtered = INITIAL_DOCUMENTS;
+      let filtered = currentDocuments;
 
       if (searchVal) {
         filtered = filtered.filter(doc => 
@@ -169,8 +423,25 @@
       renderDocs(filtered);
     }
 
-    function downloadOfficialDoc(id, title, format) {
-      // Create offscreen container styled as an official white paper document
+    function downloadOfficialDoc(id, title, format, fileUrl = '') {
+      if (fileUrl) {
+        // Direct download of custom attached files (Base64/Link)
+        try {
+          const link = document.createElement('a');
+          link.href = fileUrl;
+          link.download = `feamcrj_${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.${format.toLowerCase()}`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          return;
+        } catch (e) {
+          console.error("Custom download failed, trying new window fallback:", e);
+          window.open(fileUrl, '_blank');
+          return;
+        }
+      }
+
+      // Pre-defined high-fidelity templates (html2pdf.js generation)
       const optDiv = document.createElement('div');
       optDiv.className = "bg-white text-zinc-950 p-10 font-sans border-8 border-double border-zinc-300 w-[794px] min-h-[1123px] flex flex-col justify-between mx-auto text-left";
       optDiv.style.boxSizing = "border-box";
@@ -182,162 +453,250 @@
 
       if (id === 'doc-1') {
         bodyHTML = `
-          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">REGULAMENTO GERAL UNIFICADO DE COMPETIÇÕES E EVENTOS ESPORTIVOS</h2>
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">Regulamento Geral Unificado de Competições 2026</h2>
           
-          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917;">
-            <p style="margin-bottom: 12px;"><strong>1. DAS MODALIDADES HOMOLOGADAS:</strong> Este regulamento rege todos os eventos oficiais e chancelados pela FEAMCRJ no Estado do Rio de Janeiro para as seguintes modalidades: Jiu-Jitsu Brasileiro (BJJ) (Grappling / Kimono e No-Gi), Muay Thai Tradicional (Percussão / Cotovelos, Joelhos, Clinche), Boxe Olímpico e Profissional (Percussão), Luta Livre Esportiva (Grappling / Submission), Kickboxing (Rules K1 e Low Kicks) e Mixed Martial Arts (MMA) (Híbrido).</p>
+          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+            <p style="margin-bottom: 12px; line-height: 1.5;"><strong>1. Diretrizes Gerais</strong><br>Este documento estabelece as diretrizes unificadas para os eventos competitivos homologados no ano de 2026. O objetivo principal é garantir a integridade física dos atletas, a organização estrutural dos eventos e o alto nível técnico das disputas.</p>
             
-            <p style="margin-bottom: 12px;"><strong>2. DAS DIVISÕES DE PESO E IDADE:</strong> As competições seguirão rigorosamente as tabelas oficiais de peso de cada modalidade esportiva nacional e internacional sob a chancela da FEAMCRJ, divididas em categorias que abrangem desde as divisões infantis (Pré-Mirim, Mirim, Infantil, Infanto-Juvenil e Juvenil) até as divisões de rendimento adulto e sênior (Master 1, 2, 3, 4 e 5) com graduações adequadas para cada nível.</p>
+            <p style="margin-bottom: 12px; line-height: 1.5;"><strong>2. Divisão de Categorias</strong><br>As chaves de combate serão estruturadas cruzando as seguintes variáveis estruturais:
+            <br>• <strong>Idade:</strong> Infantil, Cadete, Juvenil, Adulto e Master.
+            <br>• <strong>Peso:</strong> Categorias rigorosamente divididas conforme a tabela oficial da federação.
+            <br>• <strong>Experiência:</strong> Estreantes, Iniciantes e Avançados.</p>
             
-            <p style="margin-bottom: 12px;"><strong>3. DAS REGRAS E CONDUTA DISCIPLINAR:</strong> É obrigatório o porte da Carteira Digital de Filiado FEAMCRJ ou documento oficial com foto na pesagem oficial. Atletas, treinadores e líderes de equipe que violarem o Código de Ética Esportiva estão sujeitos à desqualificação imediata e suspensão temporária do circuito oficial. É vedada qualquer manifestação antidesportiva, ofensiva ou discriminatória dentro ou fora das áreas de luta.</p>
+            <p style="margin-bottom: 12px; line-height: 1.5;"><strong>3. Equipamentos e Indumentária</strong><br>A apresentação do atleta na área de luta exige o uso obrigatório de:
+            <br>• Protetor bucal e coquilha (uso pessoal e intransferível).
+            <br>• Luvas em perfeito estado, no padrão de onças (oz) exigido para a categoria de peso.
+            <br>• Caneleiras de proteção aprovadas pela comissão de arbitragem.
+            <br>• Shorts de combate adequados, sem zíperes ou fivelas metálicas.</p>
             
-            <p style="margin-bottom: 12px;"><strong>4. DA ARBITRAGEM E SEGURANÇA:</strong> Todo evento chancelado contará com árbitros diplomados pelo Curso Oficial de Arbitragem da FEAMCRJ. É obrigatório o policiamento local, equipe médica especializada com ambulância UTI móvel contratada pela diretoria de eventos da Federação.</p>
-            
-            <p style="margin-top: 16px;">Este regulamento entra em vigor na data de sua publicação oficial, revogando as disposições em contrário.</p>
+            <p style="margin-bottom: 12px; line-height: 1.5;"><strong>4. Arbitragem, Conduta e Pontuação</strong><br>O julgamento dos combates priorizará a contundência, a clareza dos golpes aplicados e o domínio do centro da área de combate. Ações como falta de combatividade, golpes ilegais ou conduta antidesportiva resultarão em advertências verbais, dedução de pontos ou desclassificação imediata sob a autoridade irrefutável do árbitro central.</p>
           </div>
         `;
       } else if (id === 'doc-2') {
         bodyHTML = `
-          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-4">TABELA DE TAXAS ADMINISTRATIVAS, ANUIDADES E FILIAÇÕES DE LUTAS</h2>
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-4">Tabela de Taxas Administrativas 2026</h2>
           
-          <div class="space-y-4 text-xs leading-relaxed" style="color: #1c1917;">
-            <p class="text-center font-medium mb-3">Abaixo estão estabelecidos os valores vigentes para as taxas de filiação anual, registros de equipes, chancelas e alvarás para o exercício de 2026:</p>
+          <div class="space-y-4 text-xs leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+            <p style="text-align: center; font-weight: bold; margin-bottom: 16px;">Valores referenciais estabelecidos para o exercício do ano vigente. Os recolhimentos são essenciais para a manutenção administrativa, homologação de registros e infraestrutura dos eventos.</p>
             
-            <table class="w-full text-left border-collapse border border-zinc-300 mb-4" style="font-size: 11px; width: 100%; border-collapse: collapse; margin-bottom: 16px;">
-              <thead>
-                <tr class="bg-zinc-100 font-bold border-b border-zinc-300" style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db;">
-                  <th class="border border-zinc-300 p-2" style="border: 1px solid #d1d5db; padding: 8px;">Item / Serviço</th>
-                  <th class="border border-zinc-300 p-2" style="border: 1px solid #d1d5db; padding: 8px;">Valor Vigente</th>
-                  <th class="border border-zinc-300 p-2" style="border: 1px solid #d1d5db; padding: 8px;">Periodicidade</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Filiação / Anuidade Atleta (Menor de Idade)</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 80,00</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Anual</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Filiação / Anuidade Atleta (Adulto/Master)</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 120,00</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Anual</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Filiação / Credenciamento de Professor</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 200,00</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Anual</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Alvará de Funcionamento de Academia / CT</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 350,00</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Anual</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Certificado de Graduação Faixas Coloridas</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 50,00</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Por Emissão</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Registro e Homologação de Faixa Preta</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">R$ 850,00</td>
-                  <td class="border border-zinc-300 p-2" style="border: 1px solid #e5e7eb; padding: 8px;">Registro Único</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <p class="font-bold" style="margin-top: 12px; font-weight: bold;">SISTEMA INTEGRADO DE SPLIT FINANCEIRO (ATA DE DELIBERAÇÃO):</p>
-            <p class="text-justify" style="text-align: justify;">A FEAMCRJ opera um sistema automatizado de divisão de valores de pagamentos on-line (Split): Inscrições de alunos em Torneios possuem repasse de 30% automático ao Professor Líder da equipe. Exames de Faixa Colorida possuem 60% de repasse ao Professor Examinador. Todos os pagamentos de alunos/filiados são centralizados por meio de PIX chave oficial.</p>
-          </div>
-        `;
-      } else if (id === 'doc-3') {
-        bodyHTML = `
-          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">MANUAL DE PADRONIZAÇÃO DE GRADUAÇÕES E EXAMES DE FAIXA PRETA</h2>
-          
-          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917;">
-            <p style="margin-bottom: 12px;"><strong>1. DO TEMPO MÍNIMO DE CARÊNCIA EM CADA GRADUAÇÃO:</strong> Os professores de cada modalidade devem seguir estritamente o tempo regulamentar antes de promover ou indicar alunos para graduação: No Jiu-Jitsu (BJJ), segue o tempo mínimo internacional (Branca para Azul: 1 a 2 anos; Azul para Roxa: 2 anos; Roxa para Marrom: 1,5 ano; Marrom para Preta: 1 ano). No Muay Thai e Kickboxing, o sistema de Kruangs exige 6 meses por grau e exame técnico centralizado de 6 horas para Grau Preto perante banca oficial.</p>
-            
-            <p style="margin-bottom: 12px;"><strong>2. DO EXAME CENTRALIZADO DE FAIXA PRETA:</strong> Os exames de faixa preta e graus superiores serão realizados duas vezes ao ano (Junho e Dezembro) no Centro de Treinamento Oficial da FEAMCRJ. A banca examinadora será composta pelo Diretor Técnico da modalidade e dois Mestres convidados devidamente homologados. O candidato deve apresentar monografia sobre a história da sua modalidade, certidão civil negativa e certificado de primeiros socorros válido.</p>
-            
-            <p style="margin-bottom: 12px;"><strong>3. RECONHECIMENTO DE DIPLOMAS EXTERNOS:</strong> Professores vindos de outras entidades devem solicitar a Homologação por Equivalência de Linhagem Marcial, comprovando sua árvore de graduações e filiação anterior.</p>
-          </div>
-        `;
-      } else if (id === 'doc-4') {
-        bodyHTML = `
-          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-4">FICHA DE FILIAÇÃO COLETIVA PARA ACADEMIAS E CTS</h2>
-          
-          <div class="space-y-3 text-[10px] leading-relaxed" style="color: #1c1917;">
-            <div class="border border-zinc-300 p-3 rounded space-y-2" style="border: 1px solid #d1d5db; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-              <p><strong>DADOS DO CENTRO DE TREINAMENTO / ACADEMIA:</strong></p>
-              <p>Nome da Equipe: __________________________________________________________________________</p>
-              <p>Professor Responsável: ___________________________________ Registro FEAMCRJ: _________________</p>
-              <p>Endereço Completo: _______________________________________________________________________</p>
-            </div>
-
-            <div class="border border-zinc-300 p-3 rounded space-y-2" style="border: 1px solid #d1d5db; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-              <p><strong>RELAÇÃO DE ATLETAS A FILIAR:</strong></p>
-              <table class="w-full text-left border-collapse" style="font-size: 10px; width: 100%;">
+            <div style="margin-bottom: 15px;">
+              <h3 style="font-size: 13px; font-weight: bold; border-bottom: 2px solid #b91c1c; padding-bottom: 4px; color: #b91c1c; margin-top: 10px;">1. Filiações e Anuidades</h3>
+              <table style="font-size: 11px; width: 100%; border-collapse: collapse; margin-top: 6px;">
                 <thead>
-                  <tr class="bg-zinc-100 font-bold border-b border-zinc-300" style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db;">
-                    <th class="p-1">Nome Completo</th>
-                    <th class="p-1">CPF / RG</th>
-                    <th class="p-1">Nascimento</th>
-                    <th class="p-1">Graduação / Peso</th>
+                  <tr style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db; font-weight: bold; text-align: left;">
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Descrição do Serviço</th>
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Valor Base (R$)</th>
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Vencimento / Prazo</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr style="border-bottom: 1px solid #e5e7eb;">
-                    <td class="p-1 py-2">1. _________________________________</td>
-                    <td class="p-1">_________________</td>
-                    <td class="p-1">__/__/____</td>
-                    <td class="p-1">_________ / _____ kg</td>
+                  <tr>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Filiação de Academia (Coletiva)</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 350,00</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Anual</td>
                   </tr>
-                  <tr style="border-bottom: 1px solid #e5e7eb;">
-                    <td class="p-1 py-2">2. _________________________________</td>
-                    <td class="p-1">_________________</td>
-                    <td class="p-1">__/__/____</td>
-                    <td class="p-1">_________ / _____ kg</td>
+                  <tr>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Renovação Anual de Atleta</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 80,00</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Anual</td>
                   </tr>
-                  <tr style="border-bottom: 1px solid #e5e7eb;">
-                    <td class="p-1 py-2">3. _________________________________</td>
-                    <td class="p-1">_________________</td>
-                    <td class="p-1">__/__/____</td>
-                    <td class="p-1">_________ / _____ kg</td>
+                  <tr>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Emissão de Carteirinha (2ª Via)</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 30,00</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Sob demanda</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <p class="italic text-center text-[9px]" style="font-style: italic; text-align: center; font-size: 9px; margin-top: 12px;">"Declaro que todos os atletas acima listados estão com exames médicos em dia, aptos a praticar artes marciais de contato e devidamente matriculados em meu estabelecimento."</p>
+            <div style="margin-bottom: 15px;">
+              <h3 style="font-size: 13px; font-weight: bold; border-bottom: 2px solid #b91c1c; padding-bottom: 4px; color: #b91c1c; margin-top: 15px;">2. Eventos e Competições</h3>
+              <table style="font-size: 11px; width: 100%; border-collapse: collapse; margin-top: 6px;">
+                <thead>
+                  <tr style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db; font-weight: bold; text-align: left;">
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Descrição do Serviço</th>
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Valor Base (R$)</th>
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Observações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Inscrição Individual em Campeonato</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 120,00</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Por modalidade/categoria</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Absoluto / Categoria Extra</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 60,00</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Adicional</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+              <h3 style="font-size: 13px; font-weight: bold; border-bottom: 2px solid #b91c1c; padding-bottom: 4px; color: #b91c1c; margin-top: 15px;">3. Exames e Graduações</h3>
+              <table style="font-size: 11px; width: 100%; border-collapse: collapse; margin-top: 6px;">
+                <thead>
+                  <tr style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db; font-weight: bold; text-align: left;">
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Descrição do Serviço</th>
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Valor Base (R$)</th>
+                    <th style="padding: 6px; border: 1px solid #d1d5db;">Certificação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Exame de Graduação (Kyu / Prajied)</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 150,00</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Inclusa emissão de certificado</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Homologação de Grau Preto / Dan</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 850,00</td>
+                    <td style="padding: 6px; border: 1px solid #e5e7eb;">Avaliação da banca técnica</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } else if (id === 'doc-3') {
+        bodyHTML = `
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">Manual de Padronização de Graduações e Exames</h2>
+          
+          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+            <div style="margin-bottom: 16px;">
+              <h3 style="font-size: 12px; font-weight: bold; background-color: #f3f4f6; padding: 6px; margin: 0 0 8px 0; border-left: 4px solid #b91c1c;">1. Estrutura de Progressão</h3>
+              <p style="line-height: 1.5; margin: 0; padding: 0 6px;">O sistema de graduação atesta o desenvolvimento técnico, tático, físico e marcial do praticante. A transição para os níveis de excelência (graus pretos e avançados) exige não apenas destreza no combate, mas também domínio teórico e pedagógico.</p>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <h3 style="font-size: 12px; font-weight: bold; background-color: #f3f4f6; padding: 6px; margin: 0 0 8px 0; border-left: 4px solid #b91c1c;">2. Critérios de Avaliação</h3>
+              <p style="line-height: 1.5; margin: 0 0 8px 0; padding: 0 6px;">Os candidatos à promoção de grau serão submetidos a uma banca examinadora que avaliará os seguintes pilares:</p>
+              <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.5;">
+                <li style="margin-bottom: 4px;"><strong>Execução Técnica:</strong> Demonstração de fundamentos, sequências de ataque, defesa, bloqueios e movimentação de ringue.</li>
+                <li style="margin-bottom: 4px;"><strong>Condicionamento Físico:</strong> Testes de resistência, força e explosão adequados ao nível exigido.</li>
+                <li style="margin-bottom: 4px;"><strong>Combate (Sparring):</strong> Aplicação prática das técnicas em situação de luta controlada, avaliando timing, distância e controle emocional.</li>
+                <li style="margin-bottom: 4px;"><strong>Conhecimento Teórico:</strong> Histórico da modalidade, terminologias, regras de arbitragem e primeiros socorros.</li>
+              </ul>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <h3 style="font-size: 12px; font-weight: bold; background-color: #f3f4f6; padding: 6px; margin: 0 0 8px 0; border-left: 4px solid #b91c1c;">3. Requisitos para Níveis Avançados</h3>
+              <p style="line-height: 1.5; margin: 0; padding: 0 6px;">A candidatura aos graus máximos e níveis de instrução requer tempo de carência mínimo estipulado na graduação anterior, participação ativa em eventos da federação (como atleta, árbitro ou técnico) e conduta ética ilibada dentro e fora dos tatames/ringues.</p>
+            </div>
+          </div>
+        `;
+      } else if (id === 'doc-4') {
+        bodyHTML = `
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-2">Ficha Cadastral de Filiação Coletiva</h2>
+          <p class="text-center text-xs font-semibold mb-4" style="color: #4b5563; margin-top: 0;">Formulário destinado ao registro oficial de equipes e academias junto à federação.</p>
+          
+          <div class="space-y-3 text-[10px] leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+            <div style="border: 1px solid #d1d5db; padding: 10px; border-radius: 4px; margin-bottom: 12px;">
+              <p style="font-weight: bold; color: #b91c1c; border-bottom: 1px solid #e5e7eb; padding-bottom: 2px; margin-bottom: 6px; margin-top: 0; font-size: 11px;">Dados da Instituição / Equipe</p>
+              <p style="margin: 4px 0;">Nome da Academia / Equipe: __________________________________________________________________________</p>
+              <p style="margin: 4px 0;">CNPJ (se houver): __________________________________________________________________________</p>
+              <p style="margin: 4px 0;">Endereço Completo: _______________________________________________________________________</p>
+            </div>
+
+            <div style="border: 1px solid #d1d5db; padding: 10px; border-radius: 4px; margin-bottom: 12px;">
+              <p style="font-weight: bold; color: #b91c1c; border-bottom: 1px solid #e5e7eb; padding-bottom: 2px; margin-bottom: 6px; margin-top: 0; font-size: 11px;">Responsabilidade Técnica</p>
+              <p style="margin: 4px 0;">Professor Responsável: ______________________________________________________________________</p>
+              <p style="margin: 4px 0;">Graduação atual: ____________________________________ Telefone / WhatsApp: _________________</p>
+              <p style="margin: 4px 0;">E-mail: ____________________________________________________________________________________</p>
+            </div>
+
+            <div style="border: 1px solid #d1d5db; padding: 10px; border-radius: 4px; margin-bottom: 12px;">
+              <p style="font-weight: bold; color: #b91c1c; border-bottom: 1px solid #e5e7eb; padding-bottom: 2px; margin-bottom: 6px; margin-top: 0; font-size: 11px;">Relação Inicial de Atletas</p>
+              <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db; text-align: left; font-weight: bold;">
+                    <th style="padding: 4px;">Nome do Atleta</th>
+                    <th style="padding: 4px;">Data de Nasc.</th>
+                    <th style="padding: 4px;">Graduação</th>
+                    <th style="padding: 4px;">Peso (kg)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 6px 4px;">_________________________________________________</td>
+                    <td style="padding: 6px 4px;">____/____/______</td>
+                    <td style="padding: 6px 4px;">_________________</td>
+                    <td style="padding: 6px 4px;">_____________ kg</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 6px 4px;">_________________________________________________</td>
+                    <td style="padding: 6px 4px;">____/____/______</td>
+                    <td style="padding: 6px 4px;">_________________</td>
+                    <td style="padding: 6px 4px;">_____________ kg</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 6px 4px;">_________________________________________________</td>
+                    <td style="padding: 6px 4px;">____/____/______</td>
+                    <td style="padding: 6px 4px;">_________________</td>
+                    <td style="padding: 6px 4px;">_____________ kg</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 10px;">
+              <div>
+                <p style="margin: 0;">Assinatura do Responsável Técnico: _______________________________________________</p>
+              </div>
+              <div style="text-align: right;">
+                <p style="margin: 0;">Data: _____/_____/2026</p>
+              </div>
+            </div>
           </div>
         `;
       } else if (id === 'doc-5') {
         bodyHTML = `
-          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">TERMO DE RESPONSABILIDADE E ISENÇÃO MÉDICA (MENORES)</h2>
+          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">Termo de Responsabilidade e Isenção Médica</h2>
           
-          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917;">
-            <p style="margin-bottom: 12px;">Eu, ______________________________________________________________________, portador do RG nº ____________________ e CPF nº ____________________, na qualidade de Pai / Mãe ou Responsável Legal do menor atleta ___________________________________________________, nascido em __/__/____, filiado à equipe ________________________, declaro para os devidos fins de inscrição em competição da FEAMCRJ:</p>
+          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+            <p style="margin-bottom: 12px; line-height: 1.5;">Eu, ____________________________________________________________________, portador(a) do CPF nº ________________________ e RG nº ________________________, residente e domiciliado(a) na ____________________________________________________________________, na qualidade de responsável legal pelo(a) menor abaixo identificado(a):</p>
             
-            <p style="margin-bottom: 12px;"><strong>1. APTIDÃO FÍSICA:</strong> Que o referido menor encontra-se em perfeitas condições de saúde física e mental, estando plenamente apto para disputar campeonatos de combate de contato físico e artes marciais de alta intensidade chancelados por esta Federação.</p>
+            <p style="margin-bottom: 8px;"><strong>Nome do Atleta Menor:</strong> __________________________________________________________</p>
+            <p style="margin-bottom: 16px;"><strong>Data de Nascimento:</strong> ____/____/______ &nbsp;&nbsp;&nbsp;&nbsp; <strong>RG/CPF do Menor:</strong> ________________________</p>
             
-            <p style="margin-bottom: 12px;"><strong>2. ISENÇÃO DE RESPONSABILIDADE:</strong> Que isento a Federação Esportiva de Arte Marcial e Combate do Estado do Rio de Janeiro (FEAMCRJ), organizadores, patrocinadores, árbitros e o ginásio de qualquer responsabilidade por acidentes, lesões físicas, traumas ou qualquer intercorrência que possa ocorrer no decorrer dos combates.</p>
+            <div style="margin-top: 10px; border-left: 3px solid #b91c1c; padding-left: 8px; margin-bottom: 12px;">
+              <p style="margin: 0;"><strong>Declaração de Condição de Saúde</strong><br>Declaro para os devidos fins que o(a) menor encontra-se em perfeitas condições de saúde física e mental, estando plenamente apto(a) a participar de treinamentos intensos e competições de artes marciais organizados ou chancelados por esta Federação.</p>
+            </div>
             
-            <p style="margin-bottom: 12px;"><strong>3. DIREITOS DE IMAGEM:</strong> Autorizo o uso de imagem e voz do atleta menor para fins de divulgação esportiva em mídias sociais, fotos jornalísticas e transmissão oficial dos eventos da Federação.</p>
+            <div style="margin-top: 10px; border-left: 3px solid #b91c1c; padding-left: 8px; margin-bottom: 12px;">
+              <p style="margin: 0;"><strong>Ciência de Riscos</strong><br>Reconheço que as artes marciais são esportes de contato e que, mesmo com o uso de todos os equipamentos de segurança obrigatórios e sob a supervisão da equipe de arbitragem e médica, existem riscos inerentes à prática que podem resultar em lesões.</p>
+            </div>
+
+            <div style="margin-top: 10px; border-left: 3px solid #b91c1c; padding-left: 8px; margin-bottom: 12px;">
+              <p style="margin: 0;"><strong>Autorização</strong><br>Autorizo expressamente a participação do(a) menor nos eventos do calendário de 2026 e isento a FEAMCRJ, seus diretores, árbitros, promotores e a equipe de instrução de quaisquer responsabilidades civis ou criminais por eventuais incidentes ocorridos durante as competições, decorrentes da prática normal do esporte.</p>
+            </div>
+
+            <div style="margin-top: 35px; display: flex; justify-content: space-between; align-items: center; font-size: 10px;">
+              <div>
+                <p style="margin: 0;">Assinatura do Responsável Legal: _____________________________________________</p>
+              </div>
+              <div style="text-align: right;">
+                <p style="margin: 0;">Rio de Janeiro, ____ de ________________ de 2026.</p>
+              </div>
+            </div>
           </div>
         `;
       }
 
       optDiv.innerHTML = `
         <!-- HEADER DO DOCUMENTO -->
-        <div class="border-b-4 border-red-700 pb-4 mb-6" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b91c1c; padding-bottom: 12px; margin-bottom: 24px;">
+        <div class="border-b-4 border-red-700 pb-4 mb-6" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b91c1c; padding-bottom: 12px; margin-bottom: 24px; font-family: sans-serif;">
           <div style="text-align: left;">
             <h1 style="color: #b91c1c; font-size: 18px; margin: 0; font-weight: 900;">FEAMCRJ</h1>
             <p style="font-size: 9px; text-transform: uppercase; color: #4b5563; font-weight: bold; margin: 0;">Federação Esportiva de Arte Marcial e Combate do Estado do RJ</p>
             <p style="font-size: 8px; color: #6b7280; margin: 0;">CNPJ: 42.128.812/0001-90 | Reg. Cartório Civil nº 812.428-RJ</p>
             <p style="font-size: 8px; color: #6b7280; margin: 0;">Sede: Rua Conde de Bonfim, 342 - Tijuca, Rio de Janeiro - RJ</p>
           </div>
-          <div style="text-align: right;">
-            <span style="font-size: 9px; font-family: monospace; font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 10px; border-radius: 4px; display: inline-block;">DOC-ID: ${id.toUpperCase()}</span>
-            <span style="font-size: 8px; color: #9ca3af; display: block; margin-top: 4px; font-family: monospace;">Homologação FEAMCRJ-2026</span>
+          <div style="text-align: right; font-family: monospace;">
+            <span style="font-size: 9px; font-weight: bold; background-color: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 10px; border-radius: 4px; display: inline-block;">DOC-ID: ${id.toUpperCase()}</span>
+            <span style="font-size: 8px; color: #9ca3af; display: block; margin-top: 4px;">Homologação FEAMCRJ-2026</span>
           </div>
         </div>
 
@@ -347,14 +706,14 @@
         </div>
 
         <!-- FOOTER DO DOCUMENTO -->
-        <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-top: auto;">
-          <div style="display: grid; grid-template-cols: 1fr 1fr; gap: 32px; text-align: center; font-size: 10px; margin-bottom: 24px;">
-            <div>
+        <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-top: auto; font-family: sans-serif;">
+          <div style="display: flex; justify-content: space-between; text-align: center; font-size: 10px; margin-bottom: 24px; width: 100%;">
+            <div style="flex: 1;">
               <div style="border-top: 1px solid #9ca3af; width: 160px; margin: 0 auto; padding-top: 4px;"></div>
               <p style="font-weight: bold; color: #1f2937; margin: 2px 0 0 0;">Grão-Mestre Roberto Albuquerque</p>
               <p style="font-size: 8px; color: #6b7280; text-transform: uppercase; margin: 0;">Presidente FEAMCRJ</p>
             </div>
-            <div>
+            <div style="flex: 1;">
               <div style="border-top: 1px solid #9ca3af; width: 160px; margin: 0 auto; padding-top: 4px;"></div>
               <p style="font-weight: bold; color: #1f2937; margin: 2px 0 0 0;">Mestre Alexandre Silva</p>
               <p style="font-size: 8px; color: #6b7280; text-transform: uppercase; margin: 0;">Vice-Presidente & Secretário Geral</p>
