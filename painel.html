@@ -47,6 +47,10 @@
           </p>
         </div>
         <div class="flex items-center gap-3">
+          <button onclick="toggleDojoVirtualGame()" class="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 text-white hover:brightness-110 text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg flex items-center space-x-1.5 shrink-0">
+            <span>🎮</span>
+            <span>Dojo Jogo de Luta</span>
+          </button>
           <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse mr-2"></span>
             Acesso Ativo
@@ -297,6 +301,37 @@
             <!-- Dynamic registration card will be injected here -->
           </div>
 
+          <!-- MEUS BOLETOS & COBRANÇAS DA FEDERAÇÃO -->
+          <div class="space-y-4 mt-8">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400 font-display">Mensalidades, Anuidades & Boletos</h2>
+              <span class="text-[9px] bg-amber-500/10 text-amber-500 border border-amber-500/25 px-2.5 py-1 rounded-md font-bold uppercase tracking-wider">Boletos Oficiais</span>
+            </div>
+            
+            <div class="bg-zinc-900 border border-zinc-900/60 rounded-2xl p-6 space-y-4 shadow-lg shadow-black/10">
+              <p class="text-zinc-400 text-xs">Abaixo estão listados todos os seus boletos de filiação, taxas administrativas ou mensalidades enviadas pela diretoria da FEAMCRJ.</p>
+              
+              <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/40">
+                <table class="w-full text-left text-xs text-zinc-400">
+                  <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                    <tr>
+                      <th class="p-3.5">Cobrança / Descrição</th>
+                      <th class="p-3.5">Vencimento</th>
+                      <th class="p-3.5">Valor</th>
+                      <th class="p-3.5">Status</th>
+                      <th class="p-3.5 text-right">Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody id="atleta-boletos-tbody" class="divide-y divide-zinc-900">
+                    <tr>
+                      <td colspan="5" class="p-4 text-center text-zinc-500 text-xs">Carregando seus boletos...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           <!-- PORTAL DOCS DIRECT ACCESS -->
           <div class="bg-zinc-900 border border-zinc-900 rounded-2xl p-6 space-y-4">
             <h3 class="text-xs font-black uppercase tracking-wider text-white">Documentos Importantes</h3>
@@ -329,6 +364,9 @@
           </button>
           <button type="button" id="tab-prof-mensalidades" onclick="switchProfTab('mensalidades')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
             👥 Mensalidades dos Alunos
+          </button>
+          <button type="button" id="tab-prof-boletos-fed" onclick="switchProfTab('boletos-fed')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            📄 Nossos Boletos (Federação)
           </button>
         </div>
 
@@ -562,6 +600,37 @@
                 <!-- Alunos e status de mensalidade injetados dinamicamente -->
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- CONTEÚDO 4: NOSSOS BOLETOS DA FEDERAÇÃO (PROFESSOR / CT COBRANÇAS) -->
+        <div id="prof-content-boletos-fed" class="lg:col-span-12 hidden space-y-6">
+          <div>
+            <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400 font-display">Boletos & Taxas de Credenciamento do CT</h2>
+            <p class="text-zinc-500 text-[11px] mt-1">Consulte seus débitos, anuidades e taxas administrativas do Centro de Treinamento junto à FEAMCRJ.</p>
+          </div>
+
+          <div class="bg-zinc-900 border border-zinc-900/60 rounded-2xl p-6 space-y-4">
+            <p class="text-zinc-400 text-xs">Todos os boletos abaixo são emitidos diretamente pela diretoria geral da Federação e são vinculados à homologação cadastral do seu CT.</p>
+            
+            <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/40">
+              <table class="w-full text-left text-xs text-zinc-400">
+                <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                  <tr>
+                    <th class="p-3.5">Cobrança / Descrição</th>
+                    <th class="p-3.5">Vencimento</th>
+                    <th class="p-3.5">Valor</th>
+                    <th class="p-3.5">Status</th>
+                    <th class="p-3.5 text-right">Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="prof-boletos-tbody" class="divide-y divide-zinc-900">
+                  <tr>
+                    <td colspan="5" class="p-4 text-center text-zinc-500 text-xs">Carregando boletos da academia...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -1339,6 +1408,92 @@
             </div>
 
           </div>
+
+          <!-- SEÇÃO ADMIN: CONTROLE E DISPARO DE BOLETOS -->
+          <div class="mt-8 border-t border-zinc-900 pt-8 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 class="text-sm font-black uppercase text-amber-500 tracking-wider font-display">Controle de Emissão & Disparo de Boletos</h3>
+                <p class="text-zinc-500 text-xs">Emita cobranças avulsas para atletas ou professores de CT e faça disparos de notificação.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <!-- Formulário de Emissão (Takes 4 cols) -->
+              <div class="lg:col-span-4 bg-zinc-900 border border-zinc-850 p-6 rounded-2xl space-y-4">
+                <h4 class="text-xs font-black uppercase text-zinc-300 tracking-wider">Novo Boleto Avulso</h4>
+                <form id="adm-boleto-form" class="space-y-4" onsubmit="handleEmitirBoleto(event)">
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Tipo de Destinatário</label>
+                    <select id="adm-boleto-tipo" required onchange="onBoletoTipoChange()" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="atleta">Atleta / Filiado</option>
+                      <option value="professor">Professor / CT Credenciado</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Selecionar Destinatário</label>
+                    <select id="adm-boleto-destinatario" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <!-- Populado dinamicamente -->
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Descrição do Débito</label>
+                    <input type="text" id="adm-boleto-desc" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Renovação Anual de Faixa Preta">
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Valor (R$)</label>
+                      <input type="number" id="adm-boleto-val" required min="1" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="100,00">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Vencimento</label>
+                      <input type="date" id="adm-boleto-venc" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                  </div>
+
+                  <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 text-xs font-black uppercase tracking-widest text-zinc-950 hover:bg-amber-400 shadow-md transition-all cursor-pointer">
+                    ⚡ Registrar e Emitir Cobrança
+                  </button>
+                </form>
+              </div>
+
+              <!-- Listagem de Boletos e Ações de Disparo (Takes 8 cols) -->
+              <div class="lg:col-span-8 space-y-4">
+                <div class="bg-zinc-900/40 border border-zinc-900 p-4 rounded-2xl flex items-center justify-between">
+                  <h4 class="text-xs font-black uppercase text-zinc-300 tracking-wider">Histórico de Cobranças Emitidas pela Federação</h4>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-zinc-500 uppercase font-bold">Filtro Status:</span>
+                    <select id="adm-boleto-filter-status" onchange="renderAdminBoletos()" class="bg-zinc-950 border border-zinc-850 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-amber-500">
+                      <option value="todos">Todos</option>
+                      <option value="pendente">Pendentes</option>
+                      <option value="pago">Pagos</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+                  <table class="w-full text-left text-xs text-zinc-400">
+                    <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                      <tr>
+                        <th class="p-3">Destinatário</th>
+                        <th class="p-3">Descrição / Boleto</th>
+                        <th class="p-3">Vencimento</th>
+                        <th class="p-3">Valor</th>
+                        <th class="p-3">Status</th>
+                        <th class="p-3 text-right">Ações de Envio</th>
+                      </tr>
+                    </thead>
+                    <tbody id="adm-boletos-tbody" class="divide-y divide-zinc-900">
+                      <!-- Populado dinamicamente -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- TAB CONTENT: ATENDIMENTO CHAT ONLINE (TEMPO REAL) -->
@@ -1731,6 +1886,7 @@
         }
 
         renderUserRegistrations(loggedUser.email);
+        loadAthleteBoletos();
       }
     });
 
@@ -3189,7 +3345,7 @@
     // ==========================================
 
     function switchProfTab(tabName) {
-      const tabs = ['ct-alunos', 'caixa-fluxo', 'mensalidades'];
+      const tabs = ['ct-alunos', 'caixa-fluxo', 'mensalidades', 'boletos-fed'];
       tabs.forEach(t => {
         const btn = document.getElementById('tab-prof-' + t);
         const content = document.getElementById('prof-content-' + t);
@@ -3205,6 +3361,7 @@
 
       if (tabName === 'caixa-fluxo') loadProfessorCaixa();
       if (tabName === 'mensalidades') loadProfessorMensalidades();
+      if (tabName === 'boletos-fed') loadProfessorBoletos();
     }
 
     // Submit handler para Frente de Caixa (POS) do CT
@@ -3780,9 +3937,13 @@
       const element = document.createElement('div');
       element.className = "bg-zinc-950 text-white p-10 flex flex-col items-center justify-center space-y-12 font-sans w-[794px] min-h-[1123px] mx-auto text-left";
       element.style.boxSizing = "border-box";
-      element.style.position = "fixed";
-      element.style.top = "-10000px";
-      element.style.left = "-10000px";
+      element.style.position = "absolute";
+      element.style.left = "-9999px";
+      element.style.top = "0px";
+      element.style.width = "794px";
+      element.style.minHeight = "1123px";
+      element.style.backgroundColor = "#09090b";
+      element.style.color = "#ffffff";
 
       element.innerHTML = `
         <div style="text-align: center; font-family: sans-serif; margin-bottom: 20px; width: 100%;">
@@ -3930,7 +4091,7 @@
 
     async function imprimirComprovanteInscricao(insId) {
       try {
-        const inscricoes = await getInscricoes();
+        const inscricoes = await getInscricoesTodas();
         const ins = inscricoes.find(i => i.id === insId);
         if (!ins) {
           alert('Erro: Inscrição não encontrada.');
@@ -3950,9 +4111,13 @@
         const element = document.createElement('div');
         element.className = "bg-white text-zinc-950 p-10 flex flex-col justify-between font-sans w-[794px] min-h-[1123px] mx-auto text-left border-[12px] border-double border-zinc-300";
         element.style.boxSizing = "border-box";
-        element.style.position = "fixed";
-        element.style.top = "-10000px";
-        element.style.left = "-10000px";
+        element.style.position = "absolute";
+        element.style.left = "-9999px";
+        element.style.top = "0px";
+        element.style.width = "794px";
+        element.style.minHeight = "1123px";
+        element.style.backgroundColor = "#ffffff";
+        element.style.color = "#09090b";
 
         element.innerHTML = `
           <div style="border-bottom: 4px solid #b91c1c; padding-bottom: 12px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
@@ -4055,6 +4220,380 @@
         inner.classList.toggle('rotate-y-180');
       }
     }
+
+    // ==========================================
+    // SISTEMA DE BOLETOS & JOGO DE LUTA INTEGRADOS
+    // ==========================================
+    async function loadAthleteBoletos() {
+      try {
+        const tbody = document.getElementById('atleta-boletos-tbody');
+        if (!tbody) return;
+        const loggedUser = JSON.parse(localStorage.getItem('feamcrj_logged_user') || '{}');
+        const boletos = await getBoletos();
+        const userBoletos = boletos.filter(b => b.destinatarioEmail?.toLowerCase() === loggedUser.email?.toLowerCase());
+        if (userBoletos.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-zinc-500 text-xs">Nenhum boleto pendente ou faturamento em aberto.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = userBoletos.map(b => {
+          const status = b.status === 'pago' ? `<span class="text-emerald-400 font-bold uppercase">Pago</span>` : `<span class="text-amber-500 font-bold uppercase animate-pulse">Pendente</span>`;
+          const act = b.status === 'pago' 
+            ? `<button onclick="imprimirReciboQuitacao('${b.id}')" class="px-2 py-1 bg-zinc-800 text-white rounded text-[10px] font-bold uppercase cursor-pointer">Recibo</button>`
+            : `<button onclick="pagarBoletoViaPix('${b.id}')" class="px-2 py-1 bg-amber-500 text-zinc-950 rounded text-[10px] font-black uppercase cursor-pointer">Pagar</button>`;
+          return `<tr><td class="p-3 text-white font-bold">${b.descricao}</td><td class="p-3 text-zinc-400">${b.dataVencimento.split('-').reverse().join('/')}</td><td class="p-3 text-amber-500 font-bold">R$ ${b.valor}</td><td class="p-3">${status}</td><td class="p-3 text-right">${act}</td></tr>`;
+        }).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    async function loadProfessorBoletos() {
+      try {
+        const tbody = document.getElementById('prof-boletos-tbody');
+        if (!tbody) return;
+        const loggedUser = JSON.parse(localStorage.getItem('feamcrj_logged_user') || '{}');
+        const boletos = await getBoletos();
+        const profBoletos = boletos.filter(b => b.destinatarioEmail?.toLowerCase() === loggedUser.email?.toLowerCase());
+        if (profBoletos.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-zinc-500 text-xs">Nenhum boleto em aberto com a FEAMCRJ.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = profBoletos.map(b => {
+          const status = b.status === 'pago' ? `<span class="text-emerald-400 font-bold uppercase">Pago</span>` : `<span class="text-amber-500 font-bold uppercase animate-pulse">Pendente</span>`;
+          const act = b.status === 'pago' 
+            ? `<button onclick="imprimirReciboQuitacao('${b.id}')" class="px-2 py-1 bg-zinc-800 text-white rounded text-[10px] font-bold uppercase cursor-pointer">Recibo</button>`
+            : `<button onclick="pagarBoletoViaPix('${b.id}')" class="px-2 py-1 bg-amber-500 text-zinc-950 rounded text-[10px] font-black uppercase cursor-pointer">Pagar</button>`;
+          return `<tr><td class="p-3 text-white font-bold">${b.descricao}</td><td class="p-3 text-zinc-400">${b.dataVencimento.split('-').reverse().join('/')}</td><td class="p-3 text-amber-500 font-bold">R$ ${b.valor}</td><td class="p-3">${status}</td><td class="p-3 text-right">${act}</td></tr>`;
+        }).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    async function loadAdminBoletos() {
+      try {
+        const tbody = document.getElementById('adm-boletos-tbody');
+        if (!tbody) return;
+        const filter = document.getElementById('adm-boleto-filter-status').value;
+        const boletos = await getBoletos();
+        const filtered = boletos.filter(b => filter === 'todos' || b.status === filter);
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-zinc-500 text-xs">Nenhum boleto cadastrado.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = filtered.map(b => {
+          const status = b.status === 'pago' ? `<span class="text-emerald-400 font-bold uppercase">Pago</span>` : `<span class="text-amber-500 font-bold uppercase animate-pulse">Pendente</span>`;
+          const notify = b.notificado ? `🟢 Enviado` : `Disparar`;
+          const actions = b.status === 'pago'
+            ? `<button onclick="excluirBoletoAdmin('${b.id}')" class="px-2.5 py-1.5 bg-zinc-850 hover:bg-red-500/20 text-zinc-500 hover:text-red-500 text-[10px] font-bold rounded cursor-pointer">Deletar</button>`
+            : `<div class="flex gap-1.5 justify-end">
+                 <button onclick="dispararBoletoNotificacao('${b.id}')" class="px-2 py-1 bg-amber-500 text-zinc-950 text-[10px] font-bold rounded cursor-pointer">${notify}</button>
+                 <button onclick="quitarBoletoManual('${b.id}')" class="px-2 py-1 bg-zinc-800 text-emerald-400 text-[10px] font-bold rounded cursor-pointer">Quitar</button>
+                 <button onclick="excluirBoletoAdmin('${b.id}')" class="px-2 py-1 bg-zinc-850 text-zinc-500 text-[10px] rounded cursor-pointer">Deletar</button>
+               </div>`;
+          return `<tr><td class="p-3"><div class="font-bold text-white">${b.destinatarioNome}</div><div class="text-[10px] text-zinc-500">${b.destinatarioEmail}</div></td><td class="p-3 font-semibold text-zinc-300">${b.descricao}</td><td class="p-3 text-zinc-400">${b.dataVencimento.split('-').reverse().join('/')}</td><td class="p-3 text-amber-500 font-bold">R$ ${b.valor}</td><td class="p-3">${status}</td><td class="p-3 text-right">${actions}</td></tr>`;
+        }).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    async function populateBoletoRecipients() {
+      try {
+        const destSelect = document.getElementById('adm-boleto-destinatario');
+        const tipo = document.getElementById('adm-boleto-tipo').value;
+        if (!destSelect) return;
+        destSelect.innerHTML = '';
+        if (tipo === 'atleta') {
+          const atletas = await getAtletas();
+          atletas.forEach(a => {
+            destSelect.innerHTML += `<option class="bg-zinc-900 text-white" value='${JSON.stringify({id: a.id, nome: a.name, email: a.email})}'>${a.name} (${a.email})</option>`;
+          });
+        } else {
+          const academias = await getAcademias();
+          academias.forEach(ac => {
+            destSelect.innerHTML += `<option class="bg-zinc-900 text-white" value='${JSON.stringify({id: ac.id, nome: ac.title, email: ac.email || "alliance.copacabana@alliance.com.br"})}'>${ac.title}</option>`;
+          });
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function onBoletoTipoChange() { populateBoletoRecipients(); }
+
+    async function handleEmitirBoleto(event) {
+      event.preventDefault();
+      try {
+        const dest = JSON.parse(document.getElementById('adm-boleto-destinatario').value);
+        const tipo = document.getElementById('adm-boleto-tipo').value;
+        const desc = document.getElementById('adm-boleto-desc').value;
+        const val = parseFloat(document.getElementById('adm-boleto-val').value);
+        const venc = document.getElementById('adm-boleto-venc').value;
+        await salvarBoleto({
+          destinatarioId: dest.id, destinatarioNome: dest.nome, destinatarioEmail: dest.email,
+          destinatarioTipo: tipo, descricao: desc, valor: val, dataVencimento: venc,
+          status: 'pendente', dataPagamento: null, formaPagamento: null, notificado: false
+        });
+        alert('⚡ Cobrança chancelada com sucesso!');
+        document.getElementById('adm-boleto-form').reset();
+        populateBoletoRecipients();
+        loadAdminBoletos();
+      } catch (e) { alert(e.message); }
+    }
+
+    async function dispararBoletoNotificacao(id) {
+      try {
+        const boletos = await getBoletos();
+        const b = boletos.find(x => x.id === id);
+        if (!b) return;
+        b.notificado = true;
+        await salvarBoleto(b);
+        loadAdminBoletos();
+        const text = `Olá, ${b.destinatarioNome}! A FEAMCRJ emitiu a cobrança "${b.descricao}" no valor de R$ ${b.valor}, vencendo em ${b.dataVencimento.split('-').reverse().join('/')}. Efetue o pagamento via Pix no seu painel!`;
+        window.open(`https://wa.me/5521993370397?text=${encodeURIComponent(text)}`, '_blank');
+      } catch (e) { console.error(e); }
+    }
+
+    async function quitarBoletoManual(id) {
+      if (!confirm('Deseja marcar esta cobrança como paga?')) return;
+      try {
+        const boletos = await getBoletos();
+        const b = boletos.find(x => x.id === id);
+        if (!b) return;
+        b.status = 'pago';
+        b.dataPagamento = new Date().toISOString().split('T')[0];
+        b.formaPagamento = 'pix';
+        await salvarBoleto(b);
+        if (window.adicionarLancamentoFinanceiroGlobal) {
+          await window.adicionarLancamentoFinanceiroGlobal({
+            id: 'lan-' + Date.now(), data: b.dataPagamento, origem: b.destinatarioNome,
+            categoria: 'federacao', descricao: `QUITAÇÃO: ${b.descricao}`, forma: 'pix', valor: b.valor, tipo: 'entrada'
+          });
+        }
+        loadAdminBoletos();
+        if (window.loadAdminFinanceiroGlobal) window.loadAdminFinanceiroGlobal();
+        alert('🟢 Cobrança marcada como quitada!');
+      } catch (e) { console.error(e); }
+    }
+
+    async function excluirBoletoAdmin(id) {
+      if (!confirm('Deseja excluir este boleto?')) return;
+      await excluirBoleto(id);
+      loadAdminBoletos();
+    }
+
+    async function pagarBoletoViaPix(id) {
+      try {
+        const boletos = await getBoletos();
+        const b = boletos.find(x => x.id === id);
+        if (!b) return;
+        const code = `00020101021226580014br.gov.bcb.pix2536feamcrjpixfaturamento@feamcrj.org5204000053039865405${Number(b.valor).toFixed(2)}5802BR5915FEAMCRJ FEDERAC6009SAO_PAULO62140510feam${b.id}6304D1A2`;
+        navigator.clipboard.writeText(code).catch(() => {});
+        if (confirm(`Código Pix Copiado!\n\n${code}\n\nEfetue o pagamento de R$ ${b.valor} e clique em OK para simular aprovação instantânea!`)) {
+          b.status = 'pago';
+          b.dataPagamento = new Date().toISOString().split('T')[0];
+          b.formaPagamento = 'pix';
+          await salvarBoleto(b);
+          loadAthleteBoletos();
+          loadProfessorBoletos();
+          alert('🎉 Pagamento aprovado com sucesso!');
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    // Recibo de quitação
+    async function imprimirReciboQuitacao(id) {
+      try {
+        const boletos = await getBoletos();
+        const b = boletos.find(x => x.id === id);
+        if (!b) return;
+        const element = document.createElement('div');
+        element.className = "bg-white text-zinc-950 p-10 flex flex-col justify-between font-sans w-[794px] min-h-[1123px] mx-auto text-left border-[12px] border-double border-zinc-300";
+        element.style.position = "absolute";
+        element.style.left = "-9999px";
+        element.style.top = "0px";
+        element.style.width = "794px";
+        element.style.minHeight = "1123px";
+        element.style.backgroundColor = "#ffffff";
+        element.style.color = "#09090b";
+        element.innerHTML = `
+          <div style="border-bottom: 4px solid #b91c1c; padding-bottom: 12px; margin-bottom: 24px; width: 100%;">
+            <h1 style="color: #b91c1c; font-size: 20px; margin: 0; font-weight: 900;">FEAMCRJ</h1>
+            <p style="font-size: 9px; text-transform: uppercase; color: #4b5563; font-weight: bold; margin: 0;">Federação Esportiva de Arte Marcial e Combate do Estado do RJ</p>
+          </div>
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="font-size: 16px; font-weight: bold; text-transform: uppercase; color: #111827; margin: 0;">Recibo de Quitação</h2>
+          </div>
+          <div style="border: 1px solid #d1d5db; padding: 24px; border-radius: 8px; background-color: #f9fafb; font-size: 12px; line-height: 1.8;">
+            <p><strong>Recebemos de:</strong> ${b.destinatarioNome}</p>
+            <p><strong>Referente a:</strong> ${b.descricao}</p>
+            <p><strong>Valor:</strong> R$ ${b.valor} (via Pix)</p>
+            <p><strong>Data de Liquidação:</strong> ${b.dataPagamento || new Date().toLocaleDateString('pt-BR')}</p>
+            <p style="color: #10b981; font-weight: bold;">STATUS: TOTALMENTE PAGO / QUITADO</p>
+          </div>
+          <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; text-align: center; font-size: 10px;">
+            <p style="font-weight: bold; margin: 0;">Raphael Jaboque</p>
+            <p style="color: #6b7280; margin: 0;">Presidente FEAMCRJ</p>
+          </div>
+        `;
+        document.body.appendChild(element);
+        const opt = { margin: 15, filename: `recibo_${b.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().from(element).set(opt).save().then(() => document.body.removeChild(element)).catch(() => document.body.removeChild(element));
+      } catch (err) { alert(err.message); }
+    }
+
+    // ==========================================
+    // COMBAT MINIGAME JOGO DE LUTA
+    // ==========================================
+    let gamePlayerStyle = '';
+    let playerHP = 100;
+    let enemyHP = 100;
+    let gameIsOver = false, isPlayerTurn = true;
+
+    function toggleDojoVirtualGame() {
+      const modal = document.getElementById('dojo-virtual-modal');
+      if (!modal) return;
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        resetCombatGame();
+        const xp = parseInt(localStorage.getItem('feam_dojo_xp') || '0');
+        document.getElementById('game-belt-text').textContent = xp >= 150 ? 'Faixa Preta' : (xp >= 50 ? 'Faixa Azul' : 'Faixa Branca');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function selectMartialArt(style) {
+      gamePlayerStyle = style;
+      ['bjj', 'muaythai', 'kickboxing'].forEach(s => {
+        const btn = document.getElementById('char-card-' + s);
+        if (btn) btn.className = s === style ? "p-3 bg-amber-500 text-zinc-950 rounded-xl text-xs uppercase font-black" : "p-3 bg-zinc-900 text-white rounded-xl text-xs uppercase font-black";
+      });
+      const btn = document.getElementById('start-combat-btn');
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
+      btn.removeAttribute('disabled');
+    }
+
+    function startCombatGame() {
+      document.getElementById('game-screen-selection').classList.add('hidden');
+      document.getElementById('game-screen-arena').classList.remove('hidden');
+      playerHP = 100; enemyHP = 100; gameIsOver = false; isPlayerTurn = true;
+      document.getElementById('arena-player-name').textContent = "Você (" + gamePlayerStyle.toUpperCase() + ")";
+      document.getElementById('arena-enemy-name').textContent = "Mestre FEAMCRJ";
+      updateGameUI();
+    }
+
+    function resetCombatGame() {
+      document.getElementById('game-screen-selection').classList.remove('hidden');
+      document.getElementById('game-screen-arena').classList.add('hidden');
+      document.getElementById('game-screen-result').classList.add('hidden');
+      gamePlayerStyle = '';
+      const btn = document.getElementById('start-combat-btn');
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      btn.setAttribute('disabled', 'true');
+    }
+
+    function updateGameUI() {
+      document.getElementById('arena-player-hp-text').textContent = playerHP + ' HP';
+      document.getElementById('arena-enemy-hp-text').textContent = enemyHP + ' HP';
+      document.getElementById('game-live-status').textContent = isPlayerTurn ? 'SUA VEZ DE ATACAR!' : 'OPONENTE ATACANDO...';
+    }
+
+    function executeAction(act) {
+      if (!isPlayerTurn || gameIsOver) return;
+      let dmg = act === 'special' ? Math.floor(25 + Math.random() * 10) : (act === 'kick' ? Math.floor(15 + Math.random() * 8) : Math.floor(8 + Math.random() * 5));
+      enemyHP = Math.max(0, enemyHP - dmg);
+      document.getElementById('game-last-action').textContent = `Você usou ${act.toUpperCase()} e causou ${dmg} de dano!`;
+      updateGameUI();
+      if (enemyHP <= 0) { endGame('win'); return; }
+      isPlayerTurn = false;
+      updateGameUI();
+      setTimeout(enemyTurn, 1000);
+    }
+
+    function enemyTurn() {
+      if (gameIsOver) return;
+      let dmg = Math.floor(10 + Math.random() * 10);
+      playerHP = Math.max(0, playerHP - dmg);
+      document.getElementById('game-last-action').textContent = `Oponente atacou e causou ${dmg} de dano!`;
+      isPlayerTurn = true;
+      updateGameUI();
+      if (playerHP <= 0) { endGame('lose'); }
+    }
+
+    function endGame(res) {
+      gameIsOver = true;
+      document.getElementById('game-screen-arena').classList.add('hidden');
+      document.getElementById('game-screen-result').classList.remove('hidden');
+      const title = document.getElementById('result-title');
+      const xpText = document.getElementById('result-reward-xp');
+      if (res === 'win') {
+        title.textContent = "VITÓRIA!";
+        title.className = "text-lg font-black text-emerald-400 uppercase";
+        let xp = parseInt(localStorage.getItem('feam_dojo_xp') || '0') + 50;
+        localStorage.setItem('feam_dojo_xp', xp.toString());
+        xpText.textContent = "+50 XP (Ganho de Faixa!)";
+      } else {
+        title.textContent = "DERROTA!";
+        title.className = "text-lg font-black text-red-500 uppercase";
+        xpText.textContent = "Tente novamente para ganhar XP!";
+      }
+    }
+
+    // Hook listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      const bTipo = document.getElementById('adm-boleto-tipo');
+      if (bTipo) bTipo.addEventListener('change', onBoletoTipoChange);
+      
+      const user = localStorage.getItem('feamcrj_logged_user');
+      if (user) {
+        const u = JSON.parse(user);
+        if (u.email === 'feamcrj@gmail.com' || u.tipo === 'admin') {
+          setTimeout(() => { populateBoletoRecipients(); loadAdminBoletos(); }, 500);
+        } else if (u.tipo === 'professor') {
+          setTimeout(() => { loadProfessorBoletos(); }, 500);
+        } else {
+          setTimeout(() => { loadAthleteBoletos(); }, 500);
+        }
+      }
+    });
   </script>
+
+  <!-- MODAL DOJO JOGO DE LUTA -->
+  <div id="dojo-virtual-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[9999] hidden flex items-center justify-center p-4">
+    <div class="relative bg-zinc-950 border border-zinc-800 rounded-3xl w-full max-w-lg overflow-hidden flex flex-col shadow-2xl">
+      <div class="bg-gradient-to-r from-red-600 to-amber-500 px-6 py-4 flex items-center justify-between text-zinc-950">
+        <h3 class="text-xs font-black uppercase tracking-wider font-display m-0">🎮 DOJO VIRTUAL FEAM <span id="game-belt-text" class="bg-black text-white px-2 py-0.5 rounded ml-2 font-mono">Faixa Branca</span></h3>
+        <button onclick="toggleDojoVirtualGame()" class="text-zinc-950 hover:bg-black/10 p-1 px-2.5 rounded-lg cursor-pointer font-bold">X</button>
+      </div>
+      <div class="p-6 space-y-6">
+        <div id="game-screen-selection" class="space-y-4">
+          <p class="text-xs text-zinc-400 text-center">Selecione sua arte marcial para entrar no tatame digital:</p>
+          <div class="grid grid-cols-3 gap-3">
+            <button onclick="selectMartialArt('bjj')" id="char-card-bjj" class="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-white uppercase font-black hover:border-amber-500 cursor-pointer">Jiu-Jitsu 🥋</button>
+            <button onclick="selectMartialArt('muaythai')" id="char-card-muaythai" class="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-white uppercase font-black hover:border-amber-500 cursor-pointer">Muay Thai 🥊</button>
+            <button onclick="selectMartialArt('kickboxing')" id="char-card-kickboxing" class="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-white uppercase font-black hover:border-amber-500 cursor-pointer">Kickboxing 🎽</button>
+          </div>
+          <div class="text-center pt-2">
+            <button onclick="startCombatGame()" id="start-combat-btn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:brightness-110 opacity-50 cursor-not-allowed" disabled>ENTRAR NO TATAME</button>
+          </div>
+        </div>
+        <div id="game-screen-arena" class="hidden space-y-4">
+          <div class="flex justify-between items-center bg-zinc-900 p-3 rounded-xl text-xs">
+            <div><span id="arena-player-name" class="font-bold text-white">Você</span>: <span id="arena-player-hp-text" class="text-emerald-400 font-bold">100 HP</span></div>
+            <div class="text-red-500 font-black">VS</div>
+            <div class="text-right"><span id="arena-enemy-name" class="font-bold text-white">Oponente</span>: <span id="arena-enemy-hp-text" class="text-red-400 font-bold">100 HP</span></div>
+          </div>
+          <div class="bg-zinc-900/40 p-4 rounded-xl text-center border border-zinc-800">
+            <p id="game-live-status" class="text-xs font-bold text-amber-500 uppercase">SUA VEZ DE ATACAR!</p>
+            <p id="game-last-action" class="text-[10px] text-zinc-500 mt-1 italic font-mono">Prepare-se...</p>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="executeAction('punch')" class="p-2 bg-zinc-900 border border-zinc-800 hover:border-amber-500 rounded-xl text-[10px] font-bold text-white cursor-pointer">Soco 👊</button>
+            <button onclick="executeAction('kick')" class="p-2 bg-zinc-900 border border-zinc-800 hover:border-amber-500 rounded-xl text-[10px] font-bold text-white cursor-pointer">Chute 🦵</button>
+            <button onclick="executeAction('special')" class="p-2 bg-amber-500 hover:bg-amber-400 rounded-xl text-[10px] font-black text-zinc-950 cursor-pointer">Especial 🔥</button>
+          </div>
+        </div>
+        <div id="game-screen-result" class="hidden text-center space-y-4">
+          <h4 id="result-title" class="text-lg font-black text-white uppercase">VITÓRIA!</h4>
+          <p id="result-reward-xp" class="text-xs text-emerald-400 font-mono">+50 XP (Ganho de Faixa!)</p>
+          <button onclick="resetCombatGame()" class="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold text-white cursor-pointer">Lutar Novamente</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -402,6 +402,80 @@ if (!localStorage.getItem('feam_mensalidades')) {
     }
   ]));
 }
+if (!localStorage.getItem('feam_boletos')) {
+  localStorage.setItem('feam_boletos', JSON.stringify([
+    {
+      id: 'bol-mock-1',
+      destinatarioId: 'ath-mock-1',
+      destinatarioNome: 'Carlos Silva',
+      destinatarioEmail: 'carlos.silva@gmail.com',
+      destinatarioTipo: 'atleta',
+      descricao: 'Taxa de Filiação Anual 2026',
+      valor: 120.00,
+      dataVencimento: '2026-05-10',
+      status: 'pago',
+      dataPagamento: '2026-05-08',
+      formaPagamento: 'pix',
+      notificado: true
+    },
+    {
+      id: 'bol-mock-2',
+      destinatarioId: 'ath-mock-2',
+      destinatarioNome: 'Beatriz Santos',
+      destinatarioEmail: 'beatriz.santos@gmail.com',
+      destinatarioTipo: 'atleta',
+      descricao: 'Mensalidade de Treinamentos - Julho/2026',
+      valor: 150.00,
+      dataVencimento: '2026-07-10',
+      status: 'pendente',
+      dataPagamento: null,
+      formaPagamento: null,
+      notificado: true
+    },
+    {
+      id: 'bol-mock-3',
+      destinatarioId: 'acad-1',
+      destinatarioNome: 'Alliance Jiu-Jitsu Copacabana',
+      destinatarioEmail: 'alliance.copacabana@alliance.com.br',
+      destinatarioTipo: 'professor',
+      descricao: 'Renovação de Credenciamento Anual de CT 2026',
+      valor: 350.00,
+      dataVencimento: '2026-08-15',
+      status: 'pendente',
+      dataPagamento: null,
+      formaPagamento: null,
+      notificado: false
+    },
+    {
+      id: 'bol-mock-4',
+      destinatarioId: 'ath-davi',
+      destinatarioNome: 'Davi Leonardo',
+      destinatarioEmail: 'davileonardo303@gmail.com',
+      destinatarioTipo: 'atleta',
+      descricao: 'Inscrição de Torneio - Estadual FEAMCRJ 2026',
+      valor: 120.00,
+      dataVencimento: '2026-08-10',
+      status: 'pendente',
+      dataPagamento: null,
+      formaPagamento: null,
+      notificado: true
+    },
+    {
+      id: 'bol-mock-5',
+      destinatarioId: 'ath-davi',
+      destinatarioNome: 'Davi Leonardo',
+      destinatarioEmail: 'davileonardo303@gmail.com',
+      destinatarioTipo: 'atleta',
+      descricao: 'Taxa de Filiação de Atleta 2026',
+      valor: 90.00,
+      dataVencimento: '2026-03-10',
+      status: 'pago',
+      dataPagamento: '2026-03-05',
+      formaPagamento: 'pix',
+      notificado: true
+    }
+  ]));
+}
 if (!localStorage.getItem('feam_academias')) {
   localStorage.setItem('feam_academias', JSON.stringify(INITIAL_ACADEMIES));
 }
@@ -1530,4 +1604,62 @@ async function atualizarDocumento(docId, updatedFields) {
   }
   localStorage.setItem('feam_documentos', JSON.stringify(docs));
 }
+
+// Boletos & Financeiro Unificado
+async function getBoletos() {
+  if (isFirebaseActive) {
+    try {
+      const snap = await db.collection('boletos').get();
+      return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+      console.error("Erro ao buscar boletos no Firestore: ", e);
+      return JSON.parse(localStorage.getItem('feam_boletos')) || [];
+    }
+  } else {
+    return JSON.parse(localStorage.getItem('feam_boletos')) || [];
+  }
+}
+
+async function salvarBoleto(boletoData) {
+  const boleto = {
+    ...boletoData,
+    id: boletoData.id || 'bol-' + Math.floor(100000 + Math.random() * 900000)
+  };
+
+  if (isFirebaseActive) {
+    try {
+      await db.collection('boletos').doc(boleto.id).set(boleto);
+    } catch (e) {
+      console.error("Erro ao salvar boleto no Firestore: ", e);
+    }
+  }
+
+  const localBols = JSON.parse(localStorage.getItem('feam_boletos')) || [];
+  const idx = localBols.findIndex(b => b.id === boleto.id);
+  if (idx !== -1) {
+    localBols[idx] = { ...localBols[idx], ...boleto };
+  } else {
+    localBols.push(boleto);
+  }
+  localStorage.setItem('feam_boletos', JSON.stringify(localBols));
+  return boleto;
+}
+
+async function excluirBoleto(id) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('boletos').doc(id).delete();
+    } catch (e) {
+      console.error("Erro ao excluir boleto no Firestore: ", e);
+    }
+  }
+  let localBols = JSON.parse(localStorage.getItem('feam_boletos')) || [];
+  localBols = localBols.filter(b => b.id !== id);
+  localStorage.setItem('feam_boletos', JSON.stringify(localBols));
+}
+
+window.getBoletos = getBoletos;
+window.salvarBoleto = salvarBoleto;
+window.excluirBoleto = excluirBoleto;
+
 
