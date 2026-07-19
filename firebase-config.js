@@ -1365,8 +1365,12 @@ async function getDocumentos() {
   if (isFirebaseActive) {
     try {
       const snap = await db.collection('documentos').get();
+      const hasInit = localStorage.getItem('feam_documentos_init');
       if (!snap.empty) {
+        localStorage.setItem('feam_documentos_init', 'true');
         return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      } else if (hasInit) {
+        return [];
       }
     } catch (err) {
       console.error("Erro ao carregar documentos do Firestore:", err);
@@ -1374,7 +1378,8 @@ async function getDocumentos() {
   }
   
   let localDocs = JSON.parse(localStorage.getItem('feam_documentos'));
-  if (!localDocs || localDocs.length === 0) {
+  const hasInit = localStorage.getItem('feam_documentos_init');
+  if (localDocs === null && !hasInit) {
     localDocs = [
       {
         id: 'doc-1',
@@ -1423,6 +1428,7 @@ async function getDocumentos() {
       }
     ];
     localStorage.setItem('feam_documentos', JSON.stringify(localDocs));
+    localStorage.setItem('feam_documentos_init', 'true');
     
     if (isFirebaseActive) {
       for (const d of localDocs) {
@@ -1433,6 +1439,8 @@ async function getDocumentos() {
         }
       }
     }
+  } else if (!localDocs) {
+    localDocs = [];
   }
   return localDocs;
 }
@@ -1452,6 +1460,8 @@ async function adicionarDocumento(docData) {
     isDefault: false
   };
 
+  localStorage.setItem('feam_documentos_init', 'true');
+
   if (isFirebaseActive) {
     try {
       await db.collection('documentos').doc(newId).set(completo);
@@ -1467,6 +1477,7 @@ async function adicionarDocumento(docData) {
 }
 
 async function excluirDocumento(docId) {
+  localStorage.setItem('feam_documentos_init', 'true');
   if (isFirebaseActive) {
     try {
       await db.collection('documentos').doc(docId).delete();
