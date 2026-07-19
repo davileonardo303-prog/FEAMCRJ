@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "esbuild src/firebase-modular.js --bundle --minify --outfile=firebase-modular-dist.js && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && cp *.html style.css components.js firebase-config.js firebase-applet-config.json firebase-modular-dist.js dist/ || cp *.html style.css components.js firebase-config.js firebase-modular-dist.js dist/",
+    "build": "esbuild src/firebase-modular.js --bundle --minify --outfile=firebase-modular-dist.js && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && cp *.html style.css components.js dojo_games.js firebase-config.js firebase-applet-config.json firebase-modular-dist.js dist/ || cp *.html style.css components.js dojo_games.js firebase-config.js firebase-modular-dist.js dist/",
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit"
