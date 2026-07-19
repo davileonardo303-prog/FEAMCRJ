@@ -1490,3 +1490,24 @@ async function excluirDocumento(docId) {
   localStorage.setItem('feam_documentos', JSON.stringify(docs));
 }
 
+async function atualizarDocumento(docId, updatedFields) {
+  localStorage.setItem('feam_documentos_init', 'true');
+  
+  if (isFirebaseActive) {
+    try {
+      await db.collection('documentos').doc(docId).set(updatedFields, { merge: true });
+    } catch (err) {
+      console.error("Erro ao atualizar documento no Firestore:", err);
+    }
+  }
+  
+  let docs = JSON.parse(localStorage.getItem('feam_documentos')) || [];
+  const idx = docs.findIndex(d => d.id === docId);
+  if (idx !== -1) {
+    docs[idx] = { ...docs[idx], ...updatedFields };
+  } else {
+    docs.push({ id: docId, ...updatedFields });
+  }
+  localStorage.setItem('feam_documentos', JSON.stringify(docs));
+}
+

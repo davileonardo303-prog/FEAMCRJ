@@ -125,6 +125,89 @@
         <!-- Dynamic docs will be loaded here -->
       </div>
 
+      <!-- EDIT DOCUMENT MODAL (ADMIN ONLY) -->
+      <div id="edit-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-4 flex items-center justify-center">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative my-8">
+          <button onclick="closeEditModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white cursor-pointer transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+
+          <div class="flex items-center space-x-3 pb-2 border-b border-zinc-800">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            </div>
+            <div>
+              <h2 class="text-sm font-black uppercase tracking-wider text-amber-500">Editar Documento</h2>
+              <p class="text-[10px] text-zinc-400">Modifique as informações ou o conteúdo textual do documento.</p>
+            </div>
+          </div>
+
+          <form id="edit-doc-form" onsubmit="handleEditSubmit(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="sm:col-span-2">
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Título do Documento</label>
+                <input type="text" id="edit-doc-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Categoria</label>
+                <select id="edit-doc-category" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                  <option value="Regulamento">Regulamento</option>
+                  <option value="Taxas">Taxas</option>
+                  <option value="Manual">Manual</option>
+                  <option value="Formulário">Formulário</option>
+                  <option value="Atletas">Atletas</option>
+                  <option value="Professores">Professores</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Formato</label>
+                <select id="edit-doc-format" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                  <option value="PDF">PDF</option>
+                  <option value="DOCX">DOCX</option>
+                  <option value="XLSX">XLSX</option>
+                  <option value="ZIP">ZIP</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Data de Publicação</label>
+                <input type="date" id="edit-doc-date" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+              </div>
+            </div>
+
+            <!-- Custom Body Content (Rich edit for text / template PDFs) -->
+            <div id="edit-body-container" class="space-y-1">
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Conteúdo/Texto do Documento (HTML/Texto para o PDF)</label>
+              <textarea id="edit-doc-body" class="w-full h-48 bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none focus:border-amber-500 font-mono leading-relaxed" placeholder="Adicione ou remova regras, parágrafos ou elementos em HTML..."></textarea>
+              <p class="text-[9px] text-zinc-500">Dica: Você pode reescrever todo o texto ou adicionar tabelas e marcas usando formatação HTML básica.</p>
+            </div>
+
+            <!-- Optional File Replace (For attached custom documents) -->
+            <div id="edit-file-container" class="space-y-1 hidden">
+              <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Substituir Arquivo Físico</label>
+              <div id="edit-drop-zone" class="border-2 border-dashed border-zinc-800 hover:border-amber-500/50 rounded-xl p-4 text-center cursor-pointer transition-all bg-zinc-950/40 flex flex-col items-center justify-center space-y-1 group">
+                <svg class="w-5 h-5 text-zinc-500 group-hover:text-amber-500 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p id="edit-file-status" class="text-[10px] text-zinc-400 font-medium">Arraste um novo arquivo ou clique para selecionar</p>
+                <input type="file" id="edit-doc-file" onchange="handleEditFileSelect(event)" class="hidden">
+              </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-2">
+              <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-300 font-bold uppercase tracking-wider transition-all cursor-pointer">
+                Cancelar
+              </button>
+              <button type="submit" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-wider text-white hover:from-red-500 hover:to-amber-400 shadow-lg transition-all cursor-pointer">
+                Salvar Alterações
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -358,9 +441,13 @@
       }
 
       list.forEach(doc => {
-        let deleteBtn = '';
+        let adminBtns = '';
         if (isAdminMode) {
-          deleteBtn = `
+          adminBtns = `
+            <button onclick="openEditModal('${doc.id}')" class="px-3.5 py-3 rounded-xl bg-zinc-950 border border-zinc-850 hover:border-amber-500 hover:text-amber-500 text-xs text-zinc-500 font-bold transition-all flex items-center justify-center space-x-1 cursor-pointer">
+              <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+              <span class="hidden sm:inline">Editar</span>
+            </button>
             <button onclick="handleDeleteDoc('${doc.id}')" class="px-3.5 py-3 rounded-xl bg-zinc-950 border border-zinc-850 hover:border-red-500 hover:text-red-500 text-xs text-zinc-500 font-bold transition-all flex items-center justify-center space-x-1 cursor-pointer">
               <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
               <span class="hidden sm:inline">Excluir</span>
@@ -388,7 +475,7 @@
                 <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 <span>Baixar Arquivo</span>
               </button>
-              ${deleteBtn}
+              ${adminBtns}
             </div>
           </div>
         `;
@@ -406,6 +493,377 @@
         } catch (e) {
           alert("Erro ao excluir documento: " + e.message);
         }
+      }
+    }
+
+    // EDIT MODAL CONTROLLERS
+    let editingDocId = null;
+    let editAttachedFileBase64 = '';
+    let editAttachedFileName = '';
+    let editAttachedFileSize = '';
+
+    function openEditModal(docId) {
+      const doc = currentDocuments.find(d => d.id === docId);
+      if (!doc) return;
+
+      editingDocId = docId;
+      editAttachedFileBase64 = doc.fileUrl || '';
+      editAttachedFileName = doc.fileName || '';
+      editAttachedFileSize = doc.size || '';
+
+      document.getElementById('edit-doc-title').value = doc.title || '';
+      document.getElementById('edit-doc-category').value = doc.category || '';
+      document.getElementById('edit-doc-format').value = doc.format || '';
+      document.getElementById('edit-doc-date').value = doc.uploadDate || new Date().toISOString().split('T')[0];
+
+      // Body container text
+      let bodyText = doc.customBody || '';
+      if (!bodyText) {
+        if (docId === 'doc-1') {
+          bodyText = `<!-- Título Principal -->
+<h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">Regulamento Geral Unificado de Competições 2026</h2>
+
+<div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+  <p style="margin-bottom: 12px; line-height: 1.5;"><strong>1. Diretrizes Gerais</strong><br>Este documento estabelece as diretrizes unificadas para os eventos competitivos homologados no ano de 2026. O objetivo principal é garantir a integridade física dos atletas, a organização estrutural dos eventos e o alto nível técnico das disputas.</p>
+  
+  <p style="margin-bottom: 12px; line-height: 1.5;"><strong>2. Divisão de Categorias</strong><br>As chaves de combate serão estruturadas cruzando as seguintes variáveis estruturais:
+  <br>• <strong>Idade:</strong> Infantil, Cadete, Juvenil, Adulto e Master.
+  <br>• <strong>Peso:</strong> Categorias rigorosamente divididas conforme a tabela oficial da federação.
+  <br>• <strong>Experiência:</strong> Estreantes, Iniciantes e Avançados.</p>
+  
+  <p style="margin-bottom: 12px; line-height: 1.5;"><strong>3. Equipamentos e Indumentária</strong><br>A apresentação do atleta na área de luta exige o uso obrigatório de:
+  <br>• Protetor bucal e coquilha (uso pessoal e intransferível).
+  <br>• Luvas em perfeito estado, no padrão de onças (oz) exigido para a categoria de peso.
+  <br>• Caneleiras de proteção aprovadas pela comissão de arbitragem.
+  <br>• Shorts de combate adequados, sem zíperes ou fivelas metálicas.</p>
+  
+  <p style="margin-bottom: 12px; line-height: 1.5;"><strong>4. Arbitragem, Conduta e Pontuação</strong><br>O julgamento dos combates priorizará a contundência, a clareza dos golpes aplicados e o domínio do centro da área de combate. Ações como falta de combatividade, golpes ilegais ou conduta antidesportiva resultarão em advertências verbais, dedução de pontos ou desclassificação imediata sob a autoridade irrefutável do árbitro central.</p>
+</div>`;
+        } else if (docId === 'doc-2') {
+          bodyText = `<h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-4">Tabela de Taxas Administrativas 2026</h2>
+
+<div class="space-y-4 text-xs leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+  <p style="text-align: center; font-weight: bold; margin-bottom: 16px;">Valores referenciais estabelecidos para o exercício do ano vigente. Os recolhimentos são essenciais para a manutenção administrativa, homologação de registros e infraestrutura dos eventos.</p>
+  
+  <div style="margin-bottom: 15px;">
+    <h3 style="font-size: 13px; font-weight: bold; border-bottom: 2px solid #b91c1c; padding-bottom: 4px; color: #b91c1c; margin-top: 10px;">1. Filiações e Anuidades</h3>
+    <table style="font-size: 11px; width: 100%; border-collapse: collapse; margin-top: 6px;">
+      <thead>
+        <tr style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db; font-weight: bold; text-align: left;">
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Descrição do Serviço</th>
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Valor Base (R$)</th>
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Vencimento / Prazo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Filiação de Academia (Coletiva)</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 350,00</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Anual</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Renovação Anual de Atleta</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 80,00</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Anual</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Emissão de Carteirinha (2ª Via)</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 30,00</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Sob demanda</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <h3 style="font-size: 13px; font-weight: bold; border-bottom: 2px solid #b91c1c; padding-bottom: 4px; color: #b91c1c; margin-top: 15px;">2. Eventos e Competições</h3>
+    <table style="font-size: 11px; width: 100%; border-collapse: collapse; margin-top: 6px;">
+      <thead>
+        <tr style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db; font-weight: bold; text-align: left;">
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Descrição do Serviço</th>
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Valor Base (R$)</th>
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Observações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Inscrição Individual em Campeonato</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 120,00</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Por modalidade/categoria</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Absoluto / Categoria Extra</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 60,00</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Adicional</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <h3 style="font-size: 13px; font-weight: bold; border-bottom: 2px solid #b91c1c; padding-bottom: 4px; color: #b91c1c; margin-top: 15px;">3. Exames e Graduações</h3>
+    <table style="font-size: 11px; width: 100%; border-collapse: collapse; margin-top: 6px;">
+      <thead>
+        <tr style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db; font-weight: bold; text-align: left;">
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Descrição do Serviço</th>
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Valor Base (R$)</th>
+          <th style="padding: 6px; border: 1px solid #d1d5db;">Certificação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Exame de Graduação (Kyu / Prajied)</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 150,00</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Inclusa emissão de certificado</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Homologação de Grau Preto / Dan</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb; font-weight: bold;">R$ 850,00</td>
+          <td style="padding: 6px; border: 1px solid #e5e7eb;">Avaliação da banca técnica</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>`;
+        } else if (docId === 'doc-3') {
+          bodyText = `<h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">Manual de Padronização de Graduações e Exames</h2>
+
+<div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+  <div style="margin-bottom: 16px;">
+    <h3 style="font-size: 12px; font-weight: bold; background-color: #f3f4f6; padding: 6px; margin: 0 0 8px 0; border-left: 4px solid #b91c1c;">1. Estrutura de Progressão</h3>
+    <p style="line-height: 1.5; margin: 0; padding: 0 6px;">O sistema de graduação atesta o desenvolvimento técnico, tático, físico e marcial do praticante. A transição para os níveis de excelência (graus pretos e avançados) exige não apenas destreza no combate, mas também domínio teórico e pedagógico.</p>
+  </div>
+  
+  <div style="margin-bottom: 16px;">
+    <h3 style="font-size: 12px; font-weight: bold; background-color: #f3f4f6; padding: 6px; margin: 0 0 8px 0; border-left: 4px solid #b91c1c;">2. Critérios de Avaliação</h3>
+    <p style="line-height: 1.5; margin: 0 0 8px 0; padding: 0 6px;">Os candidatos à promoção de grau serão submetidos a uma banca examinadora que avaliará os seguintes pilares:</p>
+    <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.5;">
+      <li style="margin-bottom: 4px;"><strong>Execução Técnica:</strong> Demonstração de fundamentos, sequências de ataque, defesa, bloqueios e movimentação de ringue.</li>
+      <li style="margin-bottom: 4px;"><strong>Condicionamento Físico:</strong> Testes de resistência, força e explosão adequados ao nível exigido.</li>
+      <li style="margin-bottom: 4px;"><strong>Combate (Sparring):</strong> Aplicação prática das técnicas em situação de luta controlada, avaliando timing, distância e controle emocional.</li>
+      <li style="margin-bottom: 4px;"><strong>Conhecimento Teórico:</strong> Histórico da modalidade, terminologias, regras de arbitragem e primeiros socorros.</li>
+    </ul>
+  </div>
+  
+  <div style="margin-bottom: 16px;">
+    <h3 style="font-size: 12px; font-weight: bold; background-color: #f3f4f6; padding: 6px; margin: 0 0 8px 0; border-left: 4px solid #b91c1c;">3. Requisitos para Níveis Avançados</h3>
+    <p style="line-height: 1.5; margin: 0; padding: 0 6px;">A candidatura aos graus máximos e níveis de instrução requer tempo de carência mínimo estipulado na graduação anterior, participação ativa em eventos da federação (como atleta, árbitro ou técnico) e conduta ética ilibada dentro e fora dos tatames/ringues.</p>
+  </div>
+</div>`;
+        } else if (docId === 'doc-4') {
+          bodyText = `<h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-2">Ficha Cadastral de Filiação Coletiva</h2>
+<p class="text-center text-xs font-semibold mb-4" style="color: #4b5563; margin-top: 0;">Formulário destinado ao registro oficial de equipes e academias junto à federação.</p>
+
+<div class="space-y-3 text-[10px] leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+  <div style="border: 1px solid #d1d5db; padding: 10px; border-radius: 4px; margin-bottom: 12px;">
+    <p style="font-weight: bold; color: #b91c1c; border-bottom: 1px solid #e5e7eb; padding-bottom: 2px; margin-bottom: 6px; margin-top: 0; font-size: 11px;">Dados da Instituição / Equipe</p>
+    <p style="margin: 4px 0;">Nome da Academia / Equipe: __________________________________________________________________________</p>
+    <p style="margin: 4px 0;">CNPJ (se houver): __________________________________________________________________________</p>
+    <p style="margin: 4px 0;">Endereço Completo: _______________________________________________________________________</p>
+  </div>
+
+  <div style="border: 1px solid #d1d5db; padding: 10px; border-radius: 4px; margin-bottom: 12px;">
+    <p style="font-weight: bold; color: #b91c1c; border-bottom: 1px solid #e5e7eb; padding-bottom: 2px; margin-bottom: 6px; margin-top: 0; font-size: 11px;">Responsabilidade Técnica</p>
+    <p style="margin: 4px 0;">Professor Responsável: ______________________________________________________________________</p>
+    <p style="margin: 4px 0;">Graduação atual: ____________________________________ Telefone / WhatsApp: _________________</p>
+    <p style="margin: 4px 0;">E-mail: ____________________________________________________________________________________</p>
+  </div>
+
+  <div style="border: 1px solid #d1d5db; padding: 10px; border-radius: 4px; margin-bottom: 12px;">
+    <p style="font-weight: bold; color: #b91c1c; border-bottom: 1px solid #e5e7eb; padding-bottom: 2px; margin-bottom: 6px; margin-top: 0; font-size: 11px;">Relação Inicial de Atletas</p>
+    <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #f3f4f6; border-bottom: 1px solid #d1d5db; text-align: left; font-weight: bold;">
+          <th style="padding: 4px;">Nome do Atleta</th>
+          <th style="padding: 4px;">Data de Nasc.</th>
+          <th style="padding: 4px;">Graduação</th>
+          <th style="padding: 4px;">Peso (kg)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 6px 4px;">_________________________________________________</td>
+          <td style="padding: 6px 4px;">____/____/______</td>
+          <td style="padding: 6px 4px;">_________________</td>
+          <td style="padding: 6px 4px;">_____________ kg</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 6px 4px;">_________________________________________________</td>
+          <td style="padding: 6px 4px;">____/____/______</td>
+          <td style="padding: 6px 4px;">_________________</td>
+          <td style="padding: 6px 4px;">_____________ kg</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 6px 4px;">_________________________________________________</td>
+          <td style="padding: 6px 4px;">____/____/______</td>
+          <td style="padding: 6px 4px;">_________________</td>
+          <td style="padding: 6px 4px;">_____________ kg</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 10px;">
+    <div>
+      <p style="margin: 0;">Assinatura do Responsável Técnico: _______________________________________________</p>
+    </div>
+    <div style="text-align: right;">
+      <p style="margin: 0;">Data: _____/_____/2026</p>
+    </div>
+  </div>
+</div>`;
+        } else if (docId === 'doc-5') {
+          bodyText = `<h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">Termo de Responsabilidade e Isenção Médica</h2>
+
+<div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
+  <p style="margin-bottom: 12px; line-height: 1.5;">Eu, ____________________________________________________________________, portador(a) do CPF nº ________________________ e RG nº ________________________, residente e domiciliado(a) na ____________________________________________________________________, na qualidade de responsável legal pelo(a) menor abaixo identificado(a):</p>
+  
+  <p style="margin-bottom: 8px;"><strong>Nome do Atleta Menor:</strong> __________________________________________________________</p>
+  <p style="margin-bottom: 16px;"><strong>Data de Nascimento:</strong> ____/____/______ &nbsp;&nbsp;&nbsp;&nbsp; <strong>RG/CPF do Menor:</strong> ________________________</p>
+  
+  <div style="margin-top: 10px; border-left: 3px solid #b91c1c; padding-left: 8px; margin-bottom: 12px;">
+    <p style="margin: 0;"><strong>Declaração de Condição de Saúde</strong><br>Declaro para os devidos fins que o(a) menor encontra-se em perfeitas condições de saúde física e mental, estando plenamente apto(a) a participar de treinamentos intensos e competições de artes marciais organizados ou chancelados por esta Federação.</p>
+  </div>
+  
+  <div style="margin-top: 10px; border-left: 3px solid #b91c1c; padding-left: 8px; margin-bottom: 12px;">
+    <p style="margin: 0;"><strong>Ciência de Riscos</strong><br>Reconheço que as artes marciais são esportes de contato e que, mesmo com o uso de todos os equipamentos de segurança obrigatórios e sob a supervisão da equipe de arbitragem e médica, existem riscos inerentes à prática que podem resultar em lesões.</p>
+  </div>
+
+  <div style="margin-top: 10px; border-left: 3px solid #b91c1c; padding-left: 8px; margin-bottom: 12px;">
+    <p style="margin: 0;"><strong>Autorização</strong><br>Autorizo expressamente a participação do(a) menor nos eventos do calendário de 2026 e isento a FEAMCRJ, seus diretores, árbitros, promotores e a equipe de instrução de quaisquer responsabilidades civis ou criminais por eventuais incidentes ocorridos durante as competições, decorrentes da prática normal do esporte.</p>
+  </div>
+
+  <div style="margin-top: 35px; display: flex; justify-content: space-between; align-items: center; font-size: 10px;">
+    <div>
+      <p style="margin: 0;">Assinatura do Responsável Legal: _____________________________________________</p>
+    </div>
+    <div style="text-align: right;">
+      <p style="margin: 0;">Rio de Janeiro, ____ de ________________ de 2026.</p>
+    </div>
+  </div>
+</div>`;
+        }
+      }
+
+      document.getElementById('edit-doc-body').value = bodyText;
+
+      // Show file replacement section if it's not a default template
+      if (doc.fileUrl || !doc.isDefault) {
+        document.getElementById('edit-file-container').classList.remove('hidden');
+        if (doc.fileName) {
+          document.getElementById('edit-file-status').innerHTML = `Arquivo atual: <strong class="text-amber-500">${doc.fileName}</strong> (${doc.size}). Arraste outro para substituir.`;
+        } else {
+          document.getElementById('edit-file-status').innerHTML = `Arraste um arquivo ou clique para selecionar.`;
+        }
+      } else {
+        document.getElementById('edit-file-container').classList.add('hidden');
+      }
+
+      document.getElementById('edit-modal').classList.remove('hidden');
+      setupEditDragAndDrop();
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.add('hidden');
+      editingDocId = null;
+      editAttachedFileBase64 = '';
+      editAttachedFileName = '';
+      editAttachedFileSize = '';
+    }
+
+    function handleEditFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        processEditFile(file);
+      }
+    }
+
+    function processEditFile(file) {
+      const statusText = document.getElementById('edit-file-status');
+      if (file.size > 8 * 1024 * 1024) {
+        alert("⚠️ O arquivo é muito grande! O limite de upload é de 8MB.");
+        return;
+      }
+
+      // Convert size to nice display
+      let sizeStr = '';
+      if (file.size > 1024 * 1024) {
+        sizeStr = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+      } else {
+        sizeStr = (file.size / 1024).toFixed(0) + ' KB';
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editAttachedFileBase64 = e.target.result;
+        editAttachedFileName = file.name;
+        editAttachedFileSize = sizeStr;
+
+        // Auto-detect format
+        const ext = file.name.split('.').pop().toUpperCase();
+        document.getElementById('edit-doc-format').value = ext;
+
+        if (statusText) {
+          statusText.innerHTML = `✅ Novo arquivo carregado: <strong class="text-amber-500">${file.name}</strong> (${sizeStr})`;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setupEditDragAndDrop() {
+      const zone = document.getElementById('edit-drop-zone');
+      const input = document.getElementById('edit-doc-file');
+      if (!zone || !input) return;
+
+      zone.onclick = () => input.click();
+
+      zone.ondragover = (e) => {
+        e.preventDefault();
+        zone.classList.add('border-amber-500', 'bg-zinc-950/80');
+      };
+
+      zone.ondragleave = () => {
+        zone.classList.remove('border-amber-500', 'bg-zinc-950/80');
+      };
+
+      zone.ondrop = (e) => {
+        e.preventDefault();
+        zone.classList.remove('border-amber-500', 'bg-zinc-950/80');
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          processEditFile(file);
+        }
+      };
+    }
+
+    async function handleEditSubmit(event) {
+      event.preventDefault();
+      if (!editingDocId) return;
+
+      const title = document.getElementById('edit-doc-title').value.trim();
+      const category = document.getElementById('edit-doc-category').value;
+      const format = document.getElementById('edit-doc-format').value;
+      const dateVal = document.getElementById('edit-doc-date').value;
+      const bodyVal = document.getElementById('edit-doc-body').value;
+
+      const updatedFields = {
+        title: title,
+        category: category,
+        format: format,
+        uploadDate: dateVal,
+        customBody: bodyVal,
+        fileUrl: editAttachedFileBase64,
+        fileName: editAttachedFileName,
+        size: editAttachedFileSize || '1.5 MB'
+      };
+
+      try {
+        await atualizarDocumento(editingDocId, updatedFields);
+        alert("🎉 Documento atualizado com sucesso!");
+        closeEditModal();
+        await loadDocuments();
+      } catch (e) {
+        alert("Erro ao salvar edições do documento: " + e.message);
       }
     }
 
@@ -451,7 +909,10 @@
 
       let bodyHTML = '';
 
-      if (id === 'doc-1') {
+      const docObj = currentDocuments.find(d => d.id === id);
+      if (docObj && docObj.customBody) {
+        bodyHTML = docObj.customBody;
+      } else if (id === 'doc-1') {
         bodyHTML = `
           <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">Regulamento Geral Unificado de Competições 2026</h2>
           
