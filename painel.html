@@ -4436,12 +4436,32 @@
     }
 
     // ==========================================
-    // COMBAT MINIGAME JOGO DE LUTA
+    // COMBAT MINIGAME JOGO DE LUTA 2D - MUAY THAI
     // ==========================================
-    let gamePlayerStyle = '';
     let playerHP = 100;
     let enemyHP = 100;
-    let gameIsOver = false, isPlayerTurn = true;
+    let gameIsOver = false;
+    let isPlayerTurn = true;
+    let gamePlayerStyle = 'muaythai'; // Default to Muay Thai
+
+    // Canvas & Animation State
+    let canvas, ctx;
+    let animFrameId = null;
+    let screenShake = 0;
+    let particles = [];
+    let floatingTexts = [];
+
+    const fighterPlayer = {
+      x: 120, y: 165, baseX: 120, baseY: 165,
+      state: 'idle', frame: 0, targetX: 120,
+      color: '#ef4444' // Red shorts
+    };
+
+    const fighterEnemy = {
+      x: 360, y: 165, baseX: 360, baseY: 165,
+      state: 'idle', frame: 0, targetX: 360,
+      color: '#3b82f6' // Blue shorts
+    };
 
     function toggleDojoVirtualGame() {
       const modal = document.getElementById('dojo-virtual-modal');
@@ -4451,8 +4471,17 @@
         resetCombatGame();
         const xp = parseInt(localStorage.getItem('feam_dojo_xp') || '0');
         document.getElementById('game-belt-text').textContent = xp >= 150 ? 'Faixa Preta' : (xp >= 50 ? 'Faixa Azul' : 'Faixa Branca');
+        
+        // Automatically pre-select Muay Thai
+        setTimeout(() => {
+          selectMartialArt('muaythai');
+        }, 100);
       } else {
         modal.classList.add('hidden');
+        if (animFrameId) {
+          cancelAnimationFrame(animFrameId);
+          animFrameId = null;
+        }
       }
     }
 
@@ -4460,7 +4489,11 @@
       gamePlayerStyle = style;
       ['bjj', 'muaythai', 'kickboxing'].forEach(s => {
         const btn = document.getElementById('char-card-' + s);
-        if (btn) btn.className = s === style ? "p-3 bg-amber-500 text-zinc-950 rounded-xl text-xs uppercase font-black" : "p-3 bg-zinc-900 text-white rounded-xl text-xs uppercase font-black";
+        if (btn) {
+          btn.className = s === style 
+            ? "p-3 bg-amber-500 text-zinc-950 rounded-xl text-xs uppercase font-black border border-amber-400" 
+            : "p-3 bg-zinc-900 text-white rounded-xl text-xs uppercase font-black hover:border-zinc-700";
+        }
       });
       const btn = document.getElementById('start-combat-btn');
       btn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -4470,20 +4503,68 @@
     function startCombatGame() {
       document.getElementById('game-screen-selection').classList.add('hidden');
       document.getElementById('game-screen-arena').classList.remove('hidden');
-      playerHP = 100; enemyHP = 100; gameIsOver = false; isPlayerTurn = true;
+      
+      playerHP = 100;
+      enemyHP = 100;
+      gameIsOver = false;
+      isPlayerTurn = true;
+
       document.getElementById('arena-player-name').textContent = "Você (" + gamePlayerStyle.toUpperCase() + ")";
       document.getElementById('arena-enemy-name').textContent = "Mestre FEAMCRJ";
+      
+      // Initialize Canvas
+      canvas = document.getElementById('combat-canvas');
+      if (canvas) {
+        ctx = canvas.getContext('2d');
+      }
+
+      // Reset fighter states
+      fighterPlayer.x = fighterPlayer.baseX;
+      fighterPlayer.state = 'idle';
+      fighterPlayer.frame = 0;
+
+      fighterEnemy.x = fighterEnemy.baseX;
+      fighterEnemy.state = 'idle';
+      fighterEnemy.frame = 0;
+
+      particles = [];
+      floatingTexts = [];
+      screenShake = 0;
+
       updateGameUI();
+      
+      // Enable action buttons
+      setCombatButtonsDisabled(false);
+
+      // Start animation loop
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+      animFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    function setCombatButtonsDisabled(disabled) {
+      ['btn-punch', 'btn-kick', 'btn-special'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          if (disabled) {
+            btn.setAttribute('disabled', 'true');
+            btn.classList.add('opacity-40', 'cursor-not-allowed');
+          } else {
+            btn.removeAttribute('disabled');
+            btn.classList.remove('opacity-40', 'cursor-not-allowed');
+          }
+        }
+      });
     }
 
     function resetCombatGame() {
       document.getElementById('game-screen-selection').classList.remove('hidden');
       document.getElementById('game-screen-arena').classList.add('hidden');
       document.getElementById('game-screen-result').classList.add('hidden');
-      gamePlayerStyle = '';
-      const btn = document.getElementById('start-combat-btn');
-      btn.classList.add('opacity-50', 'cursor-not-allowed');
-      btn.setAttribute('disabled', 'true');
+      
+      if (animFrameId) {
+        cancelAnimationFrame(animFrameId);
+        animFrameId = null;
+      }
     }
 
     function updateGameUI() {
@@ -4492,45 +4573,492 @@
       document.getElementById('game-live-status').textContent = isPlayerTurn ? 'SUA VEZ DE ATACAR!' : 'OPONENTE ATACANDO...';
     }
 
+    function spawnHitParticles(x, y, color) {
+      for (let i = 0; i < 15; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8 - 2,
+          radius: Math.random() * 4 + 2,
+          color: color || '#f59e0b',
+          alpha: 1,
+          decay: Math.random() * 0.05 + 0.02
+        });
+      }
+    }
+
+    function addFloatingText(text, x, y, color) {
+      floatingTexts.push({
+        text: text,
+        x: x,
+        y: y,
+        vy: -1.5,
+        alpha: 1,
+        color: color || '#ffffff',
+        scale: 1
+      });
+    }
+
     function executeAction(act) {
       if (!isPlayerTurn || gameIsOver) return;
-      let dmg = act === 'special' ? Math.floor(25 + Math.random() * 10) : (act === 'kick' ? Math.floor(15 + Math.random() * 8) : Math.floor(8 + Math.random() * 5));
-      enemyHP = Math.max(0, enemyHP - dmg);
-      document.getElementById('game-last-action').textContent = `Você usou ${act.toUpperCase()} e causou ${dmg} de dano!`;
-      updateGameUI();
-      if (enemyHP <= 0) { endGame('win'); return; }
       isPlayerTurn = false;
       updateGameUI();
-      setTimeout(enemyTurn, 1000);
+      setCombatButtonsDisabled(true);
+
+      // Trigger player attack animation
+      fighterPlayer.state = act === 'punch' ? 'punching' : (act === 'kick' ? 'kicking' : 'special');
+      fighterPlayer.frame = 0;
+
+      // Slide player forward to attack
+      const attackSlide = setInterval(() => {
+        if (gameIsOver) {
+          clearInterval(attackSlide);
+          return;
+        }
+        
+        // Slide forward
+        if (fighterPlayer.x < fighterEnemy.x - 45) {
+          fighterPlayer.x += 12;
+        } else {
+          clearInterval(attackSlide);
+          
+          // Impact!
+          let dmg = act === 'special' ? Math.floor(25 + Math.random() * 10) : (act === 'kick' ? Math.floor(15 + Math.random() * 8) : Math.floor(8 + Math.random() * 5));
+          enemyHP = Math.max(0, enemyHP - dmg);
+          
+          document.getElementById('game-last-action').textContent = `Você usou ${act.toUpperCase()} e causou ${dmg} de dano!`;
+          updateGameUI();
+
+          // Spark/Hit visual effects
+          screenShake = 12;
+          spawnHitParticles(fighterEnemy.x - 15, fighterEnemy.y - 45, '#f59e0b');
+          addFloatingText(`-${dmg} HP`, fighterEnemy.x, fighterEnemy.y - 80, '#ef4444');
+
+          // Trigger enemy hit animation
+          fighterEnemy.state = 'hit';
+          fighterEnemy.frame = 0;
+
+          // Slide player back
+          const retreatSlide = setInterval(() => {
+            if (fighterPlayer.x > fighterPlayer.baseX) {
+              fighterPlayer.x -= 8;
+            } else {
+              fighterPlayer.x = fighterPlayer.baseX;
+              fighterPlayer.state = 'idle';
+              clearInterval(retreatSlide);
+              
+              // Enemy recovers from hit
+              setTimeout(() => {
+                if (fighterEnemy.state === 'hit') fighterEnemy.state = 'idle';
+              }, 300);
+
+              if (enemyHP <= 0) {
+                endGame('win');
+              } else {
+                // Opponent's turn after 1 second
+                setTimeout(enemyTurn, 1000);
+              }
+            }
+          }, 20);
+        }
+      }, 20);
     }
 
     function enemyTurn() {
       if (gameIsOver) return;
-      let dmg = Math.floor(10 + Math.random() * 10);
-      playerHP = Math.max(0, playerHP - dmg);
-      document.getElementById('game-last-action').textContent = `Oponente atacou e causou ${dmg} de dano!`;
-      isPlayerTurn = true;
-      updateGameUI();
-      if (playerHP <= 0) { endGame('lose'); }
+      
+      const actions = ['punch', 'kick', 'special'];
+      const act = actions[Math.floor(Math.random() * actions.length)];
+
+      // Trigger enemy attack
+      fighterEnemy.state = act === 'punch' ? 'punching' : (act === 'kick' ? 'kicking' : 'special');
+      fighterEnemy.frame = 0;
+
+      // Slide enemy forward to attack player
+      const attackSlide = setInterval(() => {
+        if (gameIsOver) {
+          clearInterval(attackSlide);
+          return;
+        }
+
+        if (fighterEnemy.x > fighterPlayer.x + 45) {
+          fighterEnemy.x -= 12;
+        } else {
+          clearInterval(attackSlide);
+
+          // Impact on player!
+          let dmg = act === 'special' ? Math.floor(20 + Math.random() * 8) : (act === 'kick' ? Math.floor(12 + Math.random() * 6) : Math.floor(7 + Math.random() * 4));
+          playerHP = Math.max(0, playerHP - dmg);
+
+          document.getElementById('game-last-action').textContent = `Oponente usou ${act.toUpperCase()} e causou ${dmg} de dano!`;
+          
+          // Hit visual effects
+          screenShake = 10;
+          spawnHitParticles(fighterPlayer.x + 15, fighterPlayer.y - 45, '#ef4444');
+          addFloatingText(`-${dmg} HP`, fighterPlayer.x, fighterPlayer.y - 80, '#f87171');
+
+          fighterPlayer.state = 'hit';
+          fighterPlayer.frame = 0;
+
+          updateGameUI();
+
+          // Slide enemy back
+          const retreatSlide = setInterval(() => {
+            if (fighterEnemy.x < fighterEnemy.baseX) {
+              fighterEnemy.x += 8;
+            } else {
+              fighterEnemy.x = fighterEnemy.baseX;
+              fighterEnemy.state = 'idle';
+              clearInterval(retreatSlide);
+
+              // Player recovers from hit
+              setTimeout(() => {
+                if (fighterPlayer.state === 'hit') fighterPlayer.state = 'idle';
+              }, 300);
+
+              if (playerHP <= 0) {
+                endGame('lose');
+              } else {
+                isPlayerTurn = true;
+                updateGameUI();
+                setCombatButtonsDisabled(false);
+              }
+            }
+          }, 20);
+        }
+      }, 20);
     }
 
     function endGame(res) {
       gameIsOver = true;
-      document.getElementById('game-screen-arena').classList.add('hidden');
-      document.getElementById('game-screen-result').classList.remove('hidden');
-      const title = document.getElementById('result-title');
-      const xpText = document.getElementById('result-reward-xp');
+      setCombatButtonsDisabled(true);
+
       if (res === 'win') {
-        title.textContent = "VITÓRIA!";
-        title.className = "text-lg font-black text-emerald-400 uppercase";
-        let xp = parseInt(localStorage.getItem('feam_dojo_xp') || '0') + 50;
-        localStorage.setItem('feam_dojo_xp', xp.toString());
-        xpText.textContent = "+50 XP (Ganho de Faixa!)";
+        fighterPlayer.state = 'win';
+        fighterEnemy.state = 'ko';
       } else {
-        title.textContent = "DERROTA!";
-        title.className = "text-lg font-black text-red-500 uppercase";
-        xpText.textContent = "Tente novamente para ganhar XP!";
+        fighterPlayer.state = 'ko';
+        fighterEnemy.state = 'win';
       }
+
+      setTimeout(() => {
+        if (animFrameId) {
+          cancelAnimationFrame(animFrameId);
+          animFrameId = null;
+        }
+
+        document.getElementById('game-screen-arena').classList.add('hidden');
+        document.getElementById('game-screen-result').classList.remove('hidden');
+        
+        const title = document.getElementById('result-title');
+        const xpText = document.getElementById('result-reward-xp');
+        if (res === 'win') {
+          title.textContent = "VITÓRIA!";
+          title.className = "text-xl font-black text-emerald-400 uppercase tracking-widest";
+          let xp = parseInt(localStorage.getItem('feam_dojo_xp') || '0') + 50;
+          localStorage.setItem('feam_dojo_xp', xp.toString());
+          xpText.textContent = "+50 XP (Seu nível subiu!)";
+        } else {
+          title.textContent = "DERROTA!";
+          title.className = "text-xl font-black text-red-500 uppercase tracking-widest";
+          xpText.textContent = "Tente novamente para ganhar mais XP!";
+        }
+      }, 1800);
+    }
+
+    // Canvas Draw Fighter helper
+    function drawFighter(ctx, f, isPlayer) {
+      ctx.save();
+      
+      // Horizontal slide/bob
+      ctx.translate(f.x, f.y);
+      if (!isPlayer) {
+        ctx.scale(-1, 1); // Mirror horizontally
+      }
+
+      // Flash red if hit
+      if (f.state === 'hit' && Math.floor(Date.now() / 60) % 2 === 0) {
+        ctx.shadowColor = '#ef4444';
+        ctx.shadowBlur = 15;
+      }
+
+      // Draw shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.beginPath();
+      ctx.ellipse(0, 5, 22, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      let bob = 0;
+      let headY = -75;
+      let bodyY = -45;
+      let frontLegAngle = 0;
+      let backLegAngle = 0;
+      let leftArmY = -55;
+      let rightArmY = -55;
+      let leftArmX = 12;
+      let rightArmX = -8;
+
+      if (f.state === 'idle') {
+        bob = Math.sin(f.frame * 0.15) * 3;
+        headY += bob;
+        bodyY += bob / 1.8;
+        frontLegAngle = Math.sin(f.frame * 0.12) * 0.15;
+      } else if (f.state === 'punching') {
+        leftArmX = 32;
+        leftArmY = -56;
+        bob = 2;
+      } else if (f.state === 'kicking') {
+        frontLegAngle = -Math.PI / 3;
+        bodyY += 4;
+      } else if (f.state === 'special') {
+        bob = -35; 
+        headY += bob;
+        bodyY += bob;
+        frontLegAngle = -Math.PI / 2.2;
+      } else if (f.state === 'hit') {
+        bodyY += 4;
+        headY += 5;
+        leftArmY += 10;
+        rightArmY += 10;
+        ctx.rotate(-0.08);
+      } else if (f.state === 'ko') {
+        ctx.rotate(isPlayer ? -Math.PI / 2 : Math.PI / 2);
+        ctx.translate(-20, 20);
+        headY = -75;
+        bodyY = -45;
+        leftArmY = -35;
+        rightArmY = -35;
+      } else if (f.state === 'win') {
+        bob = Math.sin(f.frame * 0.1) * 2;
+        headY += bob;
+        leftArmY = -92;
+        rightArmY = -92;
+        leftArmX = 8;
+        rightArmX = -8;
+      }
+
+      // 1. Draw Legs
+      ctx.strokeStyle = '#fca5a5'; // Tan skin
+      ctx.lineWidth = 5.5;
+      ctx.lineCap = 'round';
+
+      // Back Leg
+      ctx.beginPath();
+      ctx.moveTo(-5, bodyY + 10);
+      ctx.lineTo(-9, bodyY + 24);
+      ctx.lineTo(-7, 2);
+      ctx.stroke();
+
+      // Front Leg (bouncing in idle, striking in attack)
+      ctx.beginPath();
+      ctx.moveTo(5, bodyY + 10);
+      if (f.state === 'kicking') {
+        // Full roundhouse extension!
+        ctx.lineTo(36, bodyY - 4);
+      } else if (f.state === 'special') {
+        // High Flying Knee
+        ctx.lineTo(22, bodyY - 12);
+        ctx.lineTo(15, bodyY + 8);
+      } else {
+        ctx.lineTo(9 + Math.sin(frontLegAngle) * 4, bodyY + 24);
+        ctx.lineTo(7, 2);
+      }
+      ctx.stroke();
+
+      // 2. Muay Thai Shorts
+      ctx.fillStyle = isPlayer ? '#ef4444' : '#3b82f6';
+      ctx.beginPath();
+      ctx.roundRect(-9, bodyY + 6, 18, 14, 2);
+      ctx.fill();
+      // Belt Trim
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(-9, bodyY + 6, 18, 3.5);
+
+      // 3. Torso / Muscle definition
+      ctx.fillStyle = '#f87171'; // tan skin
+      ctx.beginPath();
+      ctx.roundRect(-7, bodyY - 18, 14, 25, 3);
+      ctx.fill();
+
+      // Golden prajiad (armbands)
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(-8.5, bodyY - 12, 1.5, 3);
+      ctx.fillRect(7, bodyY - 12, 1.5, 3);
+
+      // 4. Head
+      ctx.fillStyle = '#fca5a5';
+      ctx.beginPath();
+      ctx.arc(0, headY, 9.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Headband / Mongkhon
+      ctx.fillStyle = '#f59e0b';
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(0, headY - 3, 10, Math.PI, 0);
+      ctx.stroke();
+      // Mongkhon Tail
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-9, headY - 3);
+      ctx.quadraticCurveTo(-16, headY + 5, -18, headY + 11);
+      ctx.stroke();
+
+      // Focused Eyes
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(3, headY - 2, 2.2, 1.8);
+
+      // 5. Arms & Boxing Gloves
+      ctx.strokeStyle = '#fca5a5';
+      ctx.lineWidth = 5;
+
+      // Back Guard Arm
+      ctx.beginPath();
+      ctx.moveTo(-5, bodyY - 12);
+      if (f.state === 'win') {
+        ctx.lineTo(-10, rightArmY);
+      } else {
+        ctx.lineTo(-11, bodyY - 3);
+        ctx.lineTo(rightArmX, rightArmY);
+      }
+      ctx.stroke();
+
+      // Back Glove
+      ctx.fillStyle = isPlayer ? '#dc2626' : '#2563eb';
+      ctx.beginPath();
+      ctx.arc(rightArmX, rightArmY, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Front Arm
+      ctx.strokeStyle = '#fca5a5';
+      ctx.beginPath();
+      ctx.moveTo(5, bodyY - 12);
+      if (f.state === 'punching') {
+        ctx.lineTo(leftArmX, leftArmY);
+      } else if (f.state === 'win') {
+        ctx.lineTo(10, leftArmY);
+      } else {
+        ctx.lineTo(13, bodyY - 5);
+        ctx.lineTo(leftArmX, leftArmY);
+      }
+      ctx.stroke();
+
+      // Front Glove
+      ctx.fillStyle = isPlayer ? '#dc2626' : '#2563eb';
+      ctx.beginPath();
+      ctx.arc(leftArmX, leftArmY, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Main Canvas Game Loop
+    function gameLoop() {
+      if (!canvas || !ctx) return;
+
+      // Clear Screen
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      // Apply Screen Shake
+      if (screenShake > 0) {
+        const dx = (Math.random() - 0.5) * screenShake;
+        const dy = (Math.random() - 0.5) * screenShake;
+        ctx.translate(dx, dy);
+        screenShake *= 0.85;
+        if (screenShake < 0.5) screenShake = 0;
+      }
+
+      // Draw Background Dojo
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, '#1c1917'); // stone-900
+      gradient.addColorStop(1, '#0c0a09'); // stone-950
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Sun Emblem
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.15)'; // Red Sun with transparency
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, 75, 45, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Sun Outer Ring
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.15)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, 75, 52, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Banner/Text "FEAM"
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+      ctx.font = 'bold 36px "Space Grotesk"';
+      ctx.textAlign = 'center';
+      ctx.fillText('FEAM', canvas.width / 2, 85);
+
+      // Draw Wooden/Tatame Floor
+      ctx.fillStyle = '#44403c'; // stone-700 floor
+      ctx.fillRect(0, 160, canvas.width, canvas.height - 160);
+      
+      // Golden Floor Line
+      ctx.fillStyle = '#d97706';
+      ctx.fillRect(0, 160, canvas.width, 3);
+
+      // Sub-lines on floor
+      ctx.fillStyle = '#292524';
+      for (let i = 40; i < canvas.width; i += 80) {
+        ctx.fillRect(i, 163, 1.5, canvas.height - 163);
+      }
+
+      // Increment fighter frames for idle bobs
+      fighterPlayer.frame++;
+      fighterEnemy.frame++;
+
+      // Draw Fighters
+      drawFighter(ctx, fighterPlayer, true);
+      drawFighter(ctx, fighterEnemy, false);
+
+      // Update and Draw Particles
+      particles = particles.filter(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.2; // Gravity
+        p.alpha -= p.decay;
+        
+        if (p.alpha <= 0) return false;
+        
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        return true;
+      });
+
+      // Update and Draw Floating Damage/Text
+      floatingTexts = floatingTexts.filter(t => {
+        t.y += t.vy;
+        t.alpha -= 0.02;
+        
+        if (t.alpha <= 0) return false;
+        
+        ctx.save();
+        ctx.globalAlpha = t.alpha;
+        ctx.fillStyle = t.color;
+        ctx.font = 'black 14px "Space Grotesk"';
+        ctx.textAlign = 'center';
+        ctx.fillText(t.text, t.x, t.y);
+        ctx.restore();
+        return true;
+      });
+
+      ctx.restore();
+
+      animFrameId = requestAnimationFrame(gameLoop);
     }
 
     // Hook listeners
@@ -4561,36 +5089,43 @@
       </div>
       <div class="p-6 space-y-6">
         <div id="game-screen-selection" class="space-y-4">
-          <p class="text-xs text-zinc-400 text-center">Selecione sua arte marcial para entrar no tatame digital:</p>
-          <div class="grid grid-cols-3 gap-3">
-            <button onclick="selectMartialArt('bjj')" id="char-card-bjj" class="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-white uppercase font-black hover:border-amber-500 cursor-pointer">Jiu-Jitsu 🥋</button>
-            <button onclick="selectMartialArt('muaythai')" id="char-card-muaythai" class="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-white uppercase font-black hover:border-amber-500 cursor-pointer">Muay Thai 🥊</button>
-            <button onclick="selectMartialArt('kickboxing')" id="char-card-kickboxing" class="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-white uppercase font-black hover:border-amber-500 cursor-pointer">Kickboxing 🎽</button>
+          <p class="text-xs text-zinc-400 text-center">Entre no tatame digital para o combate Muay Thai de alta performance:</p>
+          <div class="grid grid-cols-1 gap-3">
+            <button onclick="selectMartialArt('muaythai')" id="char-card-muaythai" class="p-4 bg-amber-500 text-zinc-950 border border-amber-400 rounded-xl text-xs uppercase font-black cursor-pointer text-center">
+              <span class="block text-sm mb-1">Muay Thai 🥊</span>
+              <span class="block text-[10px] text-zinc-900 normal-case font-normal">A arte das oito armas: Punhos, Cotovelos, Joelhos e Canelas</span>
+            </button>
           </div>
           <div class="text-center pt-2">
-            <button onclick="startCombatGame()" id="start-combat-btn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:brightness-110 opacity-50 cursor-not-allowed" disabled>ENTRAR NO TATAME</button>
+            <button onclick="startCombatGame()" id="start-combat-btn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:brightness-110 shadow-lg cursor-pointer">ENTRAR NO TATAME</button>
           </div>
         </div>
         <div id="game-screen-arena" class="hidden space-y-4">
-          <div class="flex justify-between items-center bg-zinc-900 p-3 rounded-xl text-xs">
+          <div class="flex justify-between items-center bg-zinc-900 p-3 rounded-xl text-xs border border-zinc-850">
             <div><span id="arena-player-name" class="font-bold text-white">Você</span>: <span id="arena-player-hp-text" class="text-emerald-400 font-bold">100 HP</span></div>
-            <div class="text-red-500 font-black">VS</div>
+            <div class="text-red-500 font-black animate-pulse">VS</div>
             <div class="text-right"><span id="arena-enemy-name" class="font-bold text-white">Oponente</span>: <span id="arena-enemy-hp-text" class="text-red-400 font-bold">100 HP</span></div>
           </div>
+          
+          <!-- interactive 2D arena canvas -->
+          <div class="relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl">
+            <canvas id="combat-canvas" width="480" height="200" class="w-full block"></canvas>
+          </div>
+
           <div class="bg-zinc-900/40 p-4 rounded-xl text-center border border-zinc-800">
             <p id="game-live-status" class="text-xs font-bold text-amber-500 uppercase">SUA VEZ DE ATACAR!</p>
             <p id="game-last-action" class="text-[10px] text-zinc-500 mt-1 italic font-mono">Prepare-se...</p>
           </div>
           <div class="grid grid-cols-3 gap-2">
-            <button onclick="executeAction('punch')" class="p-2 bg-zinc-900 border border-zinc-800 hover:border-amber-500 rounded-xl text-[10px] font-bold text-white cursor-pointer">Soco 👊</button>
-            <button onclick="executeAction('kick')" class="p-2 bg-zinc-900 border border-zinc-800 hover:border-amber-500 rounded-xl text-[10px] font-bold text-white cursor-pointer">Chute 🦵</button>
-            <button onclick="executeAction('special')" class="p-2 bg-amber-500 hover:bg-amber-400 rounded-xl text-[10px] font-black text-zinc-950 cursor-pointer">Especial 🔥</button>
+            <button id="btn-punch" onclick="executeAction('punch')" class="p-2.5 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-amber-500 rounded-xl text-[10px] font-bold text-white cursor-pointer transition-all">Soco 👊</button>
+            <button id="btn-kick" onclick="executeAction('kick')" class="p-2.5 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-amber-500 rounded-xl text-[10px] font-bold text-white cursor-pointer transition-all">Chute 🦵</button>
+            <button id="btn-special" onclick="executeAction('special')" class="p-2.5 bg-amber-500 hover:bg-amber-400 rounded-xl text-[10px] font-black text-zinc-950 cursor-pointer transition-all">Joelhada 🔥</button>
           </div>
         </div>
         <div id="game-screen-result" class="hidden text-center space-y-4">
           <h4 id="result-title" class="text-lg font-black text-white uppercase">VITÓRIA!</h4>
           <p id="result-reward-xp" class="text-xs text-emerald-400 font-mono">+50 XP (Ganho de Faixa!)</p>
-          <button onclick="resetCombatGame()" class="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold text-white cursor-pointer">Lutar Novamente</button>
+          <button onclick="resetCombatGame()" class="px-5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold text-white cursor-pointer hover:border-zinc-700">Lutar Novamente</button>
         </div>
       </div>
     </div>
