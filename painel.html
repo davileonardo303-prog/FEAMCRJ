@@ -977,14 +977,40 @@
                   <div>
                     <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Graduação / Faixa</label>
                     <select id="usr-atleta-rank" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
-                      <option value="Faixa Branca">Faixa Branca</option>
-                      <option value="Faixa Azul">Faixa Azul</option>
-                      <option value="Faixa Roxa">Faixa Roxa</option>
-                      <option value="Faixa Marrom">Faixa Marrom</option>
-                      <option value="Faixa Preta">Faixa Preta</option>
-                      <option value="Grau Iniciante">Grau Iniciante</option>
-                      <option value="Grau Intermediário">Grau Intermediário</option>
-                      <option value="Grau Avançado">Grau Avançado</option>
+                      <optgroup label="Jiu-Jitsu Brasileiro (BJJ)">
+                        <option value="Faixa Branca">Faixa Branca</option>
+                        <option value="Faixa Azul">Faixa Azul</option>
+                        <option value="Faixa Roxa">Faixa Roxa</option>
+                        <option value="Faixa Marrom">Faixa Marrom</option>
+                        <option value="Faixa Preta">Faixa Preta</option>
+                        <option value="Faixa Preta (Professor)">Faixa Preta (Professor)</option>
+                        <option value="Faixa Preta e Branca (Professor)">Faixa Preta e Branca (Professor)</option>
+                        <option value="Faixa Branca (Mestre)">Faixa Branca (Mestre)</option>
+                        <option value="Faixa Branca e Dourada (Granmestre)">Faixa Branca e Dourada (Granmestre)</option>
+                      </optgroup>
+                      <optgroup label="Muay Thai (Khans / Prajieds)">
+                        <option value="1º Khan (Branco)">1º Khan (Branco)</option>
+                        <option value="2º Khan (Amarelo)">2º Khan (Amarelo)</option>
+                        <option value="3º Khan (Amarelo e Branco)">3º Khan (Amarelo e Branco)</option>
+                        <option value="4º Khan (Verde)">4º Khan (Verde)</option>
+                        <option value="5º Khan (Verde e Branco)">5º Khan (Verde e Branco)</option>
+                        <option value="6º Khan (Azul)">6º Khan (Azul)</option>
+                        <option value="7º Khan (Azul e Branco)">7º Khan (Azul e Branco)</option>
+                        <option value="8º Khan (Marrom)">8º Khan (Marrom)</option>
+                        <option value="9º Khan (Marrom e Branco)">9º Khan (Marrom e Branco)</option>
+                        <option value="10º Khan (Vermelho)">10º Khan (Vermelho)</option>
+                        <option value="11º Khan (Vermelho e Branco - Prof. em Treinamento)">11º Khan (Vermelho e Branco - Prof. em Treinamento)</option>
+                        <option value="12º Khan (Preto - Professor Auxiliar)">12º Khan (Preto - Professor Auxiliar)</option>
+                        <option value="13º Khan (Preto e Branco - Professor)">13º Khan (Preto e Branco - Professor)</option>
+                        <option value="14º Khan (Prata - Mestre)">14º Khan (Prata - Mestre)</option>
+                        <option value="15º Khan (Ouro - Grão-Mestre)">15º Khan (Ouro - Grão-Mestre)</option>
+                        <option value="16º Khan (Ouro e Prata - Grão-Mestre Honorário)">16º Khan (Ouro e Prata - Grão-Mestre Honorário)</option>
+                      </optgroup>
+                      <optgroup label="Kickboxing / Outras Artes">
+                        <option value="Grau Iniciante">Grau Iniciante</option>
+                        <option value="Grau Intermediário">Grau Intermediário</option>
+                        <option value="Grau Avançado">Grau Avançado</option>
+                      </optgroup>
                     </select>
                   </div>
                   <div>
@@ -1611,6 +1637,15 @@
         await loadAdminInscricoes();
         await loadAdminAtletas();
         await loadAdminAcademias();
+        await loadAdminSupportChats();
+
+        // Ativa aba inicial se informada no parâmetro "tab" da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+        const allowedTabs = ['inscricoes', 'torneios', 'atletas', 'academias', 'edit-torneios', 'edit-academias', 'config-site', 'novo-usuario', 'financeiro-global', 'suporte-chat'];
+        if (tabParam && allowedTabs.includes(tabParam)) {
+          switchAdminTab(tabParam);
+        }
       } else if (loggedUser.tipo === 'professor') {
         document.getElementById('filiado-view').classList.add('hidden');
         document.getElementById('admin-view').classList.add('hidden');
@@ -1673,14 +1708,19 @@
       if (!loggedUserJson) return;
       const loggedUser = JSON.parse(loggedUserJson);
       
-      if (confirm(`Deseja solicitar o e-mail de redefinição de senha para a conta ${loggedUser.email}?`)) {
-        try {
-          const res = await recuperarSenha(loggedUser.email);
-          alert(res.message);
-        } catch (error) {
-          alert("Erro ao enviar recuperação: " + error.message);
+      showCustomConfirm({
+        title: 'Redefinir Senha',
+        message: `Deseja solicitar o e-mail de redefinição de senha para a conta ${loggedUser.email}?`,
+        type: 'info',
+        onConfirm: async () => {
+          try {
+            const res = await recuperarSenha(loggedUser.email);
+            alert(res.message);
+          } catch (error) {
+            alert("Erro ao enviar recuperação: " + error.message);
+          }
         }
-      }
+      });
     }
 
     // Carrega dados do CT próprio (Módulo do Professor)
@@ -1974,10 +2014,15 @@
     }
 
     async function admExcluirInscricao(id) {
-      if (confirm('Tem certeza de que deseja deletar permanentemente esta inscrição de torneio?')) {
-        await excluirInscricao(id);
-        await loadAdminInscricoes();
-      }
+      showCustomConfirm({
+        title: 'Excluir Inscrição',
+        message: 'Tem certeza de que deseja deletar permanentemente esta inscrição de torneio?',
+        type: 'danger',
+        onConfirm: async () => {
+          await excluirInscricao(id);
+          await loadAdminInscricoes();
+        }
+      });
     }
 
     // 2. Carregar Atletas Filiados
@@ -2095,11 +2140,17 @@
       const msg = isReject 
         ? 'Deseja realmente REJEITAR e excluir este cadastro pendente?' 
         : 'Atenção: deseja deletar permanentemente este atleta da Federação? Todos os seus dados serão excluídos.';
-      if (confirm(msg)) {
-        await excluirAtleta(id);
-        alert(isReject ? '❌ Cadastro pendente rejeitado e removido com sucesso.' : 'Atleta excluído com sucesso.');
-        await loadAdminAtletas();
-      }
+      
+      showCustomConfirm({
+        title: isReject ? 'Rejeitar Cadastro' : 'Excluir Atleta',
+        message: msg,
+        type: 'danger',
+        onConfirm: async () => {
+          await excluirAtleta(id);
+          alert(isReject ? '❌ Cadastro pendente rejeitado e removido com sucesso.' : 'Atleta excluído com sucesso.');
+          await loadAdminAtletas();
+        }
+      });
     }
 
     // 3. Carregar Academias Credenciadas (Aba aprovações/espera)
@@ -2181,13 +2232,18 @@
     }
 
     async function admDeletarAcademia(id) {
-      if (confirm('Deseja deletar permanentemente esta academia da Federação?')) {
-        await excluirAcademia(id);
-        await loadAdminAcademias();
-        if (document.getElementById('content-edit-academias') && !document.getElementById('content-edit-academias').classList.contains('hidden')) {
-          await loadAdminManageAcademias();
+      showCustomConfirm({
+        title: 'Excluir Academia',
+        message: 'Deseja deletar permanentemente esta academia da Federação?',
+        type: 'danger',
+        onConfirm: async () => {
+          await excluirAcademia(id);
+          await loadAdminAcademias();
+          if (document.getElementById('content-edit-academias') && !document.getElementById('content-edit-academias').classList.contains('hidden')) {
+            await loadAdminManageAcademias();
+          }
         }
-      }
+      });
     }
 
     // 4. Cadastrar Novo Campeonato (Formulário Adicionar)
@@ -2344,15 +2400,20 @@
     });
 
     async function admDeletarTorneio(id) {
-      if (confirm('Tem certeza absoluta de que deseja excluir permanentemente este torneio do site? Isso também poderá afetar inscrições relacionadas.')) {
-        try {
-          await excluirTorneio(id);
-          alert('Torneio excluído com sucesso.');
-          await loadAdminManageTorneios();
-        } catch (error) {
-          alert('Erro ao deletar torneio: ' + error.message);
+      showCustomConfirm({
+        title: 'Excluir Torneio',
+        message: 'Tem certeza absoluta de que deseja excluir permanentemente este torneio do site? Isso também poderá afetar inscrições relacionadas.',
+        type: 'danger',
+        onConfirm: async () => {
+          try {
+            await excluirTorneio(id);
+            alert('Torneio excluído com sucesso.');
+            await loadAdminManageTorneios();
+          } catch (error) {
+            alert('Erro ao deletar torneio: ' + error.message);
+          }
         }
-      }
+      });
     }
 
     // ==========================================
@@ -2496,16 +2557,21 @@
     });
 
     async function admDeletarAcademiaCard(id) {
-      if (confirm('Tem certeza de que deseja deletar permanentemente esta academia? Todos os dados cadastrais serão removidos.')) {
-        try {
-          await excluirAcademia(id);
-          alert('Academia removida com sucesso.');
-          await loadAdminManageAcademias();
-          await loadAdminAcademias();
-        } catch (error) {
-          alert('Erro ao excluir: ' + error.message);
+      showCustomConfirm({
+        title: 'Excluir Academia',
+        message: 'Tem certeza de que deseja deletar permanentemente esta academia? Todos os dados cadastrais serão removidos.',
+        type: 'danger',
+        onConfirm: async () => {
+          try {
+            await excluirAcademia(id);
+            alert('Academia removida com sucesso.');
+            await loadAdminManageAcademias();
+            await loadAdminAcademias();
+          } catch (error) {
+            alert('Erro ao excluir: ' + error.message);
+          }
         }
-      }
+      });
     }
 
     // ==========================================
@@ -2682,15 +2748,20 @@
         alert("❌ O administrador Master (feamcrj@gmail.com) não pode ser removido!");
         return;
       }
-      if (confirm("⚠️ Tem certeza que deseja revogar o acesso deste administrador? Ele perderá imediatamente as permissões master do site.")) {
-        try {
-          await excluirAdmin(id);
-          alert("✅ Acesso de administrador revogado com sucesso!");
-          await loadAdminMembersList();
-        } catch (e) {
-          alert("Erro ao excluir administrador: " + e.message);
+      showCustomConfirm({
+        title: 'Revogar Acesso',
+        message: '⚠️ Tem certeza que deseja revogar o acesso deste administrador? Ele perderá imediatamente as permissões master do site.',
+        type: 'danger',
+        onConfirm: async () => {
+          try {
+            await excluirAdmin(id);
+            alert("✅ Acesso de administrador revogado com sucesso!");
+            await loadAdminMembersList();
+          } catch (e) {
+            alert("Erro ao excluir administrador: " + e.message);
+          }
         }
-      }
+      });
     }
 
     document.getElementById('admin-add-user-form').addEventListener('submit', async (e) => {
@@ -2961,55 +3032,63 @@
     async function fecharChatAtivoAdmin() {
       if (!selectedChatId || typeof isFirebaseActive === 'undefined' || !isFirebaseActive) return;
       
-      if (!confirm("Deseja encerrar este atendimento de suporte?")) return;
+      showCustomConfirm({
+        title: 'Encerrar Atendimento',
+        message: 'Deseja encerrar este atendimento de suporte?',
+        type: 'info',
+        onConfirm: async () => {
+          try {
+            const chatRef = db.collection('suporte_chats').doc(selectedChatId);
+            const doc = await chatRef.get();
+            if (doc.exists) {
+              const messages = doc.data().messages || [];
+              messages.push({
+                sender: 'system',
+                text: 'Atendimento encerrado pelo suporte',
+                time: Date.now()
+              });
 
-      try {
-        const chatRef = db.collection('suporte_chats').doc(selectedChatId);
-        const doc = await chatRef.get();
-        if (doc.exists) {
-          const messages = doc.data().messages || [];
-          messages.push({
-            sender: 'system',
-            text: 'Atendimento encerrado pelo suporte',
-            time: Date.now()
-          });
-
-          await chatRef.update({
-            status: 'closed',
-            messages: messages,
-            lastMessage: 'Atendimento encerrado',
-            lastMessageTime: firebase.firestore.FieldValue.serverTimestamp() || new Date()
-          });
+              await chatRef.update({
+                status: 'closed',
+                messages: messages,
+                lastMessage: 'Atendimento encerrado',
+                lastMessageTime: firebase.firestore.FieldValue.serverTimestamp() || new Date()
+              });
+            }
+          } catch(e){
+            console.error(e);
+          }
         }
-      } catch(e){
-        console.error(e);
-      }
+      });
     }
 
     async function limparHistoricoChats() {
       if (typeof isFirebaseActive === 'undefined' || !isFirebaseActive || !db) return;
-      if (!confirm("Tem certeza de que deseja apagar permanentemente todas as conversas e históricos de chats de suporte?")) return;
-
-      try {
-        const snapshot = await db.collection('suporte_chats').get();
-        const batch = db.batch();
-        snapshot.forEach(doc => {
-          batch.delete(doc.ref);
-        });
-        await batch.commit();
-        
-        selectedChatId = null;
-        document.getElementById('admin-chat-active').classList.add('hidden');
-        document.getElementById('admin-no-chat-selected').classList.remove('hidden');
-        
-        alert("Todos os históricos de chat foram apagados com sucesso!");
-      } catch (err) {
-        console.error("Erro ao limpar chats:", err);
-        alert("Ocorreu uma falha ao limpar as conversas.");
-      }
+      showCustomConfirm({
+        title: 'Limpar Histórico',
+        message: 'Tem certeza de que deseja apagar permanentemente todas as conversas e históricos de chats de suporte?',
+        type: 'danger',
+        onConfirm: async () => {
+          try {
+            const snapshot = await db.collection('suporte_chats').get();
+            const batch = db.batch();
+            snapshot.docs.forEach(doc => {
+              batch.delete(doc.ref);
+            });
+            await batch.commit();
+            alert("✅ Todo o histórico de chats do suporte foi apagado permanentemente!");
+            selectedChatId = null;
+            document.getElementById('admin-chat-active').classList.add('hidden');
+            document.getElementById('admin-no-chat-selected').classList.remove('hidden');
+            document.getElementById('admin-support-chat-messages').innerHTML = '';
+            await loadAdminSupportChats();
+          } catch (e) {
+            alert("Erro ao limpar histórico: " + e.message);
+          }
+        }
+      });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
       const adminInput = document.getElementById('admin-chat-input');
       const adminSendBtn = document.getElementById('admin-chat-send-btn');
       
@@ -3031,7 +3110,6 @@
           }
         });
       }
-    });
 
     // ==========================================
     // SISTEMA FINANCEIRO, COMERCIAL & POS (AUTOMAÇÃO DE CTs & FEDERAÇÃO)
@@ -3152,15 +3230,21 @@
     }
 
     async function deletarLancamentoCaixa(id) {
-      if (!confirm('Deseja realmente estornar/deletar este lançamento do caixa?')) return;
-      await excluirTransacao(id);
-      await loadProfessorCaixa();
-      
-      // Se a aba financeira administrativa global estiver aberta, sincroniza ela também
-      const isFinGlobal = document.getElementById('content-financeiro-global');
-      if (isFinGlobal && !isFinGlobal.classList.contains('hidden')) {
-        await loadAdminFinanceiroGlobal();
-      }
+      showCustomConfirm({
+        title: 'Estornar Lançamento',
+        message: 'Deseja realmente estornar/deletar este lançamento do caixa?',
+        type: 'danger',
+        onConfirm: async () => {
+          await excluirTransacao(id);
+          await loadProfessorCaixa();
+          
+          // Se a aba financeira administrativa global estiver aberta, sincroniza ela também
+          const isFinGlobal = document.getElementById('content-financeiro-global');
+          if (isFinGlobal && !isFinGlobal.classList.contains('hidden')) {
+            await loadAdminFinanceiroGlobal();
+          }
+        }
+      });
     }
 
     // Carrega mensalidades de alunos vinculados ao CT do Professor
@@ -3405,9 +3489,15 @@
     }
 
     async function deletarLancamentoGlobal(id) {
-      if (!confirm('Deseja realmente remover esta transação das contas globais e locais da federação?')) return;
-      await excluirTransacao(id);
-      await loadAdminFinanceiroGlobal();
+      showCustomConfirm({
+        title: 'Excluir Transação Global',
+        message: 'Deseja realmente remover esta transação das contas globais e locais da federação?',
+        type: 'danger',
+        onConfirm: async () => {
+          await excluirTransacao(id);
+          await loadAdminFinanceiroGlobal();
+        }
+      });
     }
 
     function renderCtPerformanceChart(allTrans, academies) {
@@ -3463,39 +3553,57 @@
       }
     }
 
+    // Exposição global de funções para os botões e handlers inline
+    window.switchAdminTab = switchAdminTab;
+    window.admToggleStatusAcademia = admToggleStatusAcademia;
+    window.admDeletarAcademia = admDeletarAcademia;
+    window.admToggleStatusAtleta = admToggleStatusAtleta;
+    window.admDeletarAtleta = admDeletarAtleta;
+    window.admDeletarTorneio = admDeletarTorneio;
+    window.admDeletarAcademiaCard = admDeletarAcademiaCard;
+    window.openEditTorneioModal = openEditTorneioModal;
+    window.openEditAcademiaModal = openEditAcademiaModal;
+    window.deletarLancamentoGlobal = deletarLancamentoGlobal;
+    window.receberMensalidadeAluno = receberMensalidadeAluno;
+    window.closeEditAcademiaModal = closeEditAcademiaModal;
+    window.closeEditTorneioModal = closeEditTorneioModal;
+    window.openAddAcademiaForm = openAddAcademiaForm;
+    window.admApproveAtleta = admApproveAtleta;
+    window.admTogglePagamento = admTogglePagamento;
+    window.admExcluirInscricao = admExcluirInscricao;
+    window.responderWhatsAppAdmin = responderWhatsAppAdmin;
+
     // Submit handler para o caixa central FEAM
-    document.addEventListener('DOMContentLoaded', () => {
-      const admFinForm = document.getElementById('adm-fin-form');
-      if (admFinForm) {
-        admFinForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          try {
-            const desc = document.getElementById('adm-fin-desc').value;
-            const tipo = document.getElementById('adm-fin-tipo').value;
-            const cat = document.getElementById('adm-fin-cat').value;
-            const val = parseFloat(document.getElementById('adm-fin-val').value);
-            const forma = document.getElementById('adm-fin-forma').value;
+    const admFinForm = document.getElementById('adm-fin-form');
+    if (admFinForm) {
+      admFinForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+          const desc = document.getElementById('adm-fin-desc').value;
+          const tipo = document.getElementById('adm-fin-tipo').value;
+          const cat = document.getElementById('adm-fin-cat').value;
+          const val = parseFloat(document.getElementById('adm-fin-val').value);
+          const forma = document.getElementById('adm-fin-forma').value;
 
-            await registrarTransacao({
-              ctId: 'admin-feam',
-              ctName: 'FEAMCRJ Federação',
-              tipo,
-              categoria: cat,
-              descricao: desc,
-              valor: val,
-              formaPagamento: forma,
-              data: new Date().toISOString().split('T')[0]
-            });
+          await registrarTransacao({
+            ctId: 'admin-feam',
+            ctName: 'FEAMCRJ Federação',
+            tipo,
+            categoria: cat,
+            descricao: desc,
+            valor: val,
+            formaPagamento: forma,
+            data: new Date().toISOString().split('T')[0]
+          });
 
-            alert('🟢 Lançamento financeiro chancelado na Federação com sucesso!');
-            admFinForm.reset();
-            await loadAdminFinanceiroGlobal();
-          } catch (error) {
-            alert('Erro ao registrar fluxo na Federação: ' + error.message);
-          }
-        });
-      }
-    });
+          alert('🟢 Lançamento financeiro chancelado na Federação com sucesso!');
+          admFinForm.reset();
+          await loadAdminFinanceiroGlobal();
+        } catch (error) {
+          alert('Erro ao registrar fluxo na Federação: ' + error.message);
+        }
+      });
+    }
 
     function toggleCardFlip() {
       const inner = document.getElementById('card-inner');

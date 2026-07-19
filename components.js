@@ -76,6 +76,11 @@ function renderHeader() {
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 </button>
               </div>
+              ${loggedUser.tipo === 'admin' ? `
+                <a href="painel.html?tab=config-site" id="btn-configuracao-site" class="px-5 py-2.5 rounded-full bg-amber-500 text-zinc-950 font-extrabold uppercase text-xs tracking-wider transition-all transform hover:-translate-y-0.5 hover:bg-amber-400 flex items-center gap-1.5 shadow-lg shadow-amber-500/20 cursor-pointer">
+                  ⚙️ Configuração do Site
+                </a>
+              ` : ''}
             ` : `
               <a href="login.html" class="text-sm font-bold text-zinc-300 hover:text-white transition-all">Portal do Filiado</a>
               <a href="cadastro-atleta.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-sm font-bold text-white hover:from-red-500 hover:to-amber-400 shadow-md shadow-amber-950/20 transition-all transform hover:-translate-y-0.5">Filie-se Já</a>
@@ -103,7 +108,7 @@ function renderHeader() {
         <a href="loja.html" class="block px-3 py-2 rounded-lg text-base font-semibold ${activePage === 'loja.html' ? 'text-amber-500 bg-amber-500/5' : 'text-zinc-300 hover:bg-zinc-900'}">Loja Oficial</a>
         <a href="documentos.html" class="block px-3 py-2 rounded-lg text-base font-semibold ${activePage === 'documentos.html' ? 'text-amber-500 bg-amber-500/5' : 'text-zinc-300 hover:bg-zinc-900'}">Downloads / Leis</a>
         <a href="contato.html" class="block px-3 py-2 rounded-lg text-base font-semibold ${activePage === 'contato.html' ? 'text-amber-500 bg-amber-500/5' : 'text-zinc-300 hover:bg-zinc-900'}">Contato</a>
-        <div class="pt-4 border-t border-zinc-900 flex flex-col space-y-2">
+         <div class="pt-4 border-t border-zinc-900 flex flex-col space-y-2">
           ${isLoggedIn ? `
             <div class="flex items-center justify-between p-3 bg-zinc-900 rounded-xl">
               <div class="flex items-center space-x-3">
@@ -117,6 +122,11 @@ function renderHeader() {
               </div>
               <a href="painel.html" class="text-xs bg-amber-500 text-zinc-950 font-bold px-3 py-1 rounded-lg">Painel</a>
             </div>
+            ${loggedUser.tipo === 'admin' ? `
+              <a href="painel.html?tab=config-site" class="w-full text-center py-2.5 bg-amber-500 text-zinc-950 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all hover:bg-amber-400 flex items-center justify-center gap-1.5 shadow-md">
+                ⚙️ Configuração do Site
+              </a>
+            ` : ''}
             <button onclick="handleSignOut()" class="w-full text-center py-2 border border-red-500/30 text-red-400 font-bold text-sm rounded-xl">Desconectar</button>
           ` : `
             <a href="login.html" class="w-full text-center py-2.5 border border-zinc-800 text-zinc-300 font-bold text-sm rounded-xl hover:bg-zinc-900">Portal do Filiado</a>
@@ -428,6 +438,183 @@ function showCustomModal(options = {}) {
 
 // Redefine window.alert para usar o modal customizado de forma transparente
 window.showCustomModal = showCustomModal;
+
+// Modal dinâmico e profissional para pagamento via PIX
+function showPixPaymentModal({ title, message, amount, email, name, onConfirm }) {
+  const modal = document.createElement('div');
+  modal.className = "fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-zinc-950/85 backdrop-blur-sm";
+  modal.id = "feam-pix-modal";
+
+  const pixKey = "21993370397";
+
+  modal.innerHTML = `
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative overflow-hidden transform scale-95 transition-all duration-300 text-center">
+      <div class="absolute -top-10 -left-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <!-- Icon -->
+      <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 animate-bounce">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+
+      <h3 class="text-xl font-black uppercase tracking-tight text-white mb-2 font-display">${title || 'Filiação Cadastrada!'}</h3>
+      <p class="text-zinc-400 text-xs leading-relaxed mb-6 whitespace-pre-line">${message}</p>
+
+      <!-- Detalhes do PIX -->
+      <div class="bg-zinc-950 border border-zinc-850 rounded-2xl p-4 text-left space-y-3 mb-6 relative">
+        <div class="flex justify-between items-center border-b border-zinc-900 pb-2">
+          <span class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Valor da Taxa</span>
+          <span class="text-base font-black text-emerald-400">R$ ${amount || '70,00'}</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-zinc-900 pb-2">
+          <span class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Favorecido</span>
+          <span class="text-[11px] font-bold text-white text-right">Federação Esportiva de Arte Marcial e Combate RJ</span>
+        </div>
+        <div class="space-y-1">
+          <span class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">Chave PIX (Celular)</span>
+          <div class="flex items-center gap-2">
+            <input type="text" readonly value="${pixKey}" id="pix-key-input" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white font-mono font-bold outline-none">
+            <button id="btn-copy-pix" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer">Copiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <button id="btn-pix-confirm" class="w-full py-3.5 rounded-xl text-white text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-md transition-all active:scale-95 cursor-pointer">
+          Já realizei o pagamento, ir para login
+        </button>
+        <p class="text-[9px] text-zinc-500">⚠️ O acesso será liberado imediatamente após a confirmação do PIX pelo administrador.</p>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  setTimeout(() => {
+    const dialog = modal.querySelector('div');
+    if (dialog) dialog.classList.remove('scale-95');
+  }, 10);
+
+  // Botão copiar
+  const copyBtn = modal.querySelector('#btn-copy-pix');
+  copyBtn.addEventListener('click', () => {
+    const input = modal.querySelector('#pix-key-input');
+    input.select();
+    input.setSelectionRange(0, 99999);
+    try {
+      navigator.clipboard.writeText(pixKey);
+      alert('🔑 Chave PIX copiada com sucesso! Faça o pagamento no aplicativo do seu banco.');
+    } catch (err) {
+      // Fallback
+      document.execCommand('copy');
+      alert('🔑 Chave PIX copiada!');
+    }
+  });
+
+  // Botão confirmar
+  const confirmBtn = modal.querySelector('#btn-pix-confirm');
+  confirmBtn.addEventListener('click', () => {
+    modal.remove();
+    if (typeof onConfirm === 'function') {
+      onConfirm();
+    }
+  });
+}
+
+window.showPixPaymentModal = showPixPaymentModal;
+
+// Modal customizado e seguro para confirmações (substituto de window.confirm)
+function showCustomConfirm(options = {}) {
+  const {
+    title = 'Confirmação',
+    message = '',
+    onConfirm = null,
+    onCancel = null,
+    confirmText = 'Confirmar',
+    cancelText = 'Cancelar',
+    type = 'warning' // warning, danger
+  } = options;
+
+  // Remove qualquer modal de confirmação existente
+  const existing = document.getElementById('feam-custom-confirm');
+  if (existing) {
+    existing.remove();
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'feam-custom-confirm';
+  modal.className = 'fixed inset-0 z-[11000] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-opacity duration-300';
+
+  let iconColor = 'text-amber-500 bg-amber-500/10 border-amber-500/30';
+  let confirmBtnColor = 'bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400';
+  let iconSvg = `
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+    </svg>
+  `;
+
+  if (type === 'danger') {
+    iconColor = 'text-red-500 bg-red-500/10 border-red-500/30';
+    confirmBtnColor = 'bg-gradient-to-r from-red-700 to-rose-600 hover:from-red-600 hover:to-rose-500';
+    iconSvg = `
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+      </svg>
+    `;
+  }
+
+  modal.innerHTML = `
+    <div class="bg-zinc-900 border border-zinc-850 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative overflow-hidden transform scale-95 transition-all duration-300">
+      <div class="absolute -top-10 -left-10 w-40 h-40 bg-zinc-800/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="flex flex-col items-center text-center">
+        <div class="w-16 h-16 rounded-full ${iconColor} border flex items-center justify-center mb-4">
+          ${iconSvg}
+        </div>
+        
+        <h3 class="text-xl font-black uppercase tracking-tight text-white mb-2 font-display">${title}</h3>
+        <p class="text-zinc-400 text-sm leading-relaxed mb-6 whitespace-pre-line">${message}</p>
+        
+        <div class="flex flex-col sm:flex-row gap-2 w-full">
+          <button id="feam-confirm-cancel" class="flex-1 py-3.5 rounded-xl text-zinc-400 hover:text-white bg-zinc-950 hover:bg-zinc-850 border border-zinc-800 text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
+            ${cancelText}
+          </button>
+          <button id="feam-confirm-proceed" class="flex-1 py-3.5 rounded-xl text-white text-xs font-bold uppercase tracking-widest ${confirmBtnColor} shadow-md transition-all active:scale-95 cursor-pointer">
+            ${confirmText}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  setTimeout(() => {
+    const dialog = modal.querySelector('div');
+    if (dialog) dialog.classList.remove('scale-95');
+  }, 10);
+
+  const cancelBtn = modal.querySelector('#feam-confirm-cancel');
+  const proceedBtn = modal.querySelector('#feam-confirm-proceed');
+
+  cancelBtn.addEventListener('click', () => {
+    modal.remove();
+    if (typeof onCancel === 'function') {
+      onCancel();
+    }
+  });
+
+  proceedBtn.addEventListener('click', () => {
+    modal.remove();
+    if (typeof onConfirm === 'function') {
+      onConfirm();
+    }
+  });
+}
+
+window.showCustomConfirm = showCustomConfirm;
+
 window.alert = function(msg) {
   console.log("📢 Intercepted alert: ", msg);
   let type = 'info';

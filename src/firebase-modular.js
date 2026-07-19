@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { 
   getFirestore, 
   doc, 
@@ -152,7 +152,22 @@ class FirestoreCompat {
 
 // Global factory to initialize the compatible database
 window.initCompatFirestore = function(config, databaseId) {
-  const app = initializeApp(config);
+  let app;
+  try {
+    app = getApps().length > 0 ? getApp() : initializeApp(config);
+  } catch (e) {
+    console.warn("⚠️ initCompatFirestore standard init failed, trying fallbacks:", e);
+    try {
+      app = getApp();
+    } catch (e2) {
+      try {
+        app = initializeApp(config, "modular-named-app-" + Date.now());
+      } catch (e3) {
+        console.error("❌ All modular firebase app initialization attempts failed:", e3);
+        throw e3;
+      }
+    }
+  }
   const rawDb = getFirestore(app, databaseId);
   return new FirestoreCompat(rawDb);
 };

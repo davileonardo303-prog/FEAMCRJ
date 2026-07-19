@@ -46,25 +46,12 @@
       <!-- Login Card -->
       <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
         
-        <!-- Abas de Tipo de Login (Opção Aluno, Professor, ADM) -->
-        <div class="flex p-1 bg-zinc-950 border border-zinc-850 rounded-xl mb-6">
-          <button type="button" onclick="setRole('atleta')" id="tab-atleta" class="flex-1 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg text-amber-500 bg-zinc-900 border border-zinc-850/40 transition-all cursor-pointer">
-            Aluno / Atleta
-          </button>
-          <button type="button" onclick="setRole('professor')" id="tab-professor" class="flex-1 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg text-zinc-400 hover:text-white transition-all cursor-pointer">
-            Professor / CT
-          </button>
-          <button type="button" onclick="setRole('admin')" id="tab-admin" class="flex-1 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg text-zinc-400 hover:text-white transition-all cursor-pointer">
-            ADM / FEAM
-          </button>
-        </div>
-
         <form id="login-form" class="space-y-5">
           
           <!-- E-mail -->
           <div>
-            <label id="email-label" class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Seu E-mail de Atleta</label>
-            <input type="email" id="email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="Ex: atleta@gmail.com">
+            <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Seu E-mail Cadastrado</label>
+            <input type="email" id="email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="Digite seu e-mail de acesso">
           </div>
 
           <!-- Senha -->
@@ -76,25 +63,25 @@
             <input type="password" id="password" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" placeholder="••••••••">
           </div>
 
-          <!-- Dica de Demonstração Interativa -->
+          <!-- Informações / Ajuda de Login -->
           <div id="demo-helper" class="bg-zinc-950 border border-zinc-850/60 rounded-xl p-3.5 text-center transition-all">
-            <p id="demo-text" class="text-[11px] text-zinc-400 font-medium">Acesso para atletas filiados visualizarem carteirinha digital e histórico.</p>
-            <button type="button" id="demo-btn" onclick="fillDemoCredentials()" class="hidden mt-2 mx-auto px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest rounded border border-amber-500/20 transition-all cursor-pointer">
-              Preencher dados de teste
+            <p id="demo-text" class="text-[11px] text-zinc-400 font-medium">O sistema identificará automaticamente se você é Aluno/Atleta, Professor/CT ou Administrador.</p>
+            <button type="button" id="demo-btn" onclick="fillDemoCredentials()" class="mt-2 mx-auto px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest rounded border border-amber-500/20 transition-all cursor-pointer flex items-center justify-center gap-1">
+              <span>Preencher Conta Master FEAMCRJ</span>
             </button>
           </div>
 
           <!-- Submit Button -->
-          <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-sm font-black uppercase tracking-widest hover:from-red-500 hover:to-amber-400 shadow-md shadow-amber-950/20 transition-all cursor-pointer">
-            Entrar como Atleta
+          <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-sm font-black uppercase tracking-widest hover:from-red-500 hover:to-amber-400 shadow-md shadow-amber-950/20 transition-all cursor-pointer flex items-center justify-center gap-2">
+            <span>ENTRAR NO PORTAL</span>
           </button>
 
           <div class="text-center mt-4 space-y-2">
             <p class="text-xs text-zinc-500">Ainda não possui cadastro de filiação?</p>
             <div class="flex justify-center space-x-4">
-              <a href="cadastro-atleta.html" class="text-xs text-amber-500 hover:underline font-bold">Filie-se como Atleta</a>
+              <a href="cadastro-atleta.html" class="text-xs text-amber-500 hover:underline font-bold font-display">Filie-se como Atleta</a>
               <span class="text-zinc-800">|</span>
-              <a href="cadastro-professor.html" class="text-xs text-amber-500 hover:underline font-bold">Credencie sua Academia</a>
+              <a href="cadastro-professor.html" class="text-xs text-amber-500 hover:underline font-bold font-display">Credencie sua Academia</a>
             </div>
           </div>
 
@@ -113,60 +100,14 @@
 
   <!-- Lógica de Autenticação -->
   <script>
-    let currentRole = 'atleta';
-
     // Se o usuário já estiver logado, manda direto para o painel
     if (localStorage.getItem('feamcrj_logged_user')) {
       window.location.href = 'painel.html';
     }
 
-    function setRole(role) {
-      currentRole = role;
-      
-      // Reset classes
-      const tabs = ['atleta', 'professor', 'admin'];
-      tabs.forEach(t => {
-        const btn = document.getElementById(`tab-${t}`);
-        if (t === role) {
-          btn.className = "flex-1 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg text-amber-500 bg-zinc-900 border border-zinc-850/40 transition-all cursor-pointer";
-        } else {
-          btn.className = "flex-1 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg text-zinc-400 hover:text-white transition-all cursor-pointer";
-        }
-      });
-
-      // Update Labels, Placeholders, Helpers & Buttons
-      const emailLabel = document.getElementById('email-label');
-      const emailInput = document.getElementById('email');
-      const demoText = document.getElementById('demo-text');
-      const demoBtn = document.getElementById('demo-btn');
-      const submitBtn = document.getElementById('submit-btn');
-
-      if (role === 'atleta') {
-        emailLabel.textContent = "Seu E-mail de Atleta";
-        emailInput.placeholder = "Ex: atleta@gmail.com";
-        demoText.textContent = "Acesso para atletas filiados verem carteirinha digital e histórico de faixas.";
-        demoBtn.classList.add('hidden');
-        submitBtn.textContent = "Entrar como Atleta";
-      } else if (role === 'professor') {
-        emailLabel.textContent = "E-mail do Professor / Academia";
-        emailInput.placeholder = "Ex: academia@gmail.com";
-        demoText.textContent = "Acesso exclusivo do professor credenciado para gerenciar seus atletas filiados.";
-        demoBtn.classList.add('hidden');
-        submitBtn.textContent = "Entrar como Professor";
-      } else if (role === 'admin') {
-        emailLabel.textContent = "E-mail de Administrador FEAM";
-        emailInput.placeholder = "Ex: feamcrj@gmail.com";
-        demoText.textContent = "Acesso exclusivo da diretoria da Federação para gestão global e homologações.";
-        demoBtn.classList.remove('hidden');
-        submitBtn.textContent = "Painel Administrativo";
-      }
-    }
-
     function fillDemoCredentials() {
-      if (currentRole === 'admin') {
-        document.getElementById('email').value = 'feamcrj@gmail.com';
-        document.getElementById('password').value = 'Master582@';
-      }
+      document.getElementById('email').value = 'feamcrj@gmail.com';
+      document.getElementById('password').value = 'Master582@';
     }
 
     async function triggerPasswordRecovery() {
@@ -186,13 +127,35 @@
 
       const email = document.getElementById('email').value;
       const pass = document.getElementById('password').value;
+      const submitBtn = document.getElementById('submit-btn');
+
+      // Coloca botão em estado de loading
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
+      submitBtn.innerHTML = `
+        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>IDENTIFICANDO PERFIL...</span>
+      `;
 
       try {
         const res = await loginFiliado(email, pass);
         if (res.success) {
-          window.location.href = 'painel.html';
+          submitBtn.innerHTML = `<span>SUCESSO! REDIRECIONANDO...</span>`;
+          setTimeout(() => {
+            window.location.href = 'painel.html';
+          }, 300);
         }
       } catch (error) {
+        // Volta o botão ao estado original
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        submitBtn.innerHTML = originalText;
+        
+        // Exibe erro customizado amigável
         alert('Erro no login: ' + error.message);
       }
     });

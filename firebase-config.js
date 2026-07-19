@@ -56,12 +56,14 @@ if (typeof firebase === 'undefined') {
 
 // === COORDENAÇÃO DE CREDENCIAIS DO FIREBASE ===
 let firebaseConfig = {
-  apiKey: "AIzaSyDrt-S9dkePFM9AMjX_AaAf6xwbsr5x-0w",
-  authDomain: "feamcrj-78f07.firebaseapp.com",
-  projectId: "feamcrj-78f07",
-  storageBucket: "feamcrj-78f07.firebasestorage.app",
-  messagingSenderId: "452441331892",
-  appId: "1:452441331892:web:729b61b9b7797f61859fe1"
+  apiKey: "AIzaSyBoXqh1dYaCDGVLpPZ8tSZhQIHlQRFlp4U",
+  authDomain: "feamcrj-dcfaa.firebaseapp.com",
+  projectId: "feamcrj-dcfaa",
+  storageBucket: "feamcrj-dcfaa.firebasestorage.app",
+  messagingSenderId: "72630680924",
+  appId: "1:72630680924:web:726f1e31d436ba5220d599",
+  databaseId: "ai-studio-feamcrjfederaoes-91246755-2038-4b5d-a55f-d54783e79085",
+  firestoreDatabaseId: "ai-studio-feamcrjfederaoes-91246755-2038-4b5d-a55f-d54783e79085"
 };
 
 // Tenta carregar as credenciais reais do sandbox / workspace do usuário de forma síncrona
@@ -125,29 +127,51 @@ function inicializarFirebase() {
       
       if (dbId) {
         console.log("🔥 Inicializando Firestore com banco nomeado ID:", dbId);
-        try {
-          // Tenta usar a função namespace com app e dbId, que é a mais recomendada no compat
-          db = firebase.firestore(firebase.app(), dbId);
-          console.log("✅ Firestore inicializado com firebase.firestore(app, dbId)");
-        } catch (e) {
-          console.warn("⚠️ Falha ao inicializar com firebase.firestore(app, dbId), tentando firebase.app().firestore(dbId):", e);
-          fetch('/api/log-error', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ error: "Compat init 1 failed: " + e.message, stack: e.stack, url: "firebase-config.js" })
-          }).catch(() => {});
+        if (typeof window.initCompatFirestore === 'function') {
           try {
-            db = firebase.app().firestore(dbId);
-            console.log("✅ Firestore inicializado com firebase.app().firestore(dbId)");
-          } catch (e2) {
-            console.warn("⚠️ Falha ao inicializar com firebase.app().firestore(dbId), tentando firebase.firestore() padrão com databaseId no config:", e2);
+            db = window.initCompatFirestore(firebaseConfig, dbId);
+            console.log("✅ Firestore inicializado com sucesso via wrapper modular (initCompatFirestore)!");
+          } catch (eInit) {
+            console.warn("⚠️ Falha ao inicializar com initCompatFirestore, tentando fallback compat:", eInit);
+            try {
+              db = firebase.firestore(firebase.app(), dbId);
+              console.log("✅ Firestore inicializado com firebase.firestore(app, dbId)");
+            } catch (e) {
+              console.warn("⚠️ Falha ao inicializar com firebase.firestore(app, dbId), tentando firebase.app().firestore(dbId):", e);
+              try {
+                db = firebase.app().firestore(dbId);
+                console.log("✅ Firestore inicializado com firebase.app().firestore(dbId)");
+              } catch (e2) {
+                db = firebase.firestore();
+                console.log("✅ Firestore inicializado com firebase.firestore() padrão (respeitando databaseId no config)");
+              }
+            }
+          }
+        } else {
+          try {
+            // Tenta usar a função namespace com app e dbId, que é a mais recomendada no compat
+            db = firebase.firestore(firebase.app(), dbId);
+            console.log("✅ Firestore inicializado com firebase.firestore(app, dbId)");
+          } catch (e) {
+            console.warn("⚠️ Falha ao inicializar com firebase.firestore(app, dbId), tentando firebase.app().firestore(dbId):", e);
             fetch('/api/log-error', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ error: "Compat init 2 failed: " + e2.message, stack: e2.stack, url: "firebase-config.js" })
+              body: JSON.stringify({ error: "Compat init 1 failed: " + e.message, stack: e.stack, url: "firebase-config.js" })
             }).catch(() => {});
-            db = firebase.firestore();
-            console.log("✅ Firestore inicializado com firebase.firestore() padrão (respeitando databaseId no config)");
+            try {
+              db = firebase.app().firestore(dbId);
+              console.log("✅ Firestore inicializado com firebase.app().firestore(dbId)");
+            } catch (e2) {
+              console.warn("⚠️ Falha ao inicializar com firebase.app().firestore(dbId), tentando firebase.firestore() padrão com databaseId no config:", e2);
+              fetch('/api/log-error', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ error: "Compat init 2 failed: " + e2.message, stack: e2.stack, url: "firebase-config.js" })
+              }).catch(() => {});
+              db = firebase.firestore();
+              console.log("✅ Firestore inicializado com firebase.firestore() padrão (respeitando databaseId no config)");
+            }
           }
         }
       } else {
@@ -417,6 +441,36 @@ async function getAtletas() {
 }
 
 async function cadastrarAtleta(atletaData) {
+  // Higieniza os dados de acesso para evitar problemas com espaços ou letras maiúsculas
+  atletaData.email = atletaData.email.trim().toLowerCase();
+  atletaData.password = atletaData.password.trim();
+
+  // Prevenção de duplicação: verifica e-mail e CPF já cadastrados
+  try {
+    const allAtletas = await getAtletas() || [];
+    const emailExists = allAtletas.some(a => a.email && a.email.trim().toLowerCase() === atletaData.email);
+    if (emailExists) {
+      throw new Error("Este e-mail já está cadastrado como atleta filiado! Por favor, utilize outro e-mail ou faça login no portal.");
+    }
+
+    if (atletaData.cpf && atletaData.cpf.trim()) {
+      const cleanCpf = atletaData.cpf.replace(/\D/g, '');
+      const cpfExists = allAtletas.some(a => {
+        if (!a.cpf) return false;
+        return a.cpf.replace(/\D/g, '') === cleanCpf;
+      });
+      if (cpfExists) {
+        throw new Error("Este CPF já está cadastrado em nossa federação!");
+      }
+    }
+  } catch (err) {
+    // Repassa o erro específico de validação
+    if (err.message.includes("cadastrado")) {
+      throw err;
+    }
+    console.warn("Aviso na verificação de duplicidade:", err);
+  }
+
   const numFiliacao = "FEAM-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
   const { password, ...firestoreData } = atletaData;
   const completo = {
@@ -478,6 +532,36 @@ async function getAcademias() {
 }
 
 async function cadastrarAcademia(acadData) {
+  // Higieniza os dados de acesso para evitar problemas com espaços ou letras maiúsculas
+  acadData.email = acadData.email.trim().toLowerCase();
+  acadData.password = acadData.password.trim();
+
+  // Prevenção de duplicação: verifica e-mail e documento já cadastrados
+  try {
+    const allAcademias = await getAcademias() || [];
+    const emailExists = allAcademias.some(a => a.email && a.email.trim().toLowerCase() === acadData.email);
+    if (emailExists) {
+      throw new Error("Este e-mail de professor/CT já está cadastrado em nossa federação! Por favor, utilize outro e-mail ou faça login.");
+    }
+
+    if (acadData.document && acadData.document.trim()) {
+      const cleanDoc = acadData.document.replace(/\D/g, '');
+      const docExists = allAcademias.some(a => {
+        if (!a.document) return false;
+        return a.document.replace(/\D/g, '') === cleanDoc;
+      });
+      if (docExists) {
+        throw new Error("Este CNPJ / CPF de Responsável por CT já está cadastrado em nossa federação!");
+      }
+    }
+  } catch (err) {
+    // Repassa o erro específico de validação
+    if (err.message.includes("cadastrado")) {
+      throw err;
+    }
+    console.warn("Aviso na verificação de duplicidade de academia:", err);
+  }
+
   const { password, ...firestoreData } = acadData;
   const completo = {
     ...firestoreData,
@@ -590,6 +674,9 @@ function salvarUsuarioLocal(id, userData, tipo) {
 
 // Recuperar senha unificado
 async function recuperarSenha(email) {
+  if (!email) throw new Error("E-mail é obrigatório.");
+  email = email.trim().toLowerCase();
+
   if (isFirebaseActive) {
     try {
       await auth.sendPasswordResetEmail(email);
@@ -604,8 +691,15 @@ async function recuperarSenha(email) {
 
 // Login unificado
 async function loginFiliado(email, senha) {
+  if (!email || !senha) {
+    throw new Error('E-mail e senha são obrigatórios.');
+  }
+  
+  email = email.trim().toLowerCase();
+  senha = senha.trim();
+
   // ADMINISTRADOR MASTER FEAMCRJ
-  if (email.toLowerCase() === 'feamcrj@gmail.com') {
+  if (email === 'feamcrj@gmail.com') {
     if (senha !== 'Master582@') {
       throw new Error('Senha incorreta para a conta de administrador master.');
     }
