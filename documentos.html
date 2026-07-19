@@ -11,7 +11,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css">
   <style>
@@ -20,6 +20,9 @@
     }
     h1, h2, h3, .font-display {
       font-family: 'Space Grotesk', sans-serif;
+    }
+    .font-signature {
+      font-family: 'Caveat', cursive;
     }
   </style>
   <!-- html2pdf.js CDN -->
@@ -914,23 +917,35 @@
         bodyHTML = docObj.customBody;
       } else if (id === 'doc-1') {
         bodyHTML = `
-          <h2 class="text-lg font-bold uppercase text-center text-red-700 tracking-wide mb-6">Regulamento Geral Unificado de Competições 2026</h2>
+          <h2 class="text-base font-black uppercase text-center text-red-700 tracking-wider mb-6" style="border-bottom: 2px solid #b91c1c; padding-bottom: 10px; font-family: 'Space Grotesk', sans-serif;">Regulamento Geral Unificado de Competições FEAMCRJ — Temporada 2026</h2>
           
-          <div class="space-y-4 text-xs text-justify leading-relaxed" style="color: #1c1917; font-family: sans-serif;">
-            <p style="margin-bottom: 12px; line-height: 1.5;"><strong>1. Diretrizes Gerais</strong><br>Este documento estabelece as diretrizes unificadas para os eventos competitivos homologados no ano de 2026. O objetivo principal é garantir a integridade física dos atletas, a organização estrutural dos eventos e o alto nível técnico das disputas.</p>
+          <div class="space-y-4 text-[10px] text-justify leading-relaxed" style="color: #1f2937; font-family: sans-serif; max-height: 520px; overflow-y: auto; padding-right: 10px;">
+            <p style="margin-bottom: 10px; line-height: 1.4;"><strong>CAPÍTULO I - DAS DIRETRIZES TÉCNICAS E DO PROPÓSITO</strong><br>
+            <strong>Art. 1º.</strong> Este regulamento estabelece as normas técnicas, disciplinares e de segurança para todas as competições e campeonatos homologados e promovidos pela Federação Esportiva de Arte Marcial e Combate do Estado do Rio de Janeiro (FEAMCRJ) na temporada esportiva de 2026. <br>
+            <strong>Art. 2º.</strong> O propósito primordial das competições é fomentar a excelência técnica das modalidades de combate, prezar pela integridade física e mental de todos os filiados ativos, e promover os valores éticos e marciais das modalidades federadas.</p>
             
-            <p style="margin-bottom: 12px; line-height: 1.5;"><strong>2. Divisão de Categorias</strong><br>As chaves de combate serão estruturadas cruzando as seguintes variáveis estruturais:
-            <br>• <strong>Idade:</strong> Infantil, Cadete, Juvenil, Adulto e Master.
-            <br>• <strong>Peso:</strong> Categorias rigorosamente divididas conforme a tabela oficial da federação.
-            <br>• <strong>Experiência:</strong> Estreantes, Iniciantes e Avançados.</p>
+            <p style="margin-bottom: 10px; line-height: 1.4;"><strong>CAPÍTULO II - DOS ATLETAS E DA DIVISÃO DE CATEGORIAS</strong><br>
+            <strong>Art. 3º.</strong> Somente poderão participar das chaves competitivas os atletas devidamente filiados e regularizados, portando a Carteira de Estudante de Luta (FEAMCRJ Digital) válida para o ano vigente.<br>
+            <strong>Art. 4º.</strong> A divisão oficial de chaves obedecerá criteriosamente aos seguintes fatores de pareamento:
+            <br>• <strong>Faixa Etária:</strong> Infantil (até 11 anos), Infanto-Juvenil (12 a 15 anos), Juvenil (16 e 17 anos), Adulto (18 a 35 anos) e Master (acima de 35 anos).
+            <br>• <strong>Peso Corporal:</strong> Divisões estritas aferidas na pesagem oficial em balança chancelada no dia do combate, com tolerância máxima de 300 gramas.
+            <br>• <strong>Graduação / Faixa:</strong> Chaves separadas por nível técnico (Estreantes/Iniciantes, Graduados e Avançados/Faixa Preta).</p>
             
-            <p style="margin-bottom: 12px; line-height: 1.5;"><strong>3. Equipamentos e Indumentária</strong><br>A apresentação do atleta na área de luta exige o uso obrigatório de:
-            <br>• Protetor bucal e coquilha (uso pessoal e intransferível).
-            <br>• Luvas em perfeito estado, no padrão de onças (oz) exigido para a categoria de peso.
-            <br>• Caneleiras de proteção aprovadas pela comissão de arbitragem.
-            <br>• Shorts de combate adequados, sem zíperes ou fivelas metálicas.</p>
+            <p style="margin-bottom: 10px; line-height: 1.4;"><strong>CAPÍTULO III - DA CONDUTA, EQUIPAMENTOS E VESTIMENTA</strong><br>
+            <strong>Art. 5º.</strong> É obrigatória a apresentação do competidor com os equipamentos de proteção e indumentária homologada em perfeito estado de higiene e conservação.
+            <br>• <strong>Proteções Individuais:</strong> Protetor bucal sob medida, coquilha de proteção genital e bandagens elásticas de mão chanceladas.
+            <br>• <strong>Para Lutas de Contato Pleno:</strong> Luvas oficiais fornecidas ou verificadas pela organização do evento, caneleiras de dupla densidade sem metal, e capacete anatômico oficial quando aplicável às categorias juvenis.
+            <br>• <strong>Vestimenta:</strong> Shorts de compressão, bermuda sem bolsos, zíper ou botões, ou Kimono oficial de acordo com as especificações rígidas da modalidade disputada.</p>
             
-            <p style="margin-bottom: 12px; line-height: 1.5;"><strong>4. Arbitragem, Conduta e Pontuação</strong><br>O julgamento dos combates priorizará a contundência, a clareza dos golpes aplicados e o domínio do centro da área de combate. Ações como falta de combatividade, golpes ilegais ou conduta antidesportiva resultarão em advertências verbais, dedução de pontos ou desclassificação imediata sob a autoridade irrefutável do árbitro central.</p>
+            <p style="margin-bottom: 10px; line-height: 1.4;"><strong>CAPÍTULO IV - DOS CRITÉRIOS DE PONTUAÇÃO E ARBITRAGEM</strong><br>
+            <strong>Art. 6º.</strong> O corpo de arbitragem é formado por juízes laterais e um árbitro central chancelados pela Mesa Diretora da FEAMCRJ, sendo suas decisões soberanas e irrevogáveis após proclamação oficial do vencedor.<br>
+            <strong>Art. 7º.</strong> Os critérios avaliativos para pontuação de rounds e combates priorizam:
+            <br>1º - <strong>Contundência e Eficácia:</strong> Golpes traumáticos de alta precisão que causem desestabilização técnica óbvia.
+            <br>2º - <strong>Domínio da Área de Combate:</strong> Postura ativa, controle de octógono/tatame e agressividade técnica regulamentar.
+            <br>3º - <strong>Técnicas de Solo e Quedas:</strong> Projeções limpas com controle dinâmico estabelecido no solo.</p>
+
+            <p style="margin-bottom: 10px; line-height: 1.4;"><strong>CAPÍTULO V - DAS INFRAÇÕES E PENALIDADES</strong><br>
+            <strong>Art. 8º.</strong> Condutas antidesportivas, linguagem abusiva, desrespeito à arbitragem ou agressão física fora das ações permitidas de luta resultará em punições severas, incluindo dedução de pontos na chave, desclassificação do evento e suspensão imediata do registro do filiado para julgamento do Superior Tribunal de Justiça Marcial da FEAMCRJ.</p>
           </div>
         `;
       } else if (id === 'doc-2') {
@@ -1169,13 +1184,15 @@
         <!-- FOOTER DO DOCUMENTO -->
         <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-top: auto; font-family: sans-serif;">
           <div style="display: flex; justify-content: space-between; text-align: center; font-size: 10px; margin-bottom: 24px; width: 100%;">
-            <div style="flex: 1;">
+            <div style="flex: 1; position: relative;">
+              <!-- Cursive ink signature overlay -->
+              <span class="font-signature" style="display: block; font-size: 18px; color: #0284c7; font-family: 'Caveat', cursive; transform: rotate(-2deg); margin-bottom: 2px; font-weight: bold; select-none: true;">Raphael Jaboque</span>
               <div style="border-top: 1px solid #9ca3af; width: 160px; margin: 0 auto; padding-top: 4px;"></div>
-              <p style="font-weight: bold; color: #1f2937; margin: 2px 0 0 0;">Grão-Mestre Roberto Albuquerque</p>
+              <p style="font-weight: bold; color: #1f2937; margin: 2px 0 0 0;">Raphael Jaboque</p>
               <p style="font-size: 8px; color: #6b7280; text-transform: uppercase; margin: 0;">Presidente FEAMCRJ</p>
             </div>
             <div style="flex: 1;">
-              <div style="border-top: 1px solid #9ca3af; width: 160px; margin: 0 auto; padding-top: 4px;"></div>
+              <div style="border-top: 1px solid #9ca3af; width: 160px; margin: 0 auto; padding-top: 4px; margin-top: 18px;"></div>
               <p style="font-weight: bold; color: #1f2937; margin: 2px 0 0 0;">Mestre Alexandre Silva</p>
               <p style="font-size: 8px; color: #6b7280; text-transform: uppercase; margin: 0;">Vice-Presidente & Secretário Geral</p>
             </div>
@@ -1207,6 +1224,11 @@
         document.body.removeChild(optDiv);
       });
     }
+
+    // Expose functions globally for inline onclick handlers
+    window.handleDeleteDoc = handleDeleteDoc;
+    window.openEditModal = openEditModal;
+    window.downloadOfficialDoc = downloadOfficialDoc;
   </script>
 </body>
 </html>

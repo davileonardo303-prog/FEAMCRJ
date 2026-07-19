@@ -179,7 +179,7 @@ function renderFooter(info) {
   }
 
   const desc = siteInfo?.footerDescription || "FEDERAÇÃO ESPORTIVA DE ARTE MARCIAL E COMBATE RIO DE JANEIRO. <br /> Entidade oficial reguladora e fomentadora do desporto de combate e artes marciais no estado do Rio de Janeiro.";
-  const pres = siteInfo?.president || "Grão-Mestre Roberto Albuquerque";
+  const pres = siteInfo?.president || "Raphael Jaboque";
   const vice = siteInfo?.vicePresident || "Mestre Alexandre Silva";
   const tech = siteInfo?.techDirector || "Mestre Wellington Santos";
   const rel = siteInfo?.publicRelations || "Dra. Beatriz Ferreira Souza";

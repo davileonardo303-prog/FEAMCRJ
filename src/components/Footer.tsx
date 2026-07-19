@@ -42,7 +42,7 @@ export default function Footer() {
           <div className="space-y-3">
             <h4 className="text-xs font-black uppercase tracking-widest text-white">Conselho Executivo</h4>
             <ul className="text-xs space-y-1.5 text-zinc-500">
-              <li><strong className="text-zinc-400">Presidente:</strong> Grão-Mestre Roberto Albuquerque</li>
+              <li><strong className="text-zinc-400">Presidente:</strong> Raphael Jaboque</li>
               <li><strong className="text-zinc-400">Vice-Presidente:</strong> Mestre Alexandre Silva</li>
               <li><strong className="text-zinc-400">Diretor Técnico:</strong> Mestre Wellington Santos</li>
               <li><strong className="text-zinc-400">Relações Públicas:</strong> Dra. Beatriz Ferreira Souza</li>

@@ -938,6 +938,26 @@ async function alterarStatusAtleta(atletaId, status) {
   }
 }
 
+async function atualizarAtleta(atletaId, fields) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('atletas').doc(atletaId).update(fields);
+    } catch (e) {
+      try {
+        await db.collection('atletas').doc(atletaId).set(fields, { merge: true });
+      } catch (err) {
+        console.error("Erro ao atualizar atleta no Firestore:", err);
+      }
+    }
+  }
+  const atletas = JSON.parse(localStorage.getItem('feam_atletas')) || [];
+  const idx = atletas.findIndex(a => a.id === atletaId);
+  if (idx !== -1) {
+    atletas[idx] = { ...atletas[idx], ...fields };
+    localStorage.setItem('feam_atletas', JSON.stringify(atletas));
+  }
+}
+
 async function excluirAcademia(acadId) {
   if (isFirebaseActive) {
     try {
@@ -1048,7 +1068,7 @@ async function getSiteInfo() {
         heroSubtitle: "A FEAMCRJ é a entidade oficial responsável por homologar, certificar e gerenciar o circuito esportivo de artes marciais e esportes de combate no Estado do Rio de Janeiro.",
         alertMessage: "",
         footerDescription: "FEDERAÇÃO ESPORTIVA DE ARTE MARCIAL E COMBATE RIO DE JANEIRO. <br /> Entidade oficial reguladora e fomentadora do desporto de combate e artes marciais no estado do Rio de Janeiro.",
-        president: "Grão-Mestre Roberto Albuquerque",
+        president: "Raphael Jaboque",
         vicePresident: "Mestre Alexandre Silva",
         techDirector: "Mestre Wellington Santos",
         publicRelations: "Dra. Beatriz Ferreira Souza",
@@ -1077,7 +1097,7 @@ async function getSiteInfo() {
     alertMessage: "",
     // Dados do rodapé (editável)
     footerDescription: "FEDERAÇÃO ESPORTIVA DE ARTE MARCIAL E COMBATE RIO DE JANEIRO. <br /> Entidade oficial reguladora e fomentadora do desporto de combate e artes marciais no estado do Rio de Janeiro.",
-    president: "Grão-Mestre Roberto Albuquerque",
+    president: "Raphael Jaboque",
     vicePresident: "Mestre Alexandre Silva",
     techDirector: "Mestre Wellington Santos",
     publicRelations: "Dra. Beatriz Ferreira Souza",
