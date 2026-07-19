@@ -35,13 +35,36 @@ function renderHeader() {
           
           <!-- Logo Brand -->
           <a href="index.html" class="flex items-center space-x-3 group">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 p-[1.5px] transition-transform duration-300 group-hover:scale-105">
-              <div class="flex items-center justify-center w-full h-full bg-zinc-950 rounded-[9px]">
-                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                </svg>
-              </div>
-            </div>
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 transition-transform duration-300 group-hover:scale-105 shrink-0">
+              <!-- Outer border -->
+              <circle cx="50" cy="50" r="48" fill="#09090b" stroke="#facc15" stroke-width="2.5" />
+              
+              <g clip-path="url(#header-logo-clip)">
+                <clipPath id="header-logo-clip">
+                  <circle cx="50" cy="50" r="46" />
+                </clipPath>
+                <!-- Background sectors -->
+                <!-- Yellow top part (semi-circle) -->
+                <path d="M 0 50 A 50 50 0 0 1 100 50 Z" fill="#FBC02D" />
+                <!-- Green bottom-left sector -->
+                <path d="M 0 50 A 50 50 0 0 0 50 100 L 50 50 Z" fill="#1B5E20" />
+                <!-- Blue bottom-right sector -->
+                <path d="M 50 50 L 50 100 A 50 50 0 0 0 100 50 Z" fill="#0D47A1" />
+                
+                <!-- Fighter Silhouette (Flying Kick) -->
+                <!-- Head -->
+                <circle cx="51" cy="30" r="4.5" fill="#09090b" />
+                <!-- Torso and limbs -->
+                <path d="M 47,34 C 47,34 43,39 44,44 L 74,41 C 76,41 77,42 77,43.5 C 77,45 76,46 73,45.5 L 54,45 L 50,55 C 49,57 46,58 44,56 L 39,52 C 38,50 39,48 41,48 L 45,44 L 38,40 C 36,39 36,37 38,36 L 43,36 Z" fill="#09090b" />
+                <!-- Guard Arm -->
+                <path d="M 48,36 L 55,34 C 57,33.5 58,34.5 58,36 C 58,37.5 57,38 54,37.5 Z" fill="#09090b" />
+                
+                <!-- Texts -->
+                <text x="50" y="62" font-family="'Inter', system-ui, sans-serif" font-weight="900" font-size="11.5" fill="#ffffff" text-anchor="middle" letter-spacing="-0.5">FEA<tspan fill="#FBC02D">M</tspan>CRJ</text>
+                <text x="50" y="72" font-family="'Inter', system-ui, sans-serif" font-weight="900" font-size="5.5" fill="#ffffff" text-anchor="middle" letter-spacing="0.2">MARTIAL COMBAT</text>
+                <text x="50" y="82" font-family="'Inter', system-ui, sans-serif" font-weight="900" font-size="7" fill="#ffffff" text-anchor="middle">RJ</text>
+              </g>
+            </svg>
             <div>
               <span class="font-extrabold text-xl text-white tracking-tight">FEAM</span>
               <span class="font-extrabold text-xl text-amber-500 tracking-tight">CRJ</span>
@@ -176,13 +199,36 @@ function renderFooter(info) {
           <!-- Col 1: Brand details -->
           <div class="space-y-4">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 p-[1.5px]">
-                <div class="flex items-center justify-center w-full h-full bg-zinc-950 rounded-[9px]">
-                  <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                  </svg>
-                </div>
-              </div>
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 shrink-0">
+                <!-- Outer border -->
+                <circle cx="50" cy="50" r="48" fill="#09090b" stroke="#facc15" stroke-width="2.5" />
+                
+                <g clip-path="url(#footer-logo-clip)">
+                  <clipPath id="footer-logo-clip">
+                    <circle cx="50" cy="50" r="46" />
+                  </clipPath>
+                  <!-- Background sectors -->
+                  <!-- Yellow top part (semi-circle) -->
+                  <path d="M 0 50 A 50 50 0 0 1 100 50 Z" fill="#FBC02D" />
+                  <!-- Green bottom-left sector -->
+                  <path d="M 0 50 A 50 50 0 0 0 50 100 L 50 50 Z" fill="#1B5E20" />
+                  <!-- Blue bottom-right sector -->
+                  <path d="M 50 50 L 50 100 A 50 50 0 0 0 100 50 Z" fill="#0D47A1" />
+                  
+                  <!-- Fighter Silhouette (Flying Kick) -->
+                  <!-- Head -->
+                  <circle cx="51" cy="30" r="4.5" fill="#09090b" />
+                  <!-- Torso and limbs -->
+                  <path d="M 47,34 C 47,34 43,39 44,44 L 74,41 C 76,41 77,42 77,43.5 C 77,45 76,46 73,45.5 L 54,45 L 50,55 C 49,57 46,58 44,56 L 39,52 C 38,50 39,48 41,48 L 45,44 L 38,40 C 36,39 36,37 38,36 L 43,36 Z" fill="#09090b" />
+                  <!-- Guard Arm -->
+                  <path d="M 48,36 L 55,34 C 57,33.5 58,34.5 58,36 C 58,37.5 57,38 54,37.5 Z" fill="#09090b" />
+                  
+                  <!-- Texts -->
+                  <text x="50" y="62" font-family="'Inter', system-ui, sans-serif" font-weight="900" font-size="11.5" fill="#ffffff" text-anchor="middle" letter-spacing="-0.5">FEA<tspan fill="#FBC02D">M</tspan>CRJ</text>
+                  <text x="50" y="72" font-family="'Inter', system-ui, sans-serif" font-weight="900" font-size="5.5" fill="#ffffff" text-anchor="middle" letter-spacing="0.2">MARTIAL COMBAT</text>
+                  <text x="50" y="82" font-family="'Inter', system-ui, sans-serif" font-weight="900" font-size="7" fill="#ffffff" text-anchor="middle">RJ</text>
+                </g>
+              </svg>
               <div>
                 <span class="font-extrabold text-xl text-white tracking-tight">FEAM</span>
                 <span class="font-extrabold text-xl text-amber-500 tracking-tight">CRJ</span>
