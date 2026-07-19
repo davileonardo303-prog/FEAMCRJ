@@ -904,12 +904,16 @@ async function confirmarInscricaoPagamento(inscricaoId, pagoStatus) {
 
 async function excluirAtleta(atletaId) {
   if (isFirebaseActive) {
-    await db.collection('atletas').doc(atletaId).delete();
-  } else {
-    let atletas = JSON.parse(localStorage.getItem('feam_atletas')) || [];
-    atletas = atletas.filter(a => a.id !== atletaId);
-    localStorage.setItem('feam_atletas', JSON.stringify(atletas));
+    try {
+      await db.collection('atletas').doc(atletaId).delete();
+    } catch (err) {
+      console.error("Erro ao deletar atleta do Firestore:", err);
+    }
   }
+  // Remove sempre do local storage também para manter sincronizado e livre de lixo local
+  let atletas = JSON.parse(localStorage.getItem('feam_atletas')) || [];
+  atletas = atletas.filter(a => a.id !== atletaId);
+  localStorage.setItem('feam_atletas', JSON.stringify(atletas));
 }
 
 async function alterarStatusAtleta(atletaId, status) {
@@ -936,12 +940,16 @@ async function alterarStatusAtleta(atletaId, status) {
 
 async function excluirAcademia(acadId) {
   if (isFirebaseActive) {
-    await db.collection('academias').doc(acadId).delete();
-  } else {
-    let academias = JSON.parse(localStorage.getItem('feam_academias')) || [];
-    academias = academias.filter(a => a.id !== acadId);
-    localStorage.setItem('feam_academias', JSON.stringify(academias));
+    try {
+      await db.collection('academias').doc(acadId).delete();
+    } catch (err) {
+      console.error("Erro ao deletar academia do Firestore:", err);
+    }
   }
+  // Remove sempre do local storage também para manter sincronizado e livre de lixo local
+  let academias = JSON.parse(localStorage.getItem('feam_academias')) || [];
+  academias = academias.filter(a => a.id !== acadId);
+  localStorage.setItem('feam_academias', JSON.stringify(academias));
 }
 
 async function alterarStatusAcademia(acadId, status) {
@@ -988,12 +996,16 @@ async function adicionarTorneio(torneioData) {
 
 async function excluirTorneio(torneioId) {
   if (isFirebaseActive) {
-    await db.collection('torneios').doc(torneioId).delete();
-  } else {
-    let torneios = JSON.parse(localStorage.getItem('feam_torneios')) || [];
-    torneios = torneios.filter(t => t.id !== torneioId);
-    localStorage.setItem('feam_torneios', JSON.stringify(torneios));
+    try {
+      await db.collection('torneios').doc(torneioId).delete();
+    } catch (err) {
+      console.error("Erro ao deletar torneio do Firestore:", err);
+    }
   }
+  // Remove sempre do local storage também para manter sincronizado e livre de lixo local
+  let torneios = JSON.parse(localStorage.getItem('feam_torneios')) || [];
+  torneios = torneios.filter(t => t.id !== torneioId);
+  localStorage.setItem('feam_torneios', JSON.stringify(torneios));
 }
 
 // ========================================================
