@@ -1658,8 +1658,100 @@ async function excluirBoleto(id) {
   localStorage.setItem('feam_boletos', JSON.stringify(localBols));
 }
 
+// ==========================================
+// MÓDULO DE FREQUÊNCIA / RELÓGIO DE PONTO
+// ==========================================
+async function getPresencas() {
+  if (isFirebaseActive) {
+    try {
+      const snap = await db.collection('presencas').get();
+      const list = snap.docs.map(doc => doc.data());
+      localStorage.setItem('feam_presencas', JSON.stringify(list));
+      return list;
+    } catch (e) {
+      console.error("Erro ao buscar presencas do Firestore: ", e);
+    }
+  }
+  return JSON.parse(localStorage.getItem('feam_presencas')) || [];
+}
+
+async function salvarPresenca(presenca) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('presencas').doc(presenca.id).set(presenca);
+    } catch (e) {
+      console.error("Erro ao salvar presenca no Firestore: ", e);
+    }
+  }
+  const localPres = JSON.parse(localStorage.getItem('feam_presencas')) || [];
+  const idx = localPres.findIndex(p => p.id === presenca.id);
+  if (idx !== -1) {
+    localPres[idx] = { ...localPres[idx], ...presenca };
+  } else {
+    localPres.push(presenca);
+  }
+  localStorage.setItem('feam_presencas', JSON.stringify(localPres));
+  return presenca;
+}
+
+async function excluirPresenca(id) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('presencas').doc(id).delete();
+    } catch (e) {
+      console.error("Erro ao excluir presenca no Firestore: ", e);
+    }
+  }
+  let localPres = JSON.parse(localStorage.getItem('feam_presencas')) || [];
+  localPres = localPres.filter(p => p.id !== id);
+  localStorage.setItem('feam_presencas', JSON.stringify(localPres));
+}
+
+// ==========================================
+// MÓDULO DE CURSOS / SEMINÁRIOS
+// ==========================================
+async function getCursosInscricoes() {
+  if (isFirebaseActive) {
+    try {
+      const snap = await db.collection('cursos_inscricoes').get();
+      const list = snap.docs.map(doc => doc.data());
+      localStorage.setItem('feam_cursos_inscricoes', JSON.stringify(list));
+      return list;
+    } catch (e) {
+      console.error("Erro ao buscar inscricoes de cursos: ", e);
+    }
+  }
+  return JSON.parse(localStorage.getItem('feam_cursos_inscricoes')) || [];
+}
+
+async function inscreverNoCurso(inscricao) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('cursos_inscricoes').doc(inscricao.id).set(inscricao);
+    } catch (e) {
+      console.error("Erro ao inscrever no curso no Firestore: ", e);
+    }
+  }
+  const localIns = JSON.parse(localStorage.getItem('feam_cursos_inscricoes')) || [];
+  const idx = localIns.findIndex(i => i.id === inscricao.id);
+  if (idx !== -1) {
+    localIns[idx] = { ...localIns[idx], ...inscricao };
+  } else {
+    localIns.push(inscricao);
+  }
+  localStorage.setItem('feam_cursos_inscricoes', JSON.stringify(localIns));
+  return inscricao;
+}
+
 window.getBoletos = getBoletos;
 window.salvarBoleto = salvarBoleto;
 window.excluirBoleto = excluirBoleto;
+
+window.getPresencas = getPresencas;
+window.salvarPresenca = salvarPresenca;
+window.excluirPresenca = excluirPresenca;
+
+window.getCursosInscricoes = getCursosInscricoes;
+window.inscreverNoCurso = inscreverNoCurso;
 
 

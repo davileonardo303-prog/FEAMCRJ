@@ -462,6 +462,66 @@
             </div>
           </div>
 
+          <!-- RELÓGIO DE PONTO / CONTROLE DE FREQUÊNCIA DO ALUNO -->
+          <div class="bg-zinc-900 border border-zinc-900 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-black uppercase tracking-wider text-white">⏱️ Relógio de Ponto (Frequência)</h3>
+              <span id="ponto-status-badge" class="px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/25">Fora de Treino</span>
+            </div>
+            
+            <p class="text-zinc-400 text-xs leading-relaxed">
+              Registre a sua presença nos treinos da sua equipe. Lembre-se de bater o ponto na **entrada** e na **saída** para homologação técnica dos seus minutos de treino pelo professor.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Tempo de Treino e Presença Info -->
+              <div class="bg-zinc-950/50 border border-zinc-850 p-4 rounded-xl space-y-1">
+                <span class="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Tempo Total de Treino</span>
+                <span id="ponto-tempo-total" class="block text-base font-black text-white">-- meses</span>
+                <span id="ponto-data-filiacao" class="block text-[9px] text-zinc-500">Filiado em: --</span>
+              </div>
+              
+              <div class="bg-zinc-950/50 border border-zinc-850 p-4 rounded-xl space-y-1">
+                <span class="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Total de Presenças</span>
+                <span id="ponto-treinos-feitos" class="block text-base font-black text-amber-500">0 treinos</span>
+                <span class="block text-[9px] text-zinc-500">Graduação: <span id="ponto-graduacao-span" class="font-bold text-white">--</span></span>
+              </div>
+            </div>
+
+            <!-- Botões de Ação do Ponto -->
+            <div class="flex flex-col sm:flex-row gap-2">
+              <button id="btn-ponto-entrada" onclick="baterPonto('entrada')" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase text-xs tracking-wider rounded-xl transition-all shadow-md shadow-emerald-950/20 cursor-pointer">
+                📥 Registrar Entrada
+              </button>
+              <button id="btn-ponto-saida" onclick="baterPonto('saida')" class="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white font-black uppercase text-xs tracking-wider rounded-xl transition-all shadow-md shadow-red-950/20 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+                📤 Registrar Saída
+              </button>
+            </div>
+
+            <!-- Histórico de Presenças -->
+            <div class="space-y-2">
+              <span class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Histórico de Treinos Recentes</span>
+              <div class="overflow-x-auto rounded-xl border border-zinc-850 bg-zinc-950/40">
+                <table class="w-full text-left text-[11px] text-zinc-400">
+                  <thead class="bg-zinc-950 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-900">
+                    <tr>
+                      <th class="p-2.5">Data</th>
+                      <th class="p-2.5">Entrada</th>
+                      <th class="p-2.5">Saída</th>
+                      <th class="p-2.5">Duração</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ponto-historico-tbody" class="divide-y divide-zinc-900/60">
+                    <tr>
+                      <td colspan="4" class="p-3 text-center text-zinc-500 text-xs">Nenhum treino registrado ainda.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
           <!-- PORTAL DOCS DIRECT ACCESS -->
           <div class="bg-zinc-900 border border-zinc-900 rounded-2xl p-6 space-y-4">
             <h3 class="text-xs font-black uppercase tracking-wider text-white">Documentos Importantes</h3>
@@ -487,7 +547,10 @@
         <!-- SUB-TABS DO PROFESSOR (AUTOMAÇÃO COMERCIAL) -->
         <div class="lg:col-span-12 flex flex-wrap items-center gap-2 border-b border-zinc-900 pb-4 mb-2">
           <button type="button" id="tab-prof-ct-alunos" onclick="switchProfTab('ct-alunos')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-zinc-950 transition-all uppercase tracking-wider cursor-pointer">
-            🏠 CT & Atletas
+            🏠 Equipe & Atletas
+          </button>
+          <button type="button" id="tab-prof-frequencia" onclick="switchProfTab('frequencia')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            📋 Ata de Treinos (Frequência)
           </button>
           <button type="button" id="tab-prof-caixa-fluxo" onclick="switchProfTab('caixa-fluxo')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
             💰 Caixa & Fluxo (POS)
@@ -505,7 +568,7 @@
           <!-- COLUNA ESQUERDA: GESTÃO DO CT (Takes 5 cols) -->
           <div class="lg:col-span-5 space-y-6">
             <div class="flex items-center justify-between">
-              <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Meu Centro de Treinamento (CT)</h2>
+              <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400">Minha Equipe / Academia</h2>
               <span class="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-amber-500 uppercase text-center">
                 Credenciado Até: <span id="prof-ct-certified">2027-12-31</span>
               </span>
@@ -517,8 +580,8 @@
                 <input type="hidden" id="prof-ct-id">
                 
                 <div>
-                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome do CT / Academia</label>
-                  <input type="text" id="prof-ct-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Nome do CT">
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome da Equipe / Academia</label>
+                  <input type="text" id="prof-ct-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500 transition-all" placeholder="Ex: Equipe Jaboque">
                 </div>
 
                 <div>
@@ -736,12 +799,12 @@
         <!-- CONTEÚDO 4: NOSSOS BOLETOS DA FEDERAÇÃO (PROFESSOR / CT COBRANÇAS) -->
         <div id="prof-content-boletos-fed" class="lg:col-span-12 hidden space-y-6">
           <div>
-            <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400 font-display">Boletos & Taxas de Credenciamento do CT</h2>
-            <p class="text-zinc-500 text-[11px] mt-1">Consulte seus débitos, anuidades e taxas administrativas do Centro de Treinamento junto à FEAMCRJ.</p>
+            <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400 font-display">Boletos & Taxas de Credenciamento da Equipe / Academia</h2>
+            <p class="text-zinc-500 text-[11px] mt-1">Consulte seus débitos, anuidades e taxas administrativas da sua Equipe / Academia junto à FEAMCRJ.</p>
           </div>
 
           <div class="bg-zinc-900 border border-zinc-900/60 rounded-2xl p-6 space-y-4">
-            <p class="text-zinc-400 text-xs">Todos os boletos abaixo são emitidos diretamente pela diretoria geral da Federação e são vinculados à homologação cadastral do seu CT.</p>
+            <p class="text-zinc-400 text-xs">Todos os boletos abaixo são emitidos diretamente pela diretoria geral da Federação e são vinculados à homologação cadastral da sua Equipe.</p>
             
             <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/40">
               <table class="w-full text-left text-xs text-zinc-400">
@@ -757,6 +820,41 @@
                 <tbody id="prof-boletos-tbody" class="divide-y divide-zinc-900">
                   <tr>
                     <td colspan="5" class="p-4 text-center text-zinc-500 text-xs">Carregando boletos da academia...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTEÚDO 5: ATA DE TREINOS & FREQUÊNCIA (PROFESSOR / ALUNOS FREQUENCIA) -->
+        <div id="prof-content-frequencia" class="lg:col-span-12 hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-sm font-black uppercase tracking-widest text-zinc-400 font-display">Ata de Presença & Frequência da Equipe</h2>
+              <p class="text-zinc-500 text-[11px] mt-1">Monitore a frequência dos seus alunos, acompanhe os treinos concluídos e registre presenças manuais.</p>
+            </div>
+            <button onclick="professorLancarPresencaManual()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-black text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md">
+              + Lançar Presença Rápida
+            </button>
+          </div>
+
+          <div class="bg-zinc-900 border border-zinc-900/60 rounded-2xl p-6 space-y-4">
+            <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/40">
+              <table class="w-full text-left text-xs text-zinc-400">
+                <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+                  <tr>
+                    <th class="p-3.5">Nome do Aluno</th>
+                    <th class="p-3.5">Graduação / Faixa</th>
+                    <th class="p-3.5">Tempo de Treino</th>
+                    <th class="p-3.5">Total Presenças</th>
+                    <th class="p-3.5">Última Presença</th>
+                    <th class="p-3.5 text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="prof-frequencia-tbody" class="divide-y divide-zinc-900">
+                  <tr>
+                    <td colspan="6" class="p-4 text-center text-zinc-500 text-xs">Carregando lista de frequência...</td>
                   </tr>
                 </tbody>
               </table>
@@ -1800,15 +1898,15 @@
             
             <div>
               <h3 class="text-lg font-black uppercase text-white tracking-tight" id="acad-modal-title">Adicionar Nova Academia</h3>
-              <p class="text-zinc-500 text-xs">Preencha os dados cadastrais da academia ou CT federado.</p>
+              <p class="text-zinc-500 text-xs">Preencha os dados cadastrais da academia ou Equipe federada.</p>
             </div>
 
             <form id="edit-academia-form" class="space-y-4">
               <input type="hidden" id="edit-acad-id">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome do Centro de Treinamento / Academia</label>
-                  <input type="text" id="edit-acad-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Gracie Barra Copacabana">
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome da Equipe / Academia</label>
+                  <input type="text" id="edit-acad-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Equipe Jaboque">
                 </div>
                 <div>
                   <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Professor Responsável / Diretor Técnico</label>
@@ -1990,15 +2088,25 @@
         const userDetails = loggedUser.detalhes || {};
         
         // Determine starting template
-        let startingTemplate = 'atleta';
-        const rankUpper = (userDetails.rank || '').toUpperCase();
-        if (loggedUser.tipo === 'professor' || rankUpper.includes('PROFESSOR') || rankUpper.includes('INSTRUTOR')) {
-          startingTemplate = 'professor';
-        } else if (rankUpper.includes('MESTRE') || rankUpper.includes('GRÃO MESTRE')) {
-          startingTemplate = 'mestre';
+        let startingTemplate = userDetails.cardType;
+        if (!startingTemplate) {
+          const rankUpper = (userDetails.rank || '').toUpperCase();
+          const categoryUpper = (userDetails.category || '').toUpperCase();
+          if (loggedUser.tipo === 'professor' || rankUpper.includes('PROFESSOR') || rankUpper.includes('INSTRUTOR')) {
+            startingTemplate = 'professor';
+          } else if (rankUpper.includes('MESTRE') || rankUpper.includes('GRÃO MESTRE')) {
+            startingTemplate = 'mestre';
+          } else if (rankUpper.includes('ALUNO') || rankUpper.includes('ESTUDANTE') || rankUpper.includes('BRANCA') || rankUpper.includes('INICIANTE') || categoryUpper.includes('ALUNO')) {
+            startingTemplate = 'aluno';
+          } else {
+            startingTemplate = 'atleta';
+          }
         }
         changeCardTemplate(startingTemplate);
         refreshCardPreview();
+
+        // Inicializa o Relógio de Ponto (Frequência) do Aluno
+        loadStudentPonto();
 
         // Se estiver pendente, mostra o alerta de PIX e atualiza carteira
         const statusTextEl = document.getElementById('card-status-text');
@@ -2046,7 +2154,7 @@
       });
     }
 
-    // Carrega dados do CT próprio (Módulo do Professor)
+    // Carrega dados do CT próprio / Equipe (Módulo do Professor)
     async function loadProfessorCT() {
       const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
       if (!loggedUserJson) return;
@@ -2058,7 +2166,7 @@
       // Tenta achar a academia vinculada a este professor pelo email
       const ct = academies.find(a => a.email === email) || {
         id: loggedUser.id || 'new-ct',
-        name: loggedUser.name || 'Meu Centro de Treinamento',
+        name: loggedUser.name || 'Minha Equipe / Academia',
         headInstructor: loggedUser.name || 'Professor Responsável',
         email: email,
         phone: '',
@@ -2080,10 +2188,10 @@
       document.getElementById('prof-ct-modalities').value = Array.isArray(ct.modalities) ? ct.modalities.join(', ') : (ct.modality || 'Jiu-Jitsu');
       document.getElementById('prof-ct-certified').textContent = ct.certifiedUntil || '2027-12-31';
       
-      // Filtra atletas vinculados a este CT
+      // Filtra atletas vinculados a esta Equipe
       const atletas = await getAtletas();
       const ctAtletas = atletas.filter(ath => {
-        const athAcad = (ath.academyName || '').toLowerCase().trim();
+        const athAcad = (ath.academyName || ath.ct || '').toLowerCase().trim();
         const ctName = (ct.name || '').toLowerCase().trim();
         return athAcad && (athAcad.includes(ctName) || ctName.includes(athAcad));
       });
@@ -2092,7 +2200,7 @@
       tbody.innerHTML = '';
       
       if (ctAtletas.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-zinc-500 text-xs">Nenhum atleta filiado a este CT registrado ainda.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-zinc-500 text-xs">Nenhum atleta filiado a esta Equipe registrado ainda.</td></tr>`;
       } else {
         ctAtletas.forEach(ath => {
           const tr = document.createElement('tr');
@@ -2117,16 +2225,16 @@
       }
       
       document.getElementById('prof-atletas-count').textContent = `${ctAtletas.length} Atletas`;
-
+ 
       // Inicializa os módulos Financeiro e de Automação Comercial (Caixa e Mensalidades do CT)
       await loadProfessorCaixa();
       await loadProfessorMensalidades();
     }
-
+ 
     async function professorDeletarAtleta(id) {
       showCustomConfirm({
         title: 'Excluir Aluno',
-        message: 'Atenção: deseja desfiliar e excluir permanentemente este aluno do seu Centro de Treinamento? Todos os dados dele serão excluídos.',
+        message: 'Atenção: deseja desfiliar e excluir permanentemente este aluno da sua Equipe / Academia? Todos os dados dele serão excluídos.',
         type: 'danger',
         onConfirm: async () => {
           try {
@@ -2140,8 +2248,8 @@
         }
       });
     }
-
-    // Salvar modificações do CT (Módulo do Professor)
+ 
+    // Salvar modificações da Equipe / Academia (Módulo do Professor)
     document.getElementById('prof-ct-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -2192,10 +2300,10 @@
         loggedUser.detalhes = data;
         localStorage.setItem('feamcrj_logged_user', JSON.stringify(loggedUser));
         
-        alert('🏠 Detalhes do seu Centro de Treinamento salvos com sucesso!');
+        alert('🏠 Detalhes da sua Equipe / Academia salvos com sucesso!');
         await loadProfessorCT();
       } catch (error) {
-        alert('Erro ao salvar dados do CT: ' + error.message);
+        alert('Erro ao salvar dados da Equipe: ' + error.message);
       }
     });
 
@@ -3480,7 +3588,7 @@
     // ==========================================
 
     function switchProfTab(tabName) {
-      const tabs = ['ct-alunos', 'caixa-fluxo', 'mensalidades', 'boletos-fed'];
+      const tabs = ['ct-alunos', 'frequencia', 'caixa-fluxo', 'mensalidades', 'boletos-fed'];
       tabs.forEach(t => {
         const btn = document.getElementById('tab-prof-' + t);
         const content = document.getElementById('prof-content-' + t);
@@ -3494,6 +3602,7 @@
         }
       });
 
+      if (tabName === 'frequencia') loadProfessorFrequencia();
       if (tabName === 'caixa-fluxo') loadProfessorCaixa();
       if (tabName === 'mensalidades') loadProfessorMensalidades();
       if (tabName === 'boletos-fed') loadProfessorBoletos();
@@ -5512,6 +5621,517 @@
       animFrameId = requestAnimationFrame(gameLoop);
     }
     } // End of inactive Muay Thai combat game block
+
+    // ==========================================
+    // SISTEMA DE CONTROLE DE FREQUÊNCIA & RELÓGIO DE PONTO
+    // ==========================================
+
+    async function loadStudentPonto() {
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserJson) return;
+
+      const user = JSON.parse(loggedUserJson);
+      const userDetails = user.detalhes || {};
+
+      // Atualiza graduação e data de filiação
+      const fData = user.detalhes?.filiadoEm || user.createdAt || user.enrolledAt || new Date().toISOString();
+      const fDateFormatted = new Date(fData).toLocaleDateString('pt-BR');
+      
+      const pFiliacao = document.getElementById('ponto-data-filiacao');
+      if (pFiliacao) pFiliacao.textContent = "Filiado em: " + fDateFormatted;
+
+      const pGrad = document.getElementById('ponto-graduacao-span');
+      if (pGrad) pGrad.textContent = userDetails.rank || 'N/A';
+
+      // Calcula o tempo de treino em meses/anos
+      const diffMs = Date.now() - new Date(fData).getTime();
+      const diffMonths = Math.max(1, Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30)));
+      let timeText = diffMonths + " meses";
+      if (diffMonths >= 12) {
+        const years = (diffMonths / 12).toFixed(1);
+        timeText = years + " anos";
+      }
+      const pTempo = document.getElementById('ponto-tempo-total');
+      if (pTempo) pTempo.textContent = timeText;
+
+      try {
+        const presencas = await getPresencas();
+        const myPresencas = presencas.filter(p => p.userEmail === user.email);
+
+        // Conta treinos concluídos
+        const completedPresencas = myPresencas.filter(p => p.status === 'concluido' || p.tipo === 'manual');
+        const pTreinos = document.getElementById('ponto-treinos-feitos');
+        if (pTreinos) pTreinos.textContent = completedPresencas.length + " treinos";
+
+        // Verifica status atual do ponto (se tem entrada aberta sem saída)
+        const openPonto = myPresencas.find(p => p.status === 'aberto');
+        const badge = document.getElementById('ponto-status-badge');
+        const btnEntrada = document.getElementById('btn-ponto-entrada');
+        const btnSaida = document.getElementById('btn-ponto-saida');
+
+        if (openPonto) {
+          if (badge) {
+            badge.textContent = "Em Treino";
+            badge.className = "px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 animate-pulse";
+          }
+          if (btnEntrada) btnEntrada.disabled = true;
+          if (btnEntrada) btnEntrada.classList.add('opacity-40', 'cursor-not-allowed');
+          if (btnSaida) btnSaida.disabled = false;
+          if (btnSaida) btnSaida.classList.remove('opacity-40', 'cursor-not-allowed');
+        } else {
+          if (badge) {
+            badge.textContent = "Fora de Treino";
+            badge.className = "px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/25";
+          }
+          if (btnEntrada) btnEntrada.disabled = false;
+          if (btnEntrada) btnEntrada.classList.remove('opacity-40', 'cursor-not-allowed');
+          if (btnSaida) btnSaida.disabled = true;
+          if (btnSaida) btnSaida.classList.add('opacity-40', 'cursor-not-allowed');
+        }
+
+        // Renderiza o Histórico Recente de Presenças
+        const tbody = document.getElementById('ponto-historico-tbody');
+        if (tbody) {
+          tbody.innerHTML = '';
+          if (myPresencas.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-zinc-500 text-xs">Nenhum treino registrado ainda.</td></tr>`;
+          } else {
+            // Sort by descending date
+            const sorted = myPresencas.sort((a, b) => new Date(b.entradaTime || b.data || 0).getTime() - new Date(a.entradaTime || a.data || 0).getTime());
+            sorted.slice(0, 5).forEach(p => {
+              const tr = document.createElement('tr');
+              tr.className = "hover:bg-zinc-900/30 transition-colors border-b border-zinc-900/60";
+              
+              const dateStr = new Date(p.entradaTime || p.data).toLocaleDateString('pt-BR');
+              const inTime = p.entradaTime ? new Date(p.entradaTime).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}) : '--:--';
+              const outTime = p.saidaTime ? new Date(p.saidaTime).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}) : (p.status === 'aberto' ? 'Treinando...' : 'Manual');
+              
+              let duration = '--';
+              if (p.entradaTime && p.saidaTime) {
+                const diffMin = Math.round((new Date(p.saidaTime).getTime() - new Date(p.entradaTime).getTime()) / 60000);
+                duration = diffMin + ' min';
+              } else if (p.tipo === 'manual') {
+                duration = '1h 30m';
+              }
+
+              tr.innerHTML = `
+                <td class="p-2.5 font-semibold text-white">${dateStr}</td>
+                <td class="p-2.5 text-zinc-400">${inTime}</td>
+                <td class="p-2.5 text-zinc-400">${outTime}</td>
+                <td class="p-2.5 text-amber-500 font-bold">${duration}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          }
+        }
+
+      } catch (err) {
+        console.error("Erro ao carregar ponto: ", err);
+      }
+    }
+
+    async function baterPonto(tipo) {
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserJson) return;
+
+      const user = JSON.parse(loggedUserJson);
+      
+      try {
+        const presencas = await getPresencas();
+        const myPresencas = presencas.filter(p => p.userEmail === user.email);
+        const openPonto = myPresencas.find(p => p.status === 'aberto');
+
+        if (tipo === 'entrada') {
+          if (openPonto) {
+            alert("⚠️ Você já possui um ponto de entrada aberto!");
+            return;
+          }
+
+          const newPonto = {
+            id: 'ponto-' + Date.now(),
+            userEmail: user.email,
+            userName: user.name,
+            userRank: user.detalhes?.rank || 'Aluno',
+            userEquipe: user.detalhes?.ct || 'Independente',
+            entradaTime: new Date().toISOString(),
+            saidaTime: null,
+            status: 'aberto',
+            tipo: 'ponto'
+          };
+
+          await salvarPresenca(newPonto);
+          alert("📥 Entrada registrada com sucesso! Tenha um excelente treino, oss!");
+        } else if (tipo === 'saida') {
+          if (!openPonto) {
+            alert("⚠️ Nenhum ponto de entrada em aberto encontrado!");
+            return;
+          }
+
+          openPonto.saidaTime = new Date().toISOString();
+          openPonto.status = 'concluido';
+
+          await salvarPresenca(openPonto);
+          alert("📤 Saída registrada! Presença de treino contabilizada e homologada com sucesso.");
+        }
+
+        await loadStudentPonto();
+      } catch (err) {
+        alert("Erro ao registrar ponto: " + err.message);
+      }
+    }
+
+    // Carrega frequencia dos alunos na aba do Professor
+    async function loadProfessorFrequencia() {
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserJson) return;
+
+      const user = JSON.parse(loggedUserJson);
+      const profEquipe = user.detalhes?.ct || ''; // Equipe do professor
+
+      const tbody = document.getElementById('prof-frequencia-tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-zinc-500 text-xs">Carregando lista de frequência...</td></tr>';
+
+      try {
+        // Pega todos os atletas da federação
+        let atletas = [];
+        if (isFirebaseActive) {
+          const snap = await db.collection('atletas').get();
+          snap.forEach(d => {
+            const data = d.data();
+            data.id = d.id;
+            atletas.push(data);
+          });
+        } else {
+          atletas = JSON.parse(localStorage.getItem('feam_atletas') || '[]');
+        }
+
+        // Filtra pela equipe do professor
+        const equipeAtletas = atletas.filter(atleta => {
+          const ctVal = atleta.detalhes?.ct || atleta.ct || '';
+          return ctVal.toLowerCase() === profEquipe.toLowerCase();
+        });
+
+        // Pega todas as presenças
+        const presencas = await getPresencas();
+
+        if (equipeAtletas.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-zinc-500 text-xs">Nenhum aluno vinculado à sua equipe encontrado.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = '';
+        
+        equipeAtletas.forEach(atleta => {
+          const aEmail = atleta.email;
+          const aPres = presencas.filter(p => p.userEmail === aEmail);
+          const completedPres = aPres.filter(p => p.status === 'concluido' || p.tipo === 'manual');
+
+          // Calcula tempo de treino em meses
+          const filiadoEm = atleta.detalhes?.filiadoEm || atleta.createdAt || atleta.enrolledAt || new Date().toISOString();
+          const diffMs = Date.now() - new Date(filiadoEm).getTime();
+          const diffMonths = Math.max(1, Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30)));
+          let timeText = diffMonths + " meses";
+          if (diffMonths >= 12) {
+            timeText = (diffMonths / 12).toFixed(1) + " anos";
+          }
+
+          // Busca última presença
+          let lastPresStr = 'Nenhum registro';
+          if (aPres.length > 0) {
+            const sorted = aPres.sort((a, b) => new Date(b.entradaTime || b.data || 0).getTime() - new Date(a.entradaTime || a.data || 0).getTime());
+            lastPresStr = new Date(sorted[0].entradaTime || sorted[0].data).toLocaleDateString('pt-BR');
+          }
+
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-zinc-900/30 transition-colors border-b border-zinc-900";
+          tr.innerHTML = `
+            <td class="p-3.5 font-bold text-white flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-full bg-zinc-800 text-amber-500 font-bold flex items-center justify-center text-xs">
+                ${atleta.name.charAt(0)}
+              </div>
+              <div>
+                <span class="block">${atleta.name}</span>
+                <span class="block text-[10px] text-zinc-500">${atleta.email}</span>
+              </div>
+            </td>
+            <td class="p-3.5">
+              <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-medium text-[10px] border border-zinc-700">
+                ${atleta.detalhes?.rank || 'Aluno'}
+              </span>
+            </td>
+            <td class="p-3.5 text-zinc-400 font-medium">${timeText}</td>
+            <td class="p-3.5 text-amber-500 font-black">${completedPres.length} treinos</td>
+            <td class="p-3.5 text-zinc-500 font-medium">${lastPresStr}</td>
+            <td class="p-3.5 text-right space-x-1 whitespace-nowrap">
+              <button onclick="professorVerFichaTreinos('${atleta.email}', '${atleta.name}')" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 hover:text-white text-zinc-400 font-bold uppercase text-[9px] tracking-wider transition-all cursor-pointer">
+                📋 Ver Ficha
+              </button>
+              <button onclick="professorLancarPresencaEspecifica('${atleta.email}', '${atleta.name}')" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black uppercase text-[9px] tracking-wider transition-all cursor-pointer">
+                + Presença
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error("Erro ao carregar frequencia dos alunos: ", err);
+      }
+    }
+
+    async function professorLancarPresencaManual() {
+      // Abre prompt de email/data para o professor cadastrar uma presença rápida
+      const loggedUserJson = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserJson) return;
+
+      const user = JSON.parse(loggedUserJson);
+      const profEquipe = user.detalhes?.ct || '';
+
+      // Pega emails dos alunos da equipe do prof para autocomplete/seleção
+      let atletas = [];
+      try {
+        if (isFirebaseActive) {
+          const snap = await db.collection('atletas').get();
+          snap.forEach(d => {
+            const data = d.data();
+            data.id = d.id;
+            atletas.push(data);
+          });
+        } else {
+          atletas = JSON.parse(localStorage.getItem('feam_atletas') || '[]');
+        }
+      } catch (e) {
+        atletas = JSON.parse(localStorage.getItem('feam_atletas') || '[]');
+      }
+
+      const equipeAtletas = atletas.filter(atleta => {
+        const ctVal = atleta.detalhes?.ct || atleta.ct || '';
+        return ctVal.toLowerCase() === profEquipe.toLowerCase();
+      });
+
+      if (equipeAtletas.length === 0) {
+        alert("❌ Você precisa ter alunos cadastrados em sua equipe para lançar presenças manuais!");
+        return;
+      }
+
+      // Cria um formulário HTML elegante no prompt ou modal customizado
+      const optionsHtml = equipeAtletas.map(a => `<option value="${a.email}">${a.name} (${a.email})</option>`).join('');
+
+      showCustomConfirm({
+        title: 'Lançar Presença Manual',
+        message: `
+          <div class="space-y-4 text-left mt-4 text-zinc-300">
+            <p class="text-xs">Lance uma presença retroativa ou manual na ata de treinos de um dos seus alunos:</p>
+            <div class="space-y-1">
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-500">Selecione o Aluno</label>
+              <select id="manual-ponto-email" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                ${optionsHtml}
+              </select>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-500">Data do Treino</label>
+                <input type="date" id="manual-ponto-data" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500" value="${new Date().toISOString().split('T')[0]}">
+              </div>
+              <div class="space-y-1">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-500">Duração (Horas)</label>
+                <select id="manual-ponto-duracao" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                  <option value="90">1h 30m (Normal)</option>
+                  <option value="60">1h (Curto)</option>
+                  <option value="120">2h (Intenso)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        `,
+        confirmText: 'Registrar Presença',
+        onConfirm: async () => {
+          const email = document.getElementById('manual-ponto-email').value;
+          const data = document.getElementById('manual-ponto-data').value;
+          const durMinutes = parseInt(document.getElementById('manual-ponto-duracao').value);
+
+          const student = equipeAtletas.find(a => a.email === email);
+          if (!student) return;
+
+          // Cria presença manual
+          const dataObj = new Date(data);
+          const entrada = new Date(dataObj.setHours(19, 0, 0, 0)); // default 19h
+          const saida = new Date(entrada.getTime() + durMinutes * 60 * 1000);
+
+          const manualPonto = {
+            id: 'ponto-' + Date.now(),
+            userEmail: student.email,
+            userName: student.name,
+            userRank: student.detalhes?.rank || 'Aluno',
+            userEquipe: student.detalhes?.ct || 'Independente',
+            entradaTime: entrada.toISOString(),
+            saidaTime: saida.toISOString(),
+            status: 'concluido',
+            tipo: 'manual'
+          };
+
+          try {
+            await salvarPresenca(manualPonto);
+            alert(`✓ Presença registrada com sucesso na Ata de ${student.name}!`);
+            await loadProfessorFrequencia();
+          } catch (e) {
+            alert("Erro ao salvar presença: " + e.message);
+          }
+        }
+      });
+    }
+
+    async function professorLancarPresencaEspecifica(email, name) {
+      showCustomConfirm({
+        title: 'Registrar Treino para ' + name,
+        message: `
+          <div class="space-y-4 text-left mt-4 text-zinc-300">
+            <p class="text-xs">Confirme a data e registre a presença de treino deste aluno:</p>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-500">Data do Treino</label>
+                <input type="date" id="manual-ponto-especifico-data" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500" value="${new Date().toISOString().split('T')[0]}">
+              </div>
+              <div class="space-y-1">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-500">Duração</label>
+                <select id="manual-ponto-especifico-duracao" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                  <option value="90">1h 30m (Padrão)</option>
+                  <option value="60">1h (Rápido)</option>
+                  <option value="120">2h (Graduação/Seminário)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        `,
+        confirmText: 'Registrar Presença',
+        onConfirm: async () => {
+          const data = document.getElementById('manual-ponto-especifico-data').value;
+          const durMinutes = parseInt(document.getElementById('manual-ponto-especifico-duracao').value);
+
+          const dataObj = new Date(data);
+          const entrada = new Date(dataObj.setHours(19, 0, 0, 0));
+          const saida = new Date(entrada.getTime() + durMinutes * 60 * 1000);
+
+          const manualPonto = {
+            id: 'ponto-' + Date.now(),
+            userEmail: email,
+            userName: name,
+            entradaTime: entrada.toISOString(),
+            saidaTime: saida.toISOString(),
+            status: 'concluido',
+            tipo: 'manual'
+          };
+
+          try {
+            await salvarPresenca(manualPonto);
+            alert(`✓ Presença de treino inserida com sucesso!`);
+            await loadProfessorFrequencia();
+          } catch (e) {
+            alert("Erro: " + e.message);
+          }
+        }
+      });
+    }
+
+    async function professorVerFichaTreinos(email, name) {
+      try {
+        const presencas = await getPresencas();
+        const studentPres = presencas.filter(p => p.userEmail === email);
+
+        let rowsHtml = '';
+        if (studentPres.length === 0) {
+          rowsHtml = `<tr><td colspan="5" class="p-4 text-center text-zinc-600 text-xs">Nenhum treino registrado na ficha técnica deste aluno.</td></tr>`;
+        } else {
+          // Sort descending
+          const sorted = studentPres.sort((a, b) => new Date(b.entradaTime || b.data || 0).getTime() - new Date(a.entradaTime || a.data || 0).getTime());
+          sorted.forEach(p => {
+            const dateStr = new Date(p.entradaTime || p.data).toLocaleDateString('pt-BR');
+            const inTime = p.entradaTime ? new Date(p.entradaTime).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}) : '--:--';
+            const outTime = p.saidaTime ? new Date(p.saidaTime).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}) : (p.status === 'aberto' ? 'Treinando...' : 'Manual');
+            
+            let duration = '--';
+            if (p.entradaTime && p.saidaTime) {
+              const diffMin = Math.round((new Date(p.saidaTime).getTime() - new Date(p.entradaTime).getTime()) / 60000);
+              duration = diffMin + ' min';
+            } else if (p.tipo === 'manual') {
+              duration = '90 min';
+            }
+
+            rowsHtml += `
+              <tr class="border-b border-zinc-900/40 text-[11px] hover:bg-zinc-900/20">
+                <td class="p-2.5 font-bold text-zinc-300">${dateStr}</td>
+                <td class="p-2.5 text-zinc-400">${inTime}</td>
+                <td class="p-2.5 text-zinc-400">${outTime}</td>
+                <td class="p-2.5 text-amber-500 font-bold">${duration}</td>
+                <td class="p-2.5 text-right">
+                  <button onclick="professorExcluirPresenca('${p.id}', '${email}', '${name}')" class="p-1 px-2 rounded bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white transition-colors cursor-pointer text-[9px] font-bold">
+                    Remover
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        showCustomConfirm({
+          title: `Ficha de Treinos - ${name}`,
+          message: `
+            <div class="space-y-4 text-left mt-4">
+              <div class="flex items-center justify-between text-xs text-zinc-500">
+                <span>Total de Treinos Contabilizados:</span>
+                <span class="font-black text-white text-sm bg-amber-500/10 text-amber-500 px-2.5 py-1 rounded-md border border-amber-500/20">${studentPres.length}</span>
+              </div>
+              
+              <div class="max-h-[250px] overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/40">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-zinc-950 text-zinc-400 font-bold uppercase text-[9px] tracking-wider border-b border-zinc-900">
+                    <tr>
+                      <th class="p-2.5">Data</th>
+                      <th class="p-2.5">Entrada</th>
+                      <th class="p-2.5">Saída</th>
+                      <th class="p-2.5">Duração</th>
+                      <th class="p-2.5 text-right">Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${rowsHtml}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `,
+          confirmText: 'Fechar Ficha',
+          onConfirm: () => {}
+        });
+
+      } catch (err) {
+        alert("Erro ao buscar ficha do aluno: " + err.message);
+      }
+    }
+
+    async function professorExcluirPresenca(presencaId, studentEmail, studentName) {
+      if (!confirm("Tem certeza que deseja remover este registro de treino da ata do aluno?")) return;
+
+      try {
+        await excluirPresenca(presencaId);
+        alert("✓ Registro de treino removido com sucesso!");
+        
+        // Reload modal by closing and opening it back or just refreshing background
+        await loadProfessorFrequencia();
+        // Closes previous modal safely
+        const modalContainer = document.querySelector('.custom-confirm-backdrop');
+        if (modalContainer) modalContainer.remove();
+
+        // Reopen to show live update
+        setTimeout(() => {
+          professorVerFichaTreinos(studentEmail, studentName);
+        }, 200);
+      } catch (e) {
+        alert("Erro: " + e.message);
+      }
+    }
 
     // Hook listeners
     document.addEventListener('DOMContentLoaded', () => {

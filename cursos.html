@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursos e Capacitações - FEAMCRJ</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- Header Dinâmico -->
+  <div id="header-container"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-16">
+      
+      <!-- Page Header -->
+      <div class="text-center space-y-4">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-500">CAPACITAÇÃO E EXCELÊNCIA</span>
+        <h1 class="text-4xl sm:text-5xl font-black uppercase tracking-tight text-white leading-none">
+          Cursos & <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-500">Seminários</span>
+        </h1>
+        <p class="text-zinc-400 text-sm max-w-2xl mx-auto leading-relaxed">
+          Zelamos pela integridade técnica das artes marciais fluminenses através de certificações oficiais homologadas, cruciais para graduações superiores e habilitação profissional de professores e árbitros.
+        </p>
+        <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
+      </div>
+
+      <!-- Grid de Cursos Oficiais -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- CURSO 1: SEMINÁRIOS TÉCNICOS -->
+        <div class="bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-zinc-800 transition-all relative overflow-hidden group">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/10 transition-all"></div>
+          <div class="space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 text-2xl">🥋</div>
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-amber-500">SEMINÁRIO TÉCNICO</span>
+              <h3 class="text-xl font-bold text-white uppercase mt-1">Seminários de Aperfeiçoamento</h3>
+            </div>
+            <p class="text-zinc-400 text-xs leading-relaxed">
+              Seminários ministrados por Grão Mestres em diversas modalidades (Muay Thai, Jiu-Jitsu, Kickboxing) focados em refinamento técnico, defesas pessoais e novas diretrizes de treinamento.
+            </p>
+            <ul class="space-y-2 text-[11px] text-zinc-500">
+              <li class="flex items-center gap-2">⏱️ <strong>Carga Horária:</strong> 8 Horas</li>
+              <li class="flex items-center gap-2">📅 <strong>Próxima Data:</strong> 15/08/2026</li>
+              <li class="flex items-center gap-2">🎓 <strong>Certificação:</strong> Diploma Oficial FEAMCRJ</li>
+            </ul>
+          </div>
+          <div class="space-y-3 pt-4 border-t border-zinc-900">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-zinc-500">Valor da Taxa</span>
+              <span class="text-lg font-black text-white">R$ 120,00</span>
+            </div>
+            <button onclick="handleEnrollCourse('seminario_aperfeicoamento', 'Seminários de Aperfeiçoamento', 120)" class="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 hover:from-amber-500 hover:to-amber-400 hover:text-zinc-950 border border-zinc-800 hover:border-amber-500 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
+              Inscrever-se Já
+            </button>
+          </div>
+        </div>
+
+        <!-- CURSO 2: PRIMEIROS SOCORROS -->
+        <div class="bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-zinc-800 transition-all relative overflow-hidden group">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-red-500/10 transition-all"></div>
+          <div class="space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-2xl">❤️</div>
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-red-400">OBRIGATÓRIO PARA PROFESSORES</span>
+              <h3 class="text-xl font-bold text-white uppercase mt-1">Curso de Primeiros Socorros</h3>
+            </div>
+            <p class="text-zinc-400 text-xs leading-relaxed">
+              Treinamento focado em salvamento de emergência, massagem cardíaca, tratamento de traumas esportivos e fraturas dentro e fora dos tatames. Obrigatório para homologação de faixas pretas.
+            </p>
+            <ul class="space-y-2 text-[11px] text-zinc-500">
+              <li class="flex items-center gap-2">⏱️ <strong>Carga Horária:</strong> 12 Horas (Teórico e Prático)</li>
+              <li class="flex items-center gap-2">📅 <strong>Próxima Data:</strong> 29/08/2026</li>
+              <li class="flex items-center gap-2">🎓 <strong>Certificação:</strong> Habilitação Técnica de Socorrista</li>
+            </ul>
+          </div>
+          <div class="space-y-3 pt-4 border-t border-zinc-900">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-zinc-500">Valor da Taxa</span>
+              <span class="text-lg font-black text-white">R$ 150,00</span>
+            </div>
+            <button onclick="handleEnrollCourse('primeiros_socorros', 'Curso de Primeiros Socorros', 150)" class="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 hover:from-red-600 hover:to-orange-500 border border-zinc-800 hover:border-red-500 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
+              Inscrever-se Já
+            </button>
+          </div>
+        </div>
+
+        <!-- CURSO 3: CURSO DE ARBITRAGEM -->
+        <div class="bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-zinc-800 transition-all relative overflow-hidden group">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-blue-500/10 transition-all"></div>
+          <div class="space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 text-2xl">📋</div>
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-blue-400">CERTIFICAÇÃO JURÍDICA</span>
+              <h3 class="text-xl font-bold text-white uppercase mt-1">Curso de Arbitragem Oficial</h3>
+            </div>
+            <p class="text-zinc-400 text-xs leading-relaxed">
+              Formação oficial e credenciamento de árbitros e juízes laterais de mesa para torneios de combate. Abrange regulamentos unificados, interpretação de regras e marcação de pontuação.
+            </p>
+            <ul class="space-y-2 text-[11px] text-zinc-500">
+              <li class="flex items-center gap-2">⏱️ <strong>Carga Horária:</strong> 16 Horas</li>
+              <li class="flex items-center gap-2">📅 <strong>Próxima Data:</strong> 12/09/2026</li>
+              <li class="flex items-center gap-2">🎓 <strong>Certificação:</strong> Habilitação de Árbitro Estadual</li>
+            </ul>
+          </div>
+          <div class="space-y-3 pt-4 border-t border-zinc-900">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-zinc-500">Valor da Taxa</span>
+              <span class="text-lg font-black text-white">R$ 180,00</span>
+            </div>
+            <button onclick="handleEnrollCourse('arbitragem_oficial', 'Curso de Arbitragem Oficial', 180)" class="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 hover:from-blue-600 hover:to-indigo-500 border border-zinc-800 hover:border-blue-500 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
+              Inscrever-se Já
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Suas Matrículas e Inscrições -->
+      <section id="meus-cursos-container" class="bg-zinc-900/60 border border-zinc-900 rounded-3xl p-8 sm:p-10 space-y-6 hidden">
+        <h2 class="text-2xl font-bold text-white uppercase tracking-tight font-display">Minhas Matrículas em Cursos</h2>
+        <div class="overflow-x-auto rounded-xl border border-zinc-850 bg-zinc-950/40">
+          <table class="w-full text-left text-xs text-zinc-400">
+            <thead class="bg-zinc-950 text-zinc-300 font-bold uppercase tracking-wider border-b border-zinc-900">
+              <tr>
+                <th class="p-3">Curso / Certificação</th>
+                <th class="p-3">Data da Inscrição</th>
+                <th class="p-3">Valor da Taxa</th>
+                <th class="p-3">Status Financeiro</th>
+                <th class="p-3">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="minhas-inscricoes-tbody" class="divide-y divide-zinc-900">
+              <!-- Dynamically rendered course inscriptions -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer Dinâmico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts Globais -->
+  <script src="firebase-config.js?v=1.3"></script>
+  <script src="components.js?v=1.3"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      setTimeout(async () => {
+        await loadMyCourseInscriptions();
+      }, 500);
+    });
+
+    async function loadMyCourseInscriptions() {
+      const loggedUserStr = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserStr) return;
+
+      const user = JSON.parse(loggedUserStr);
+      const container = document.getElementById('meus-cursos-container');
+      const tbody = document.getElementById('minhas-inscricoes-tbody');
+      
+      if (!container || !tbody) return;
+
+      try {
+        const enrollments = await getCursosInscricoes();
+        const myEnrollments = enrollments.filter(e => e.userEmail === user.email);
+
+        if (myEnrollments.length > 0) {
+          container.classList.remove('hidden');
+          tbody.innerHTML = '';
+          myEnrollments.forEach(enroll => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-zinc-900/30 transition-colors border-b border-zinc-900 text-xs";
+            tr.innerHTML = `
+              <td class="p-3 font-semibold text-white">${enroll.courseName}</td>
+              <td class="p-3 text-zinc-400">${new Date(enroll.enrolledAt).toLocaleDateString('pt-BR')}</td>
+              <td class="p-3 text-zinc-300">R$ ${enroll.price.toFixed(2)}</td>
+              <td class="p-3">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${enroll.status === 'pago' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}">
+                  ${enroll.status === 'pago' ? 'Pago / Confirmado' : 'Aguardando Pagamento'}
+                </span>
+              </td>
+              <td class="p-3">
+                ${enroll.status === 'pendente' ? `
+                  <button onclick="payCoursePix('${enroll.id}', '${enroll.courseName}', ${enroll.price})" class="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-zinc-950 font-extrabold uppercase text-[9px] tracking-wider transition-all cursor-pointer">
+                    Pagar PIX
+                  </button>
+                ` : `<span class="text-emerald-400 text-[10px] font-bold uppercase tracking-wider">Habilitado</span>`}
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        console.error("Erro ao carregar matrículas de cursos: ", err);
+      }
+    }
+
+    async function handleEnrollCourse(courseKey, courseName, price) {
+      const loggedUserStr = localStorage.getItem('feamcrj_logged_user');
+      if (!loggedUserStr) {
+        alert("🔒 Por favor, faça login no Portal do Filiado para se inscrever neste curso!");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+        return;
+      }
+
+      const user = JSON.parse(loggedUserStr);
+      
+      showCustomConfirm({
+        title: 'Inscrição no Curso',
+        message: `Deseja se matricular no "${courseName}" pelo valor de taxa de R$ ${price.toFixed(2)}? \n\nA matrícula será registrada na sua conta.`,
+        confirmText: 'Matricular-se',
+        onConfirm: async () => {
+          const enrollId = 'cur-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+          const enroll = {
+            id: enrollId,
+            courseKey,
+            courseName,
+            price,
+            userEmail: user.email,
+            userName: user.name,
+            enrolledAt: new Date().toISOString(),
+            status: 'pendente'
+          };
+
+          try {
+            await inscreverNoCurso(enroll);
+            await loadMyCourseInscriptions();
+            
+            // Abre o modal de PIX imediatamente
+            payCoursePix(enrollId, courseName, price);
+          } catch (e) {
+            alert("Erro ao realizar inscrição: " + e.message);
+          }
+        }
+      });
+    }
+
+    function payCoursePix(enrollId, courseName, price) {
+      showPixPaymentModal({
+        title: 'Taxa de Inscrição Registrada!',
+        message: `Sua pré-matrícula no curso **${courseName}** foi salva com sucesso!\n\nRealize o pagamento da taxa de inscrição abaixo para homologar seu acesso.`,
+        amount: price.toFixed(2),
+        onConfirm: () => {
+          alert("✓ Recebemos sua sinalização de pagamento! Nossa equipe validará o comprovante e você receberá seu acesso e certificado por e-mail e no painel do filiado.");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
