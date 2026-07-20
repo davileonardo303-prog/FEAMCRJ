@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderFooter();
   setupNavigationEvents();
   renderWhatsAppChatbox();
+  setupPWA();
   if (typeof getSiteInfo === 'function') {
     await applySiteInfoConfig();
   }
@@ -1236,3 +1237,180 @@ function renderWhatsAppChatbox() {
     }
   }, 3500);
 }
+
+// ==========================================
+// SISTEMA PORTÁTIL PWA & MOBILE OPTIMIZATION
+// ==========================================
+function setupPWA() {
+  const head = document.head;
+  if (!head) return;
+
+  // 1. Injeta o manifesto se não houver
+  if (!document.querySelector('link[rel="manifest"]')) {
+    const linkManifest = document.createElement('link');
+    linkManifest.rel = 'manifest';
+    linkManifest.href = '/manifest.json';
+    head.appendChild(linkManifest);
+  }
+
+  // 2. Injeta as tags mobile para visual de aplicativo nativo no iOS & Android
+  const metaCapable = document.createElement('meta');
+  metaCapable.name = 'apple-mobile-web-app-capable';
+  metaCapable.content = 'yes';
+  head.appendChild(metaCapable);
+
+  const metaStatusBar = document.createElement('meta');
+  metaStatusBar.name = 'apple-mobile-web-app-status-bar-style';
+  metaStatusBar.content = 'black-translucent';
+  head.appendChild(metaStatusBar);
+
+  const metaTitle = document.createElement('meta');
+  metaTitle.name = 'apple-mobile-web-app-title';
+  metaTitle.content = 'FEAMCRJ';
+  head.appendChild(metaTitle);
+
+  if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+    const linkTouchIcon = document.createElement('link');
+    linkTouchIcon.rel = 'apple-touch-icon';
+    linkTouchIcon.href = '/assets/icon.svg';
+    head.appendChild(linkTouchIcon);
+  }
+
+  // 3. Registra o Service Worker (/sw.js) de forma segura
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => {
+          console.log('[PWA] Service Worker registrado com sucesso! Escopo:', reg.scope);
+        })
+        .catch((err) => {
+          console.error('[PWA] Falha ao registrar Service Worker:', err);
+        });
+    });
+  }
+
+  // 4. Injeta a barra de navegação móvel (Bottom Navigation Bar)
+  renderBottomNavBar();
+
+  // 5. Adiciona padding inferior no body móvel para compensar a bottom-bar
+  const style = document.createElement('style');
+  style.innerHTML = `
+    @media (max-w: 1023px) {
+      body {
+        padding-bottom: 74px !important;
+      }
+    }
+    /* Estilo da barra de instalação do PWA */
+    #pwa-install-banner {
+      box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.5);
+    }
+  `;
+  head.appendChild(style);
+
+  // 6. Mostra o banner explicativo de instalação móvel após 4 segundos
+  setTimeout(showPwaInstallBanner, 4000);
+}
+
+function renderBottomNavBar() {
+  if (document.getElementById('mobile-bottom-navbar')) return;
+
+  const activePage = getActivePage();
+  const isLoggedIn = !!localStorage.getItem('feamcrj_logged_user');
+  
+  const navContainer = document.createElement('div');
+  navContainer.id = 'mobile-bottom-navbar';
+  // Fica fixado embaixo, aparece apenas no mobile/tablet (lg:hidden)
+  navContainer.className = 'fixed bottom-0 left-0 right-0 h-[64px] bg-zinc-950/95 backdrop-blur-md border-t border-zinc-900/80 flex items-center justify-around px-2 z-[999] lg:hidden';
+
+  const items = [
+    {
+      label: 'Início',
+      url: 'index.html',
+      active: activePage === 'index.html',
+      icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>`
+    },
+    {
+      label: 'Torneios',
+      url: 'torneios.html',
+      active: activePage === 'torneios.html',
+      icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2zm0 0h4m-4 0H8m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
+    },
+    {
+      label: 'Cursos',
+      url: 'cursos.html',
+      active: activePage === 'cursos.html',
+      icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>`
+    },
+    {
+      label: isLoggedIn ? 'Meu Painel' : 'Acessar',
+      url: isLoggedIn ? 'painel.html' : 'login.html',
+      active: activePage === 'painel.html' || activePage === 'login.html',
+      icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>`
+    }
+  ];
+
+  navContainer.innerHTML = items.map(item => `
+    <a href="${item.url}" class="flex flex-col items-center justify-center w-20 h-full transition-all duration-200 ${item.active ? 'text-amber-500 scale-105 font-black' : 'text-zinc-500 hover:text-zinc-300'}">
+      <div class="mb-1">${item.icon}</div>
+      <span class="text-[9px] uppercase tracking-wider">${item.label}</span>
+    </a>
+  `).join('');
+
+  document.body.appendChild(navContainer);
+}
+
+function showPwaInstallBanner() {
+  // Se o usuário já recusou, não mostra
+  if (localStorage.getItem('feamcrj_pwa_dismissed') === 'true') return;
+
+  // Verifica se é mobile/tablet
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (!isMobile) return;
+
+  if (document.getElementById('pwa-install-banner')) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'pwa-install-banner';
+  banner.className = 'fixed top-4 left-4 right-4 z-[99999] bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex items-start space-x-3 text-left transition-all duration-300 transform translate-y-[-120%] opacity-0';
+
+  // iOS Safari necessita de instrução manual de compartilhamento
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  let installInstruction = '';
+  if (isIOS) {
+    installInstruction = 'Para instalar como Aplicativo: Toque no ícone de <strong>Compartilhar</strong> <span class="text-amber-500 font-bold">↑</span> e depois escolha <strong>"Adicionar à Tela de Início"</strong>.';
+  } else {
+    installInstruction = 'Para instalar como Aplicativo: Toque no menu de opções do navegador e selecione <strong>"Instalar aplicativo"</strong> ou <strong>"Adicionar à Tela de Início"</strong>.';
+  }
+
+  banner.innerHTML = `
+    <div class="w-12 h-12 rounded-xl bg-zinc-950 flex items-center justify-center border border-zinc-800 shrink-0 text-amber-500">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+    </div>
+    <div class="flex-grow space-y-1">
+      <h4 class="text-xs font-black uppercase text-white tracking-wide">Instalar App FEAMCRJ</h4>
+      <p class="text-[10px] text-zinc-400 leading-relaxed">${installInstruction}</p>
+      <p class="text-[9px] text-zinc-500">Acesse sua carteirinha e frequências instantaneamente na tela inicial!</p>
+    </div>
+    <button onclick="dismissPwaBanner()" class="text-zinc-500 hover:text-white p-1 cursor-pointer" aria-label="Fechar">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+  `;
+
+  document.body.appendChild(banner);
+
+  // Anima entrada com slide suave
+  setTimeout(() => {
+    banner.classList.remove('translate-y-[-120%]', 'opacity-0');
+  }, 100);
+}
+
+// Expõe globalmente para que o botão funcione
+window.dismissPwaBanner = function() {
+  const banner = document.getElementById('pwa-install-banner');
+  if (banner) {
+    banner.classList.add('translate-y-[-120%]', 'opacity-0');
+    setTimeout(() => banner.remove(), 300);
+  }
+  localStorage.setItem('feamcrj_pwa_dismissed', 'true');
+};
