@@ -1743,6 +1743,129 @@ async function inscreverNoCurso(inscricao) {
   return inscricao;
 }
 
+// ==========================================
+// GERENCIAMENTO DE CURSOS E CAPACITAÇÕES
+// ==========================================
+async function getCursos() {
+  if (isFirebaseActive) {
+    try {
+      const snap = await db.collection('cursos').get();
+      if (!snap.empty) {
+        const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        localStorage.setItem('feam_cursos', JSON.stringify(list));
+        return list;
+      }
+    } catch (e) {
+      console.error("Erro ao buscar cursos do Firestore:", e);
+    }
+  }
+  
+  let localCursos = JSON.parse(localStorage.getItem('feam_cursos'));
+  if (!localCursos || localCursos.length === 0) {
+    localCursos = [
+      {
+        id: 'seminario_aperfeicoamento',
+        title: 'Seminários de Aperfeiçoamento',
+        category: 'SEMINÁRIO TÉCNICO',
+        description: 'Seminários ministrados por Grão Mestres em diversas modalidades (Muay Thai, Jiu-Jitsu, Kickboxing) focados em refinamento técnico, defesas pessoais e novas diretrizes de treinamento.',
+        duration: '8 Horas',
+        date: '15/08/2026',
+        certification: 'Diploma Oficial FEAMCRJ',
+        price: 120,
+        icon: '🥋',
+        bannerUrl: 'https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'primeiros_socorros',
+        title: 'Curso de Primeiros Socorros',
+        category: 'OBRIGATÓRIO PARA PROFESSORES',
+        description: 'Treinamento focado em salvamento de emergência, massagem cardíaca, tratamento de traumas esportivos e fraturas dentro e fora dos tatames. Obrigatório para homologação de faixas pretas.',
+        duration: '12 Horas (Teórico e Prático)',
+        date: '29/08/2026',
+        certification: 'Habilitação Técnica de Socorrista',
+        price: 150,
+        icon: '❤️',
+        bannerUrl: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        id: 'arbitragem_oficial',
+        title: 'Curso de Arbitragem Oficial',
+        category: 'CERTIFICAÇÃO JURÍDICA',
+        description: 'Formação oficial e credenciamento de árbitros e juízes laterais de mesa para torneios de combate. Abrange regulamentos unificados, interpretação de regras e marcação de pontuação.',
+        duration: '16 Horas',
+        date: '12/09/2026',
+        certification: 'Habilitação de Árbitro Estadual',
+        price: 180,
+        icon: '📋',
+        bannerUrl: 'https://images.unsplash.com/photo-1508847154043-be12a62861c1?q=80&w=600&auto=format&fit=crop'
+      }
+    ];
+    localStorage.setItem('feam_cursos', JSON.stringify(localCursos));
+    
+    if (isFirebaseActive) {
+      for (const c of localCursos) {
+        try {
+          await db.collection('cursos').doc(c.id).set(c);
+        } catch (e) {
+          console.error("Erro ao salvar curso inicial no Firestore:", e);
+        }
+      }
+    }
+  }
+  return localCursos;
+}
+
+async function adicionarCurso(cursoData) {
+  const newId = cursoData.id || "curso-" + Date.now();
+  const completo = {
+    ...cursoData,
+    id: newId,
+    price: Number(cursoData.price) || 0
+  };
+
+  if (isFirebaseActive) {
+    try {
+      await db.collection('cursos').doc(newId).set(completo);
+    } catch (e) {
+      console.error("Erro ao adicionar curso no Firestore:", e);
+    }
+  }
+
+  const cursos = JSON.parse(localStorage.getItem('feam_cursos')) || [];
+  cursos.push(completo);
+  localStorage.setItem('feam_cursos', JSON.stringify(cursos));
+  return completo;
+}
+
+async function excluirCurso(cursoId) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('cursos').doc(cursoId).delete();
+    } catch (e) {
+      console.error("Erro ao deletar curso do Firestore:", e);
+    }
+  }
+  let cursos = JSON.parse(localStorage.getItem('feam_cursos')) || [];
+  cursos = cursos.filter(c => c.id !== cursoId);
+  localStorage.setItem('feam_cursos', JSON.stringify(cursos));
+}
+
+async function atualizarCurso(cursoId, updatedFields) {
+  if (isFirebaseActive) {
+    try {
+      await db.collection('cursos').doc(cursoId).set(updatedFields, { merge: true });
+    } catch (e) {
+      console.error("Erro ao atualizar curso no Firestore:", e);
+    }
+  }
+  const cursos = JSON.parse(localStorage.getItem('feam_cursos')) || [];
+  const idx = cursos.findIndex(c => c.id === cursoId);
+  if (idx !== -1) {
+    cursos[idx] = { ...cursos[idx], ...updatedFields };
+    localStorage.setItem('feam_cursos', JSON.stringify(cursos));
+  }
+}
+
 window.getBoletos = getBoletos;
 window.salvarBoleto = salvarBoleto;
 window.excluirBoleto = excluirBoleto;
@@ -1753,5 +1876,11 @@ window.excluirPresenca = excluirPresenca;
 
 window.getCursosInscricoes = getCursosInscricoes;
 window.inscreverNoCurso = inscreverNoCurso;
+
+window.getCursos = getCursos;
+window.adicionarCurso = adicionarCurso;
+window.excluirCurso = excluirCurso;
+window.atualizarCurso = atualizarCurso;
+window.atualizarAtleta = atualizarAtleta;
 
 

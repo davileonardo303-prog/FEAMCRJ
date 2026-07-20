@@ -348,7 +348,7 @@
           </div>
 
           <!-- COLLAPSIBLE FORM: EDIT PROFILE DETAILS -->
-          <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3">
+          <div id="athlete-edit-carteirinha-container" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3">
             <button onclick="toggleEditDetailsPanel()" class="w-full flex items-center justify-between text-left text-xs font-black uppercase tracking-wider text-white cursor-pointer hover:text-amber-500 transition-colors">
               <span class="flex items-center gap-1.5">✏️ Editar Dados da Carteirinha</span>
               <span id="edit-panel-chevron">🔽</span>
@@ -882,10 +882,10 @@
             Atletas Filiados
           </button>
           <button onclick="switchAdminTab('academias')" id="tab-academias" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
-            Aprovar Academias
+            Aprovar Equipes
           </button>
           <button onclick="switchAdminTab('edit-academias')" id="tab-edit-academias" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
-            🏠 Gerenciar Academias / CTs
+            🛡️ Gerenciar Equipes / CTs
           </button>
           <button onclick="switchAdminTab('config-site')" id="tab-config-site" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
             ⚙️ Configuração do Site
@@ -898,6 +898,9 @@
           </button>
           <button onclick="switchAdminTab('suporte-chat')" id="tab-suporte-chat" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
             💬 Atendimento Chat
+          </button>
+          <button onclick="switchAdminTab('cursos')" id="tab-cursos" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white transition-all uppercase tracking-wider cursor-pointer">
+            🎓 Gerenciar Cursos
           </button>
           <a href="documentos.html" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-amber-500 hover:text-amber-400 transition-all uppercase tracking-wider cursor-pointer flex items-center gap-1.5 border border-zinc-850 hover:border-amber-500/30">
             <span>📄 Gerenciar Documentos</span>
@@ -1055,10 +1058,10 @@
         <div id="content-academias" class="hidden space-y-6">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 class="text-lg font-black uppercase text-white tracking-tight">Academias e Professores</h2>
-              <p class="text-zinc-500 text-xs">Valide e homologue novas academias no mapa oficial de credenciadas.</p>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Equipes e Professores</h2>
+              <p class="text-zinc-500 text-xs">Valide e homologue novas equipes no mapa oficial de credenciadas.</p>
             </div>
-            <span class="self-start sm:self-center text-xs bg-purple-500/10 text-purple-500 border border-purple-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider" id="admin-academias-count">0 Academias</span>
+            <span class="self-start sm:self-center text-xs bg-purple-500/10 text-purple-500 border border-purple-500/20 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider" id="admin-academias-count">0 Equipes</span>
           </div>
 
           <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
@@ -1101,11 +1104,11 @@
         <div id="content-edit-academias" class="hidden space-y-6">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 class="text-lg font-black uppercase text-white tracking-tight">Gerenciar Academias & Centros de Treinamento (CT)</h2>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Gerenciar Equipes & Centros de Treinamento (CT)</h2>
               <p class="text-zinc-500 text-xs">Adicione, edite ou exclua CTs diretamente sem precisar de código.</p>
             </div>
             <button onclick="openAddAcademiaForm()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-zinc-950 hover:bg-amber-400 transition-all uppercase tracking-wider font-display font-black cursor-pointer">
-              + Adicionar Academia / CT
+              + Adicionar Equipe / CT
             </button>
           </div>
 
@@ -1812,6 +1815,37 @@
           </div>
         </div>
 
+        <!-- TAB CONTENT: GERENCIAR CURSOS (ADMIN) -->
+        <div id="content-cursos" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-black uppercase text-white tracking-tight">Gerenciar Cursos & Seminários</h2>
+              <p class="text-zinc-500 text-xs">Adicione, edite ou remova cursos, palestras, treinamentos de primeiros socorros ou arbitragem.</p>
+            </div>
+            <button onclick="openEditCursoModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-zinc-950 hover:bg-amber-400 transition-all uppercase tracking-wider font-display font-black cursor-pointer">
+              + Cadastrar Novo Curso
+            </button>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-zinc-900 bg-zinc-900/40">
+            <table class="w-full text-left text-xs text-zinc-400">
+              <thead class="bg-zinc-950/60 text-zinc-400 font-bold uppercase border-b border-zinc-900">
+                <tr>
+                  <th class="p-4">Categoria</th>
+                  <th class="p-4">Título</th>
+                  <th class="p-4">Duração</th>
+                  <th class="p-4">Data</th>
+                  <th class="p-4">Certificação</th>
+                  <th class="p-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-cursos-tbody">
+                <!-- Dynamic courses list loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- MODAL: EDITAR TORNEIO (ADMIN) -->
         <div id="modal-edit-torneio" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/85 backdrop-blur-sm hidden">
           <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-6 relative shadow-2xl text-left">
@@ -1971,6 +2005,169 @@
           </div>
         </div>
 
+        <!-- MODAL: EDITAR/ADICIONAR CURSO -->
+        <div id="modal-edit-curso" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/85 backdrop-blur-sm hidden">
+          <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-6 relative shadow-2xl text-left">
+            <button type="button" onclick="closeEditCursoModal()" class="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white transition-colors cursor-pointer" title="Fechar">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div>
+              <h3 class="text-lg font-black uppercase text-white tracking-tight" id="curso-modal-title">Adicionar Novo Curso</h3>
+              <p class="text-zinc-500 text-xs">Preencha os detalhes do curso ou capacitação homologada pela federação.</p>
+            </div>
+
+            <form id="edit-curso-form" class="space-y-4">
+              <input type="hidden" id="edit-curs-id">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Título do Curso</label>
+                  <input type="text" id="edit-curs-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Curso de Primeiros Socorros">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Categoria</label>
+                  <input type="text" id="edit-curs-category" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: OBRIGATÓRIO PARA PROFESSORES">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Descrição do Curso</label>
+                <textarea id="edit-curs-description" rows="3" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Descreva os objetivos, grade técnica e público-alvo..."></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Carga Horária</label>
+                  <input type="text" id="edit-curs-duration" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 12 Horas">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Próxima Data</label>
+                  <input type="text" id="edit-curs-date" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 29/08/2026">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Certificação Entregue</label>
+                  <input type="text" id="edit-curs-certification" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Habilitação Técnica de Socorrista">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Preço da Taxa (R$)</label>
+                  <input type="number" id="edit-curs-price" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="150">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Ícone (Emoji)</label>
+                  <input type="text" id="edit-curs-icon" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="❤️">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">ID Único (Opcional)</label>
+                  <input type="text" id="edit-curs-custom-id" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="primeiros_socorros">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">URL do Banner do Curso (Imagem)</label>
+                <input type="text" id="edit-curs-banner" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="https://images.unsplash.com/photo-...">
+              </div>
+
+              <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md transition-all cursor-pointer">
+                Salvar Dados do Curso
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- MODAL: EDITAR CARTEIRINHA DO ATLETA (Professor & Admin) -->
+        <div id="modal-edit-atleta" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/85 backdrop-blur-sm hidden">
+          <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-6 relative shadow-2xl text-left">
+            <button type="button" onclick="closeEditAthleteModal()" class="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white transition-colors cursor-pointer" title="Fechar">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div>
+              <h3 class="text-lg font-black uppercase text-white tracking-tight">Editar Carteirinha do Atleta</h3>
+              <p class="text-zinc-500 text-xs">Apenas professores credenciados e administradores podem alterar as informações oficiais da Identidade Esportiva.</p>
+            </div>
+
+            <form id="edit-athlete-form" class="space-y-4">
+              <input type="hidden" id="edit-atl-id">
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nome do Filiado</label>
+                  <input type="text" id="edit-atl-name" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Número de Registro (FEAM)</label>
+                  <input type="text" id="edit-atl-reg" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Equipe / Academia</label>
+                  <input type="text" id="edit-atl-academy" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modalidade Principal</label>
+                  <input type="text" id="edit-atl-modality" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Graduação / Faixa</label>
+                  <input type="text" id="edit-atl-rank" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Data de Nascimento</label>
+                  <input type="text" id="edit-atl-birth" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="DD/MM/AAAA">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">RG</label>
+                  <input type="text" id="edit-atl-rg" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">CPF</label>
+                  <input type="text" id="edit-atl-cpf" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Filiação / Pais</label>
+                  <input type="text" id="edit-atl-parents" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Data de Expedição</label>
+                  <input type="text" id="edit-atl-expedition" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="DD/MM/AAAA">
+                </div>
+              </div>
+
+              <!-- PHOTO AREA -->
+              <div class="space-y-2">
+                <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Foto do Filiado (Rosto)</label>
+                <div class="flex items-center gap-4 bg-zinc-950 p-4 rounded-xl border border-zinc-850">
+                  <div class="w-16 h-20 bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden flex items-center justify-center">
+                    <img id="edit-atl-photo-preview" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop" class="w-full h-full object-cover">
+                  </div>
+                  <div class="space-y-2 flex-1">
+                    <input type="file" id="edit-atl-file-input" accept="image/*" class="hidden" onchange="handleEditAtlPhotoUpload(event)">
+                    <button type="button" onclick="document.getElementById('edit-atl-file-input').click()" class="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                      Alterar Foto
+                    </button>
+                    <p class="text-[9px] text-zinc-500">Formatos recomendados: JPG ou PNG. Redimensionamento automático.</p>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-xs font-black uppercase tracking-widest text-white hover:from-red-500 hover:to-amber-400 shadow-md transition-all cursor-pointer">
+                Salvar Dados da Carteirinha do Atleta
+              </button>
+            </form>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -2105,6 +2302,12 @@
         changeCardTemplate(startingTemplate);
         refreshCardPreview();
 
+        // Hide edit carteirinha for standard athletes so only professors/admins can edit it
+        const editContainer = document.getElementById('athlete-edit-carteirinha-container');
+        if (editContainer) {
+          editContainer.classList.add('hidden');
+        }
+
         // Inicializa o Relógio de Ponto (Frequência) do Aluno
         loadStudentPonto();
 
@@ -2214,7 +2417,10 @@
                 ${ath.status === 'active' ? 'Ativo' : 'Inativo'}
               </span>
             </td>
-            <td class="p-3 text-right">
+            <td class="p-3 text-right space-x-1.5 whitespace-nowrap">
+              <button onclick="openEditAthleteModal('${ath.id}')" class="p-1.5 rounded bg-zinc-950 border border-zinc-850 hover:border-amber-500/50 hover:text-amber-500 transition-colors text-zinc-500 cursor-pointer" title="Editar Carteirinha/Atleta">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+              </button>
               <button onclick="professorDeletarAtleta('${ath.id}')" class="p-1.5 rounded bg-zinc-950 border border-zinc-850 hover:border-red-500/50 hover:text-red-500 transition-colors text-zinc-500 cursor-pointer" title="Excluir Atleta">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
               </button>
@@ -2394,7 +2600,7 @@
     }
 
     function switchAdminTab(tabName) {
-      const tabs = ['inscricoes', 'torneios', 'atletas', 'academias', 'edit-torneios', 'edit-academias', 'config-site', 'novo-usuario', 'financeiro-global'];
+      const tabs = ['inscricoes', 'torneios', 'atletas', 'academias', 'edit-torneios', 'edit-academias', 'config-site', 'novo-usuario', 'financeiro-global', 'suporte-chat', 'cursos'];
       tabs.forEach(t => {
         const btn = document.getElementById('tab-' + t);
         const content = document.getElementById('content-' + t);
@@ -2418,7 +2624,60 @@
       if (tabName === 'financeiro-global') {
         loadAdminFinanceiroGlobal();
       }
+      if (tabName === 'cursos') {
+        renderCursosTab();
+      }
     }
+
+    async function renderCursosTab() {
+      const tbody = document.getElementById('admin-cursos-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-zinc-500">Carregando cursos...</td></tr>';
+      try {
+        const cursos = await getCursos();
+        tbody.innerHTML = '';
+        if (cursos.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-zinc-500">Nenhum curso cadastrado ainda.</td></tr>';
+          return;
+        }
+        cursos.forEach(c => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-zinc-900/30 transition-colors border-b border-zinc-900 text-xs text-zinc-300";
+          tr.innerHTML = `
+            <td class="p-4 font-semibold text-white">${c.category || 'Outros'}</td>
+            <td class="p-4 text-zinc-300 font-medium">${c.title}</td>
+            <td class="p-4 text-zinc-400 font-mono">${c.duration || '-'}</td>
+            <td class="p-4 text-zinc-400">${c.date || '-'}</td>
+            <td class="p-4 text-zinc-500">${c.certification || 'Não'}</td>
+            <td class="p-4 text-right space-x-2 whitespace-nowrap">
+              <button onclick="openEditCursoModal('${c.id}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 text-amber-500 hover:bg-amber-500 hover:text-zinc-950 rounded-lg text-[10px] font-bold cursor-pointer">
+                Editar
+              </button>
+              <button onclick="excluirCursoAdmin('${c.id}')" class="px-2 py-1 bg-zinc-950 border border-zinc-800 text-red-500 hover:bg-red-500 hover:text-white rounded-lg text-[10px] font-bold cursor-pointer">
+                Excluir
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-500">Erro: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function excluirCursoAdmin(id) {
+      if (!confirm("Tem certeza que deseja excluir este curso/seminário permanentemente?")) return;
+      try {
+        await excluirCurso(id);
+        alert("🟢 Curso excluído com sucesso!");
+        await renderCursosTab();
+      } catch (err) {
+        alert("Erro ao excluir curso: " + err.message);
+      }
+    }
+
+    window.renderCursosTab = renderCursosTab;
+    window.excluirCursoAdmin = excluirCursoAdmin;
 
     // 1. Carregar Inscrições de Torneios
     async function loadAdminInscricoes() {
@@ -2575,6 +2834,9 @@
             ${statusBadge}
           </td>
           <td class="p-4 text-right space-x-2 whitespace-nowrap">
+            <button onclick="openEditAthleteModal('${ath.id}')" class="px-2.5 py-1 bg-zinc-950 border border-zinc-800 text-amber-500 hover:bg-amber-500 hover:text-zinc-950 rounded-lg text-[10px] font-bold cursor-pointer">
+              Editar Carteirinha
+            </button>
             ${actionsHtml}
           </td>
         `;
@@ -3057,10 +3319,14 @@
         document.getElementById('cfg-hero-title').value = info.heroTitle || '';
         document.getElementById('cfg-hero-subtitle').value = info.heroSubtitle || '';
         
-        // Exibe os contadores dinâmicos calculados a partir do banco de dados
-        document.getElementById('disp-stat-atletas').textContent = info.statAtletas || '1.800+';
-        document.getElementById('disp-stat-academias').textContent = info.statAcademias || '85+';
-        document.getElementById('disp-stat-torneios').textContent = info.statTorneios || '14';
+        // Exibe os contadores dinâmicos calculados a partir do banco de dados em tempo real
+        const realAth = await getAtletas() || [];
+        const realAcad = await getAcademias() || [];
+        const realTorn = await getTorneios() || [];
+
+        document.getElementById('disp-stat-atletas').textContent = `${realAth.length} Atletas`;
+        document.getElementById('disp-stat-academias').textContent = `${realAcad.length} Equipes`;
+        document.getElementById('disp-stat-torneios').textContent = `${realTorn.length} Torneios`;
         document.getElementById('disp-stat-oficial').textContent = info.statOficial || '100%';
 
         // Preenche campos do rodapé
@@ -4134,17 +4400,40 @@
       const details = loggedUser.detalhes || {};
 
       const name = loggedUser.name || 'Nome do Filiado';
-      const reg = details.registrationNumber || 'FEAM-2026-XXXX';
-      const academy = details.academyName || details.address || 'EQUIPE FILIADA';
-      const modality = details.modality || details.modalities?.[0] || 'ARTE MARCIAL';
-      const rank = details.rank || 'GRADUAÇÃO';
+      const reg = details.registrationNumber || loggedUser.registrationNumber || 'FEAM-2026-XXXX';
+      const academy = details.academyName || loggedUser.academyName || details.address || loggedUser.address || 'EQUIPE FILIADA';
+      const modality = details.modality || loggedUser.modality || details.modalities?.[0] || 'ARTE MARCIAL';
+      const rank = details.rank || loggedUser.rank || 'GRADUAÇÃO';
 
-      const dataNascimento = details.dataNascimento || '15/08/1995';
-      const rg = details.rg || '12.345.678-9 IFP';
-      const cpf = details.cpf || '123.456.789-00';
-      const filiacao = details.filiacao || 'MARIA DE SOUZA & JOSÉ DE SOUZA';
-      const dataExpedicao = details.dataExpedicao || '19/07/2026';
-      const photo = details.photoUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop';
+      // Auto template selection based on rank/belt rule:
+      // Preta = PROFESSOR, Preta e Branca = MESTRE, otherwise ATLETA
+      let autoTemplate = 'atleta';
+      const rankUpper = rank.toUpperCase().trim();
+      if (rankUpper.includes('PRETA E BRANCA') || rankUpper.includes('PRETA-BRANCA') || rankUpper.includes('VERMELHA') || rankUpper.includes('MESTRE')) {
+        autoTemplate = 'mestre';
+      } else if (rankUpper === 'PRETA' || rankUpper.includes('FAIXA PRETA') || rankUpper.startsWith('PRETA') || rankUpper.includes('PROFESSOR')) {
+        autoTemplate = 'professor';
+      } else {
+        autoTemplate = 'atleta';
+      }
+      changeCardTemplate(autoTemplate);
+
+      // Safe date formatting helper if ISO is stored
+      const formatBirth = (val) => {
+        if (!val) return '15/08/1995';
+        if (val.includes('-')) {
+          const parts = val.split('-');
+          if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+        return val;
+      };
+
+      const dataNascimento = formatBirth(details.dataNascimento || loggedUser.dateOfBirth || loggedUser.dataNascimento);
+      const rg = details.rg || loggedUser.rg || '12.345.678-9 IFP';
+      const cpf = details.cpf || loggedUser.cpf || '123.456.789-00';
+      const filiacao = details.filiacao || loggedUser.filiacao || 'MARIA DE SOUZA & JOSÉ DE SOUZA';
+      const dataExpedicao = formatBirth(details.dataExpedicao || loggedUser.affiliationDate || loggedUser.dataExpedicao || '19/07/2026');
+      const photo = details.photoUrl || loggedUser.photoUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop';
 
       // Front of card text
       const nameEl = document.getElementById('card-name');
@@ -4294,6 +4583,227 @@
         alert('Erro ao salvar seus dados no banco: ' + error.message);
       }
     }
+
+    let cachedEditAthlete = null;
+
+    async function openEditAthleteModal(id) {
+      try {
+        const atletas = await getAtletas();
+        const ath = atletas.find(a => a.id === id);
+        if (!ath) {
+          alert("Atleta não localizado!");
+          return;
+        }
+        cachedEditAthlete = ath;
+        
+        document.getElementById('edit-atl-id').value = ath.id;
+        document.getElementById('edit-atl-name').value = ath.name || '';
+        document.getElementById('edit-atl-reg').value = ath.registrationNumber || '';
+        document.getElementById('edit-atl-academy').value = ath.academyName || ath.ct || '';
+        document.getElementById('edit-atl-modality').value = ath.modality || '';
+        document.getElementById('edit-atl-rank').value = ath.rank || '';
+        
+        // Handle dates
+        const dateBirth = ath.dateOfBirth || (ath.detalhes && ath.detalhes.dataNascimento) || '15/08/1995';
+        const dateExp = ath.affiliationDate || (ath.detalhes && ath.detalhes.dataExpedicao) || '19/07/2026';
+        
+        document.getElementById('edit-atl-birth').value = dateBirth;
+        document.getElementById('edit-atl-rg').value = ath.rg || (ath.detalhes && ath.detalhes.rg) || '';
+        document.getElementById('edit-atl-cpf').value = ath.cpf || (ath.detalhes && ath.detalhes.cpf) || '';
+        document.getElementById('edit-atl-parents').value = ath.filiacao || (ath.detalhes && ath.detalhes.filiacao) || '';
+        document.getElementById('edit-atl-expedition').value = dateExp;
+        
+        const photoUrl = ath.photoUrl || (ath.detalhes && ath.detalhes.photoUrl) || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop';
+        document.getElementById('edit-atl-photo-preview').src = photoUrl;
+        
+        document.getElementById('modal-edit-atleta').classList.remove('hidden');
+      } catch (err) {
+        alert("Erro ao abrir formulário de edição: " + err.message);
+      }
+    }
+
+    function closeEditAthleteModal() {
+      document.getElementById('modal-edit-atleta').classList.add('hidden');
+      cachedEditAthlete = null;
+    }
+
+    let editAtlPhotoBase64 = null;
+    function handleEditAtlPhotoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editAtlPhotoBase64 = e.target.result;
+        document.getElementById('edit-atl-photo-preview').src = editAtlPhotoBase64;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Submit edit athlete form
+    document.getElementById('edit-athlete-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (!cachedEditAthlete) return;
+      
+      const id = document.getElementById('edit-atl-id').value;
+      const name = document.getElementById('edit-atl-name').value;
+      const reg = document.getElementById('edit-atl-reg').value;
+      const academy = document.getElementById('edit-atl-academy').value;
+      const modality = document.getElementById('edit-atl-modality').value;
+      const rank = document.getElementById('edit-atl-rank').value;
+      const birth = document.getElementById('edit-atl-birth').value;
+      const rg = document.getElementById('edit-atl-rg').value;
+      const cpf = document.getElementById('edit-atl-cpf').value;
+      const parents = document.getElementById('edit-atl-parents').value;
+      const expedition = document.getElementById('edit-atl-expedition').value;
+      const photoUrl = editAtlPhotoBase64 || document.getElementById('edit-atl-photo-preview').src;
+
+      try {
+        const updatedFields = {
+          name,
+          registrationNumber: reg,
+          academyName: academy,
+          modality,
+          rank,
+          dateOfBirth: birth,
+          rg,
+          cpf,
+          filiacao: parents,
+          affiliationDate: expedition,
+          photoUrl,
+          // also write to detalhes nested obj for extra safety compatibility
+          detalhes: {
+            registrationNumber: reg,
+            academyName: academy,
+            modality,
+            rank,
+            dataNascimento: birth,
+            rg,
+            cpf,
+            filiacao: parents,
+            dataExpedicao: expedition,
+            photoUrl
+          }
+        };
+
+        if (isFirebaseActive) {
+          await db.collection('atletas').doc(id).update(updatedFields);
+        } else {
+          const key = 'feam_atletas';
+          const list = JSON.parse(localStorage.getItem(key)) || [];
+          const index = list.findIndex(a => a.id === id);
+          if (index !== -1) {
+            list[index] = { ...list[index], ...updatedFields };
+            localStorage.setItem(key, JSON.stringify(list));
+          }
+        }
+
+        alert("🟢 Carteirinha do Atleta atualizada com sucesso!");
+        closeEditAthleteModal();
+        
+        // Reload listing tables if function exists
+        if (typeof loadAdminAtletas === 'function') await loadAdminAtletas();
+        const loggedUser = JSON.parse(localStorage.getItem('feamcrj_logged_user') || '{}');
+        if (loggedUser.tipo === 'professor') {
+          await loadProfessorCT();
+        }
+      } catch (err) {
+        alert("Erro ao salvar carteirinha do atleta: " + err.message);
+      }
+    });
+
+    async function openEditCursoModal(id) {
+      if (id) {
+        // Edit Mode
+        try {
+          const cursos = await getCursos();
+          const curso = cursos.find(c => c.id === id || c.customId === id);
+          if (!curso) {
+            alert("Curso não localizado!");
+            return;
+          }
+          document.getElementById('curso-modal-title').textContent = "Editar Curso / Seminário";
+          document.getElementById('edit-curs-id').value = curso.id || id;
+          document.getElementById('edit-curs-title').value = curso.title || '';
+          document.getElementById('edit-curs-category').value = curso.category || '';
+          document.getElementById('edit-curs-description').value = curso.description || '';
+          document.getElementById('edit-curs-duration').value = curso.duration || '';
+          document.getElementById('edit-curs-date').value = curso.date || '';
+          document.getElementById('edit-curs-certification').value = curso.certification || '';
+          document.getElementById('edit-curs-price').value = curso.price || '';
+          document.getElementById('edit-curs-icon').value = curso.icon || '';
+          document.getElementById('edit-curs-custom-id').value = curso.customId || '';
+          document.getElementById('edit-curs-banner').value = curso.banner || '';
+        } catch (err) {
+          alert("Erro ao buscar dados do curso: " + err.message);
+        }
+      } else {
+        // Add Mode
+        document.getElementById('curso-modal-title').textContent = "Adicionar Novo Curso / Seminário";
+        document.getElementById('edit-curs-id').value = '';
+        document.getElementById('edit-curso-form').reset();
+        document.getElementById('edit-curs-icon').value = '🎓';
+        document.getElementById('edit-curs-banner').value = '';
+      }
+      document.getElementById('modal-edit-curso').classList.remove('hidden');
+    }
+
+    function closeEditCursoModal() {
+      document.getElementById('modal-edit-curso').classList.add('hidden');
+    }
+
+    // Submit course form
+    document.getElementById('edit-curso-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const id = document.getElementById('edit-curs-id').value;
+      const title = document.getElementById('edit-curs-title').value;
+      const category = document.getElementById('edit-curs-category').value;
+      const description = document.getElementById('edit-curs-description').value;
+      const duration = document.getElementById('edit-curs-duration').value;
+      const date = document.getElementById('edit-curs-date').value;
+      const certification = document.getElementById('edit-curs-certification').value;
+      const price = parseFloat(document.getElementById('edit-curs-price').value || '0');
+      const icon = document.getElementById('edit-curs-icon').value;
+      const customId = document.getElementById('edit-curs-custom-id').value;
+      const banner = document.getElementById('edit-curs-banner').value;
+
+      const cursoData = {
+        title,
+        category,
+        description,
+        duration,
+        date,
+        certification,
+        price,
+        icon,
+        customId: customId || 'curso_' + Math.floor(Math.random() * 10000),
+        banner: banner || 'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=600&auto=format&fit=crop'
+      };
+
+      try {
+        if (id) {
+          // Update
+          await atualizarCurso(id, cursoData);
+          alert("🟢 Curso / Seminário atualizado com sucesso!");
+        } else {
+          // Add
+          await adicionarCurso(cursoData);
+          alert("🟢 Novo Curso / Seminário cadastrado com sucesso!");
+        }
+        closeEditCursoModal();
+        if (typeof renderCursosTab === 'function') {
+          await renderCursosTab();
+        }
+      } catch (err) {
+        alert("Erro ao salvar curso: " + err.message);
+      }
+    });
+
+    window.openEditAthleteModal = openEditAthleteModal;
+    window.closeEditAthleteModal = closeEditAthleteModal;
+    window.handleEditAtlPhotoUpload = handleEditAtlPhotoUpload;
+    window.openEditCursoModal = openEditCursoModal;
+    window.closeEditCursoModal = closeEditCursoModal;
 
     window.changeCardTemplate = changeCardTemplate;
     window.refreshCardPreview = refreshCardPreview;

@@ -41,99 +41,9 @@
         <p class="text-zinc-400 text-sm max-w-2xl mx-auto leading-relaxed">
           Zelamos pela integridade técnica das artes marciais fluminenses através de certificações oficiais homologadas, cruciais para graduações superiores e habilitação profissional de professores e árbitros.
         </p>
-        <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></div>
-      </div>
-
-      <!-- Grid de Cursos Oficiais -->
-      <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <!-- CURSO 1: SEMINÁRIOS TÉCNICOS -->
-        <div class="bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-zinc-800 transition-all relative overflow-hidden group">
-          <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/10 transition-all"></div>
-          <div class="space-y-4">
-            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 text-2xl">🥋</div>
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-widest text-amber-500">SEMINÁRIO TÉCNICO</span>
-              <h3 class="text-xl font-bold text-white uppercase mt-1">Seminários de Aperfeiçoamento</h3>
-            </div>
-            <p class="text-zinc-400 text-xs leading-relaxed">
-              Seminários ministrados por Grão Mestres em diversas modalidades (Muay Thai, Jiu-Jitsu, Kickboxing) focados em refinamento técnico, defesas pessoais e novas diretrizes de treinamento.
-            </p>
-            <ul class="space-y-2 text-[11px] text-zinc-500">
-              <li class="flex items-center gap-2">⏱️ <strong>Carga Horária:</strong> 8 Horas</li>
-              <li class="flex items-center gap-2">📅 <strong>Próxima Data:</strong> 15/08/2026</li>
-              <li class="flex items-center gap-2">🎓 <strong>Certificação:</strong> Diploma Oficial FEAMCRJ</li>
-            </ul>
-          </div>
-          <div class="space-y-3 pt-4 border-t border-zinc-900">
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-zinc-500">Valor da Taxa</span>
-              <span class="text-lg font-black text-white">R$ 120,00</span>
-            </div>
-            <button onclick="handleEnrollCourse('seminario_aperfeicoamento', 'Seminários de Aperfeiçoamento', 120)" class="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 hover:from-amber-500 hover:to-amber-400 hover:text-zinc-950 border border-zinc-800 hover:border-amber-500 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
-              Inscrever-se Já
-            </button>
-          </div>
-        </div>
-
-        <!-- CURSO 2: PRIMEIROS SOCORROS -->
-        <div class="bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-zinc-800 transition-all relative overflow-hidden group">
-          <div class="absolute -top-10 -right-10 w-32 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-red-500/10 transition-all"></div>
-          <div class="space-y-4">
-            <div class="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-2xl">❤️</div>
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-widest text-red-400">OBRIGATÓRIO PARA PROFESSORES</span>
-              <h3 class="text-xl font-bold text-white uppercase mt-1">Curso de Primeiros Socorros</h3>
-            </div>
-            <p class="text-zinc-400 text-xs leading-relaxed">
-              Treinamento focado em salvamento de emergência, massagem cardíaca, tratamento de traumas esportivos e fraturas dentro e fora dos tatames. Obrigatório para homologação de faixas pretas.
-            </p>
-            <ul class="space-y-2 text-[11px] text-zinc-500">
-              <li class="flex items-center gap-2">⏱️ <strong>Carga Horária:</strong> 12 Horas (Teórico e Prático)</li>
-              <li class="flex items-center gap-2">📅 <strong>Próxima Data:</strong> 29/08/2026</li>
-              <li class="flex items-center gap-2">🎓 <strong>Certificação:</strong> Habilitação Técnica de Socorrista</li>
-            </ul>
-          </div>
-          <div class="space-y-3 pt-4 border-t border-zinc-900">
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-zinc-500">Valor da Taxa</span>
-              <span class="text-lg font-black text-white">R$ 150,00</span>
-            </div>
-            <button onclick="handleEnrollCourse('primeiros_socorros', 'Curso de Primeiros Socorros', 150)" class="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 hover:from-red-600 hover:to-orange-500 border border-zinc-800 hover:border-red-500 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
-              Inscrever-se Já
-            </button>
-          </div>
-        </div>
-
-        <!-- CURSO 3: CURSO DE ARBITRAGEM -->
-        <div class="bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-zinc-800 transition-all relative overflow-hidden group">
-          <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-blue-500/10 transition-all"></div>
-          <div class="space-y-4">
-            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 text-2xl">📋</div>
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-widest text-blue-400">CERTIFICAÇÃO JURÍDICA</span>
-              <h3 class="text-xl font-bold text-white uppercase mt-1">Curso de Arbitragem Oficial</h3>
-            </div>
-            <p class="text-zinc-400 text-xs leading-relaxed">
-              Formação oficial e credenciamento de árbitros e juízes laterais de mesa para torneios de combate. Abrange regulamentos unificados, interpretação de regras e marcação de pontuação.
-            </p>
-            <ul class="space-y-2 text-[11px] text-zinc-500">
-              <li class="flex items-center gap-2">⏱️ <strong>Carga Horária:</strong> 16 Horas</li>
-              <li class="flex items-center gap-2">📅 <strong>Próxima Data:</strong> 12/09/2026</li>
-              <li class="flex items-center gap-2">🎓 <strong>Certificação:</strong> Habilitação de Árbitro Estadual</li>
-            </ul>
-          </div>
-          <div class="space-y-3 pt-4 border-t border-zinc-900">
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-zinc-500">Valor da Taxa</span>
-              <span class="text-lg font-black text-white">R$ 180,00</span>
-            </div>
-            <button onclick="handleEnrollCourse('arbitragem_oficial', 'Curso de Arbitragem Oficial', 180)" class="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 hover:from-blue-600 hover:to-indigo-500 border border-zinc-800 hover:border-blue-500 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
-              Inscrever-se Já
-            </button>
-          </div>
-        </div>
-
+        <div class="mt-4 h-1 w-20 bg-gradient-to-r from-red-600 to-amber-500 mx-auto rounded-full"></di      <!-- Grid de Cursos Oficiais -->
+      <section id="cursos-oficiais-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Dynamically loaded courses will render here -->
       </section>
 
       <!-- Suas Matrículas e Inscrições -->
@@ -169,10 +79,69 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
+      await loadCursosGrid();
       setTimeout(async () => {
         await loadMyCourseInscriptions();
       }, 500);
     });
+
+    async function loadCursosGrid() {
+      const grid = document.getElementById('cursos-oficiais-grid');
+      if (!grid) return;
+
+      try {
+        const statusText = '<p class="text-zinc-500 text-xs col-span-full text-center py-8">Carregando cursos...</p>';
+        grid.innerHTML = statusText;
+        
+        const cursos = await getCursos();
+        grid.innerHTML = '';
+
+        if (cursos.length === 0) {
+          grid.innerHTML = '<p class="text-zinc-500 text-xs col-span-full text-center py-8">Nenhum curso disponível no momento.</p>';
+          return;
+        }
+
+        cursos.forEach(curso => {
+          const banner = curso.bannerUrl || 'https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=600&auto=format&fit=crop';
+          const icon = curso.icon || '🥋';
+          const card = document.createElement('div');
+          card.className = "bg-zinc-900/40 border border-zinc-900 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-zinc-800 transition-all relative overflow-hidden group";
+          
+          card.innerHTML = `
+            <div class="absolute inset-x-0 top-0 h-32 opacity-35 group-hover:opacity-50 transition-opacity bg-cover bg-center pointer-events-none" style="background-image: url('${banner}')"></div>
+            <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-transparent to-zinc-950 pointer-events-none"></div>
+            
+            <div class="space-y-4 relative z-10 pt-16">
+              <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 text-2xl">${icon}</div>
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-amber-500">${curso.category}</span>
+                <h3 class="text-xl font-bold text-white uppercase mt-1">${curso.title}</h3>
+              </div>
+              <p class="text-zinc-400 text-xs leading-relaxed">
+                ${curso.description}
+              </p>
+              <ul class="space-y-2 text-[11px] text-zinc-500">
+                <li class="flex items-center gap-2">⏱️ <strong>Carga Horária:</strong> ${curso.duration}</li>
+                <li class="flex items-center gap-2">📅 <strong>Próxima Data:</strong> ${curso.date}</li>
+                <li class="flex items-center gap-2">🎓 <strong>Certificação:</strong> ${curso.certification}</li>
+              </ul>
+            </div>
+            <div class="space-y-3 pt-4 border-t border-zinc-900 relative z-10">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-zinc-500">Valor da Taxa</span>
+                <span class="text-lg font-black text-white">R$ ${Number(curso.price).toFixed(2)}</span>
+              </div>
+              <button onclick="handleEnrollCourse('${curso.id}', '${curso.title}', ${Number(curso.price)})" class="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 hover:from-amber-500 hover:to-amber-400 hover:text-zinc-950 border border-zinc-800 hover:border-amber-500 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
+                Inscrever-se Já
+              </button>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (e) {
+        console.error("Erro ao carregar grid de cursos:", e);
+      }
+    }
 
     async function loadMyCourseInscriptions() {
       const loggedUserStr = localStorage.getItem('feamcrj_logged_user');
@@ -197,7 +166,7 @@
             tr.innerHTML = `
               <td class="p-3 font-semibold text-white">${enroll.courseName}</td>
               <td class="p-3 text-zinc-400">${new Date(enroll.enrolledAt).toLocaleDateString('pt-BR')}</td>
-              <td class="p-3 text-zinc-300">R$ ${enroll.price.toFixed(2)}</td>
+              <td class="p-3 text-zinc-300">R$ ${Number(enroll.price).toFixed(2)}</td>
               <td class="p-3">
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold ${enroll.status === 'pago' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}">
                   ${enroll.status === 'pago' ? 'Pago / Confirmado' : 'Aguardando Pagamento'}

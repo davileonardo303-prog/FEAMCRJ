@@ -694,7 +694,7 @@ function renderWhatsAppChatbox() {
 
   const widget = document.createElement('div');
   widget.id = 'whatsapp-support-widget';
-  widget.className = 'fixed bottom-6 right-6 z-[9999] font-sans flex flex-col items-end';
+  widget.className = 'fixed bottom-20 md:bottom-6 right-6 z-[9999] font-sans flex flex-col items-end';
 
   widget.innerHTML = `
     <!-- Botão Flutuante (Chamar WhatsApp) -->
